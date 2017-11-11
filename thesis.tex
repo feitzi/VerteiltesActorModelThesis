@@ -39,7 +39,7 @@
 %    * [medium] mathbb in section-titles/chapter-titles => disappears somehow in headlines!!!
 % **************************************************************************************************************
 \documentclass[ openright,titlepage,numbers=noenddot,headinclude,%,twoside,%1headlines,% letterpaper a4paper
-                footinclude=true,cleardoublepage=empty,abstractoff, 
+                footinclude=true,cleardoublepage=ehmpty,abstractoff, 
                 BCOR=5mm,paper=a4,fontsize=11pt,%11pt,a4paper,%
                 ngerman,american,%
                 ]{scrreprt}
@@ -84,21 +84,24 @@
 % Mainmatter
 % ********************************************************************
 \pagenumbering{arabic}
-%\setcounter{page}{90}
+\setcounter{page}{1}
 % use \cleardoublepage here to avoid problems with pdfbookmark
-%\cleardoublepage\part{Beispiel einer Arbeit}
+\cleardoublepage\part{Theoretische Grundlagen}
 % insert your chapters here
 \include{Chapters/examples/chapter01}
 \include{Chapters/examples/chapter02}
-\include{Chapters/examples/chapter03}
 \include{Chapters/examples/chapter_test}
+
+\cleardoublepage\part{Praktische Ausarbeitung eines Transaktionssystemes asdf}
+\include{Chapters/examples/chapter03}
 % ********************************************************************
 % Backmatter
 % ********************************************************************
 \appendix
 % insert your appendix here
-\cleardoublepage\part{Appendix - Some Kind of Manual}
-\include{Chapters/examples/appendix01}
+
+%\include{Chapters/examples/appendix01}
+
 %********************************************************************
 % Other Stuff in the Back
 % ********************************************************************´
