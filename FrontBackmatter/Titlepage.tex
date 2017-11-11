@@ -1,0 +1,82 @@
+%*******************************************************
+% Titlepage
+%*******************************************************
+%%%
+%%% title page (german)
+%%%
+\thispagestyle{empty}
+\pdfbookmark[0]{Titelblatt}{title}
+\begin{titlepage}
+
+  % If printed on two sides, center the title page
+  \condTWOSIDE{\changetext{}{19mm}{}{19mm}{}}
+
+  \vspace{1cm}
+  \begin{center}
+    \hfill\includegraphics[width=4.5cm]{gfx/logo_fh-kufstein} \\ 
+  \end{center}
+  \vfill
+
+  \begin{center}
+    \LARGE \textbf{\myTitle}
+  \end{center} 
+  \vfill
+
+  \begin{center}
+    %\condMASTER{\Large Masterarbeit}{\Large Bachelorarbeit}
+    \ifthenelse{\boolean{@master}}{\Large Masterarbeit}{\Large Bachelorarbeit}
+  \end{center}
+  \vfill
+
+  \begin{center}
+    \Large{zur Erlangung des akademischen Grades}
+  \end{center}
+  \vfill
+
+  \begin{center}
+    \LARGE \textbf{\myDegree}
+  \end{center}
+  \vfill
+
+  \begin{center}
+    \large Eingereicht bei:\\ 
+    \vspace{0.1cm}
+    \large \textbf{\myUni}\\
+    \vspace{0.1cm}
+    \large \textbf{\myFaculty}
+  \end{center}
+  \vfill
+
+  \begin{center}
+    \large Verfasser/in:\\
+    \vspace{0.1cm}
+    \large \textbf{\myName}\\
+    \vspace{0.1cm}
+    \large \textbf{\myId}\\
+  \end{center}
+  \vfill
+
+  \begin{center}
+    \begin{tabular}{lll}
+      Erstgutachter  & : & \myProf \\
+      \condMASTER{Zweitgutachter & : & \myOtherProf}
+    \end{tabular}
+  \end{center} 
+  \vfill
+
+  \begin{center}
+    \large Abgabedatum: \\
+    \vspace{0.1cm}
+    \large \textbf{\myTime}
+  \end{center} 
+%  \vfill
+%  \vfill
+
+%  \begin{center}
+%    \large \selectedthesisnumber \\
+%  \end{center}
+
+  % If printed on two sides, center the title page
+  \condTWOSIDE{\changetext{}{-19mm}{}{-19mm}{}}
+
+\end{titlepage}
