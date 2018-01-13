@@ -1,7 +1,11 @@
 \chapter{Das Actor Model}
-Das von \cite{hewitt1973session} erstmals vorgestellte theoretische Software Model, ermöglicht das Entwerfen und Erstellen von parallelisierten Softwaresystemen. Es unterstützt Softwareentwickler bei der effizienten Nutzung von Mehrkernprozessoren sowie bei Handhabung der  Komplexität mit welcher die Nebenläufige Programmierung einhergeht.   //
+Das von \cite{hewitt1973session} erstmals vorgestellte theoretische Software Model, ermöglicht das Entwerfen und Erstellen von parallelisierten Softwaresystemen. Es unterstützt Softwareentwickler bei der effizienten Nutzung von Mehrkernprozessoren sowie bei Handhabung der  Komplexität mit welcher die Nebenläufige Programmierung einhergeht.   
+\\
 Neben geläufigen Modellen wie beispielsweise die Funktionale Programmierung oder die Objektorientierte Programmierung bietet das Actor Model eine Vorgehensweise Software zu schreiben. Dieses Kapitel wird die theoretischen Grundlagen des Actor Models aufzeigen und sich in drei Teile unterteilen. Zuerst wird das Actor Model in seiner Grundform wie von \cite{hewitt1973session} und \cite{Agha1985ActorsSystems} definiert gezeigt, anschließend werden Architekturkonzepte auf Basis des Actor Model erarbeitet und abschließend erfolgt eine Evaluierung des Actor Models.
 
 \section{Actor Model Definition}
-Ein Actor ist laut \cite{hewitt1973session} alles was in einem Skript benötigt wird um einen Programmablauf zu ermöglichen. Hierzu zählen Datenstrukturen, auch primitive Datentypen, logische Verknüpfungen und auch Benutzereingaben oder Berechnungsergebnisse.   f
-Ein Actor ist laut \cite{hewitt1973session}
+Ein Actor ist laut \cite{hewitt1973session} alles was in einem Software Skript benötigt wird um einen Programmablauf zu ermöglichen. Hierzu zählen Datenstrukturen, auch primitive Datentypen, logische Verknüpfungen und auch Benutzereingaben oder Berechnungsergebnisse. 
+\\
+All diese Bestandteile haben ein bestimmtes Verhalten und reagieren unterschiedlich auf äußere Einwirkungen.
+\cite{hewitt1973session} zeigt das Formal alle Bestandsteile des Codes miteinander interagieren, in dem sie sich Nachrichten untereinander austauschen.  Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalten dieses Wertes. Durch die Interaktion durch Nachrichten und das beinhalten des Verhaltens zeichnet sich laut \cite{hewitt1973session} ein Actor aus.
+
