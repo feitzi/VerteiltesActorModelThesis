@@ -65,4 +65,7 @@
     "editor.wordWrap": "on",
     "editor.wordWrapColumn": 80,
     "editor.wrappingIndent": "same",
+    "cSpell.words": [
+      "Actoren"
+    ],
 }
