@@ -5,7 +5,17 @@ Neben geläufigen Modellen wie beispielsweise die Funktionale Programmierung ode
 
 \section{Actor Model Definition}
 Ein Actor ist laut \cite{hewitt1973session} alles was in einem Software Skript benötigt wird um einen Programmablauf zu ermöglichen. Hierzu zählen Datenstrukturen, auch primitive Datentypen, logische Verknüpfungen und auch Benutzereingaben oder Berechnungsergebnisse. 
-\\
 All diese Bestandteile haben ein bestimmtes Verhalten und reagieren unterschiedlich auf äußere Einwirkungen.
-\cite{hewitt1973session} zeigt das Formal alle Bestandsteile des Codes miteinander interagieren, in dem sie sich Nachrichten untereinander austauschen.  Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalten dieses Wertes. Durch die Interaktion durch Nachrichten und das beinhalten des Verhaltens zeichnet ein Actor aus. \citep{hewitt1973session}
+\cite{hewitt1973session} zeigt das Formal alle Bestandsteile des Codes miteinander interagieren, in dem sie sich Nachrichten untereinander austauschen.  Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalten dieses Wertes. Die Interaktion durch Nachrichten mit anderen Actors sowie das Kapseln des eigenen Verhalten zeichnet ein Actor aus.
 
+\subsection{Actor}
+Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann und anhand dieser Nachrichten auf folgende Unterschiedliche Arten reagieren kann:
+\begin{itemize}
+    \item Eine oder mehrere Nachrichten an andere Actoren senden.
+    \item Einen neuen Actor erstellen.
+    \item Das eigene Verhalten (siehe \ref{actorBehaviour}) für zukünftige Nachrichten ändern.
+\end{itemize}
+
+\subsection{Actor Verhalten}
+\label{actorBehaviour}
+\subsection{}
