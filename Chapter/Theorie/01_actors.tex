@@ -1,23 +1,39 @@
 \chapter{Das Actor Model}
 Das von \cite{hewitt1973session} erstmals vorgestellte theoretische Software Model, ermöglicht das Entwerfen und Erstellen von parallelisierten Softwaresystemen. Es unterstützt Softwareentwickler bei der effizienten Nutzung von Mehrkernprozessoren sowie bei Handhabung der  Komplexität mit welcher die Nebenläufige Programmierung einhergeht.   
+% evt. ausbau um probleme mit nebeläufiger programmierung
 \\
 Neben geläufigen Modellen wie beispielsweise die Funktionale Programmierung oder die Objektorientierte Programmierung bietet das Actor Model eine Vorgehensweise Software zu schreiben. Dieses Kapitel wird die theoretischen Grundlagen des Actor Models aufzeigen und sich in drei Teile unterteilen. Zuerst wird das Actor Model in seiner Grundform wie von \cite{hewitt1973session} und \cite{Agha1985ActorsSystems} definiert gezeigt, anschließend werden Architekturkonzepte auf Basis des Actor Model erarbeitet und abschließend erfolgt eine Evaluierung des Actor Models.
 
 \section{Actor Model Definition}
-Ein Actor ist laut \cite{hewitt1973session} alles was in einem Software Skript benötigt wird um einen Programmablauf zu ermöglichen. Hierzu zählen Datenstrukturen, auch primitive Datentypen, logische Verknüpfungen und auch Benutzereingaben oder Berechnungsergebnisse.
-All diese Bestandteile haben ein bestimmtes Verhalten und reagieren unterschiedlich auf äußere Einwirkungen.
-\cite{hewitt1973session} zeigt das Formal alle Bestandsteile des Codes miteinander interagieren, in dem sie sich Nachrichten untereinander austauschen.  Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalten dieses Wertes. Die Interaktion durch Nachrichten mit anderen Actors sowie das Kapseln des eigenen Verhalten zeichnet ein Actor aus.
+In der ersten Definition des Actor Models von \citep{hewitt1973session} wird ein Actor beschrieben, als kleinster Bestandteil einer Software. Jeder bestandteil eines Software Skriptes, welches benötigt wird um einen Programmablauf zu ermögliche, ist als Actor zu betrachten. Hierzu zählen Datenstrukturen, auch primitive Datentypen, logische Verknüpfungen und auch Benutzereingaben oder Berechnungsergebnisse. All diese Bestandteile haben ein bestimmtes Verhalten und reagieren unterschiedlich auf äußere Einwirkungen. Alle Bestandsteile des Codes interagieren untereinander, in dem sie sich gegenseitig Nachrichten senden und auf diese entsprechend reagieren.\\
+Das Actor-Modell kann als mathematisches Modell für parallele Datenverarbeitung, welches Akteure als universelle Grundlagen der parallelen Verarbeitung verwendet, gesehen werden. Im Gegensatz zu anderen Modellen wurde das Actor Modell von der Physik unserer Umwelt inspiriert. \footnote{Auch in der realen Welt werden Informationen nur über Nachrichten untereinander ausgetauscht. Jede Interaktion zur Umwelt erfolgt, in dem man einen Impuls an ein anderes Objekt gibt. Wenn wir beispielsweise den Namen einer Personen wissen wollen, können wir diesen nicht einfach ablesen, vielmehr müssen wir die Person nach dessen Namen fragen. Ist die Person gewillt dem Fragenden diese Auskunft zu erteilen, antwortet sie mit einer anderen Antwortnachricht darauf. In welcher Form diese Nachrichten übermittelt werden (Sprache, Brief, Gesten etc. ), ist nicht relevant.} \citep{Vernon2015ReactiveAkka}
+
+Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalten dieses Wertes. Die Interaktion durch Nachrichten mit anderen Actors sowie das Kapseln des eigenen Verhalten zeichnet ein Actor aus.
 % todo 
 % nicht alles ist ein actor in praktischen umgebungen. das ist nur in der theorie so!!!!
 
 \subsection{Actor}
-Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann. Für jede empfange Nachricht kann ein Actor auf eine oder mehrere der folgenden Arten reagieren \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka}:
+Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann. Nachrichten sind die einzige Möglichkeit wie Actors untereinander, sowie mit externen Komponenten, kommunizieren können \citep{Agha1985ConcurrentParallelism}. Nachrichten werden an einen Actor gesendet und von diesem sequentiell nach dem {FIFO-Prinzip} abgearbeitet. 
+\graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} 
+Pro Actor kann jedoch nur exakt eine Nachricht gleichzeitig behandelt werden. Dieses Vorgehen gewährleistet, dass während der Abarbeitung einer Nachricht keine anderen Veränderungen innerhalb des Actors erfolgen.
+
+\subsubsection{Tasks}
+Die Aufgabe eines jeden Programmes ist es Tasks abzuarbeiten. In einem Softwareprogramm liegen somit eine endliche Anzahl an abzuarbeitenden Tasks vor. In \cite{Agha1985ActorsSystems} wird im Kontext eines Actor Systems ein Task wie folgt representiert:
+\begin{description}
+    \item[Name] Jede abzuarbeitende Aufgabe bekommt eine Eindeutige Adresse, welche sie von anderen Aufgaben unterscheidbar macht.
+    \item[Ziel]
+    \item[Aufgaben Inhalt]
+\end{description}
+
+
+Für jede empfange Nachricht kann ein Actor auf eine oder mehrere der folgenden Arten reagieren \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka}:
 \begin{itemize}
     \item Eine oder mehrere Nachrichten an andere Actoren senden.
     \item Einen neuen Actor erstellen.
     \item Das eigene Verhalten (siehe \ref{actorBehaviour}) für zukünftige Nachrichten ändern.
-    \item Den eigenen, privaten Zustand verändern
+    \item Den eigenen, privaten Zustand verändern.
 \end{itemize}
+
 Es können auch mehrere dieser Aktionen pro empfangener Nachricht sequentiell durchgeführt werden. \\
 Das erstellen von neuen Actors während der Behandlung einer empfangen Nachricht ermöglicht es, komplexe oder Zeitintensive Rechenaufgaben auf andere Actors auszulagern. Da die Abhandlung einer Nachricht, wie bereits erwähnt, pro Actor sequentiell erfolgt und innerhalb eines Actors keine direkte parallelität erlaubt ist
 
@@ -27,3 +43,6 @@ Das erstellen von neuen Actors während der Behandlung einer empfangen Nachricht
 \label{actorBehaviour}
 Eine fundamentale Regel für einen Actor ist es das Verhalten sequentiell durchzuführen.
 \subsection{}
+
+%todo
+%Agha zitate kontrollieren
