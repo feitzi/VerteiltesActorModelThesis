@@ -6,21 +6,19 @@ Neben geläufigen Modellen wie beispielsweise die Funktionale Programmierung ode
 
 \section{Actor Model Definition}
 In der ersten Definition des Actor Models von \citep{hewitt1973session} wird ein Actor beschrieben, als kleinster Bestandteil einer Software. Jeder bestandteil eines Software Skriptes, welches benötigt wird um einen Programmablauf zu ermögliche, ist als Actor zu betrachten. Hierzu zählen Datenstrukturen, auch primitive Datentypen, logische Verknüpfungen und auch Benutzereingaben oder Berechnungsergebnisse. All diese Bestandteile haben ein bestimmtes Verhalten und reagieren unterschiedlich auf äußere Einwirkungen. Alle Bestandsteile des Codes interagieren untereinander, in dem sie sich gegenseitig Nachrichten senden und auf diese entsprechend reagieren.\\
-Das Actor-Modell kann als mathematisches Modell für parallele Datenverarbeitung, welches Akteure als universelle Grundlagen der parallelen Verarbeitung verwendet, gesehen werden. Im Gegensatz zu anderen Modellen wurde das Actor Modell von der Physik unserer Umwelt inspiriert. \footnote{Auch in der realen Welt werden Informationen nur über Nachrichten untereinander ausgetauscht. Jede Interaktion zur Umwelt erfolgt, in dem man einen Impuls an ein anderes Objekt gibt. Wenn wir beispielsweise den Namen einer Personen wissen wollen, können wir diesen nicht einfach ablesen, vielmehr müssen wir die Person nach dessen Namen fragen. Ist die Person gewillt dem Fragenden diese Auskunft zu erteilen, antwortet sie mit einer anderen Antwortnachricht darauf. In welcher Form diese Nachrichten übermittelt werden (Sprache, Brief, Gesten etc. ), ist nicht relevant.} \citep{Vernon2015ReactiveAkka}
+Das Actor-Modell kann als mathematisches Modell für parallele Datenverarbeitung, welches Akteure als universelle Grundlagen der parallelen Verarbeitung verwendet, gesehen werden. Im Gegensatz zu anderen Modellen wurde das Actor Modell von der Physik unserer Umwelt inspiriert. \footnote{Auch in der realen Welt werden Informationen nur über Nachrichten untereinander ausgetauscht. Jede Interaktion zur Umwelt erfolgt, in dem man einen Impuls an ein anderes Objekt gibt. Wenn wir beispielsweise den Namen einer Personen wissen wollen, können wir diesen nicht einfach ablesen, vielmehr müssen wir die Person nach deren Namen fragen. Ist die Person gewillt dem Fragenden diese Auskunft zu erteilen, antwortet sie mit einer anderen Antwortnachricht darauf. In welcher Form diese Nachrichten übermittelt werden (Sprache, Brief, Gesten etc. ), ist nicht relevant.} \citep{Vernon2015ReactiveAkka}
 
 Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalten dieses Wertes. Die Interaktion durch Nachrichten mit anderen Actors sowie das Kapseln des eigenen Verhalten zeichnet ein Actor aus.
 % todo 
 % nicht alles ist ein actor in praktischen umgebungen. das ist nur in der theorie so!!!!
 
 \subsection{Actor}
-Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann. Nachrichten sind die einzige Möglichkeit wie Actors untereinander, sowie mit externen Komponenten, kommunizieren können \citep{Agha1985ConcurrentParallelism}. Nachrichten werden an einen Actor gesendet und von diesem sequentiell nach dem {FIFO-Prinzip} abgearbeitet. 
-\graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} 
-Pro Actor kann jedoch nur exakt eine Nachricht gleichzeitig behandelt werden. Dieses Vorgehen gewährleistet, dass während der Abarbeitung einer Nachricht keine anderen Veränderungen innerhalb des Actors erfolgen.
+Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann. Nachrichten sind die einzige Möglichkeit wie Actors untereinander, sowie mit externen Komponenten, kommunizieren können \citep{Agha1985ConcurrentParallelism}. Nachrichten werden an einen Actor gesendet und von diesem abgearbeitet.
 
 \subsubsection{Arbeitsaufgaben und Nachrichten}
 In \cite{Agha1985ActorsSystems} wird beschrieben das in einem Actor System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträge vorliegen. Diese Aufgaben werden in einem Actor System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor Systems wie folgt repräsentiert:
 \begin{description}
-    \item[Id] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
+    \item[Identifikation] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
     \item[Ziel Adresse] Adresse an wenn der Auftrag gerichtet ist.
     \item[Aufgaben Inhalt] Beinhaltet alle benötigten Informationen um diese Aufgabe abzuarbeiten
 \end{description} 
@@ -31,23 +29,25 @@ Um eine neue Aufgabe zu erstellen muss somit die Adresse bekannt sein an welche 
     \item[Neuer Actor] Während der abarbeitung der aktuellen Aufgabe wird ein neuer Actor erstellt. Durch das erstellen des Actors ist auch dessen Adresse bekannt.
 \end{description}
 
-In aktuellen Interpretertionen eines Actors, wie beispielsweise \cite{Vernon2015ReactiveAkka} oder \cite{Brown2016ReactiveAkka.net.} wird jedoch nicht mehr von Aufgaben sondern nurmehr von Nachrichten gesprochen. Diese enthalten jedoch ebenfalls immer eine Adresse sowie einen Nachrichteninhalt. Die Identifikation der Nachricht wird in modernen Systemen jedoch nicht mehr verwendet. \\
-Empfängt ein Actor eine Nachricht, so kann dieser auf unterschiedliche Arten reagieren. In \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka} werden die Unterschiedlichen Arten wie folgt beschrieben:
-\begin{itemize}
-    \item Eine oder mehrere Nachrichten an andere Actoren senden.
-    \item Einen neuen Actor erstellen.
-    \item Das eigene Verhalten (siehe \ref{actorBehaviour}) für zukünftige Nachrichten ändern.
-    \item Den eigenen, privaten Zustand verändern.
-\end{itemize}
-Es können auch mehrere Aktionen pro empfangener Nachricht sequentiell durchgeführt werden. \\
-Das erstellen von neuen Actors während der Behandlung einer empfangen Nachricht ermöglicht es, komplexe oder Zeitintensive Rechenaufgaben auf andere Actors auszulagern. Da die Abhandlung einer Nachricht, wie bereits erwähnt, pro Actor sequentiell erfolgt und innerhalb eines Actors keine direkte parallelität erlaubt ist
+In aktuellen Interpreterionen eines Actors, wie beispielsweise \cite{Vernon2015ReactiveAkka} oder \cite{Brown2016ReactiveAkka.net.} wird jedoch nicht mehr von Aufgaben sondern nurmehr von Nachrichten gesprochen. Diese enthalten jedoch ebenfalls immer eine Adresse sowie einen Nachrichteninhalt. Die Identifikation der Nachricht wird in modernen Systemen jedoch nicht mehr verwendet. \\
 
-
-
-\subsection{Actor Verhalten}
+\subsubsection{Actor Verhalten}
 \label{actorBehaviour}
-Eine fundamentale Regel für einen Actor ist es das Verhalten sequentiell durchzuführen.
-\subsection{}
+Empfängt ein Actor eine Nachricht welche für ihn bestimmt ist, so kann dieser auf mehrere unterschiedliche Arten reagieren. In \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka} werden folgende möglichkeiten eines Actors beschrieben:
+\begin{description}
+    \item[Neue Nachricht] Erfordert die bearbeitung der empfangen Nachricht neue Berechnungen, kann eine, oder auch mehrere neue Nachrichten erstellt werden. Diese Nachrichten können dann an andere Actors, gesendet werden. Auch Resultate welche durch die bearbeitung der Nachricht erfolgen können so bekannt gegeben werden.
+    \item[Actor erstellen] Sind teile der aktuellen Nachricht nicht vom bearbeitenden Actor bearbeitbar, kann von diesem ein neuer Actor erstellt werden welcher für diese Aufgabe besser geignet ist. Diesem neuen Actor wird dann eine Nachricht mit der Teilaufgabe zugesendet.
+    \item[Verhalten ändern] Das Resultat einer bearbeitung kann sein das die nächsten Nachrichten an diesen Actor in einer anderen Art und weiße erfolgen muss. Daher kann der Actor sich für die nächste Nachricht ein neues verhalten bestimmen.
+    \item[Zustand verändern] Während der abarbeitung einer Nachricht kann der Actor auch seinen eigenen privaten Zustand verändern.
+\end{description}
+% Das erstellen von neuen Actors während der Behandlung einer empfangen Nachricht ermöglicht es, komplexe oder Zeitintensive Rechenaufgaben auf andere Actors auszulagern. Da die Abhandlung einer Nachricht, wie bereits erwähnt, pro Actor sequentiell erfolgt und innerhalb eines Actors keine direkte parallelität erlaubt ist
+
+\subsubsection{Nachrichten Eingang}
+Jeder Actor kann jederzeit an jeden anderen Actor in einem System eine Nachricht zukommen lassen. Da ein einzelner Actor jedoch zur gleichen Zeit nur exakt eine Nachrichten bearbeitend kann muss gew sein das wartende Nachrichten nicht verloren gehen. Nachrichten an ein Actor werden nach dem {FIFO-Prinzip} abgearbeitet. 
+\graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} Um dies zu gewährleisten, benötigt ein Actor eine Nachrichten Warteschlange.\citep{Agha1985ActorsSystems}. Eine abgeschlossene Nachricht kann abschließend verworfen werden. 
+
+\subsubsection{Parallelität}
+Obwohl ein Actor ankommende Nachrichten nur sequentiell bearbeitend kann, ist das Actor Model Ideal für parallele Aufgaben.\citep{Agha1985ActorsSystems} Durch das weiterreichen von Subaktionen an andere Actoren ist jedoch höchste Parallelität gegeben. In einem laufenden Actor System sind meist eine vielzahl an einzelnen Actors parallel am Nachrichten abarbeiten. Dadurch kann ein Mehrkernprozessor optimal genützt werden.
 
 %todo
 %Agha zitate kontrollieren
