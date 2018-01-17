@@ -17,24 +17,29 @@ Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann. Nachricht
 \graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} 
 Pro Actor kann jedoch nur exakt eine Nachricht gleichzeitig behandelt werden. Dieses Vorgehen gewährleistet, dass während der Abarbeitung einer Nachricht keine anderen Veränderungen innerhalb des Actors erfolgen.
 
-\subsubsection{Tasks}
-Die Aufgabe eines jeden Programmes ist es Tasks abzuarbeiten. In einem Softwareprogramm liegen somit eine endliche Anzahl an abzuarbeitenden Tasks vor. In \cite{Agha1985ActorsSystems} wird im Kontext eines Actor Systems ein Task wie folgt representiert:
+\subsubsection{Arbeitsaufgaben und Nachrichten}
+In \cite{Agha1985ActorsSystems} wird beschrieben das in einem Actor System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträge vorliegen. Diese Aufgaben werden in einem Actor System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor Systems wie folgt repräsentiert:
 \begin{description}
-    \item[Name] Jede abzuarbeitende Aufgabe bekommt eine Eindeutige Adresse, welche sie von anderen Aufgaben unterscheidbar macht.
-    \item[Ziel]
-    \item[Aufgaben Inhalt]
+    \item[Id] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
+    \item[Ziel Adresse] Adresse an wenn der Auftrag gerichtet ist.
+    \item[Aufgaben Inhalt] Beinhaltet alle benötigten Informationen um diese Aufgabe abzuarbeiten
+\end{description} 
+Um eine neue Aufgabe zu erstellen muss somit die Adresse bekannt sein an welche diese gerichtet wird. Hier wird von \cite{Agha1985ActorsSystems} drei mögliche Wege aufzeigt wie ein Actor eine solche Adresse während der Abarbeitung einer anderen Aufgabe erhalten kann.
+\begin{description}
+    \item[Bereits bekannt] Die Adresse eines anderen Actors ist durch die bearbeitung früherer Aufgaben bereits bekannt.
+    \item[In Ihnalt enthalten] Im Inhalt der gerade bearbeitenden Aufgabe ist eine andere Adresse enthalten.
+    \item[Neuer Actor] Während der abarbeitung der aktuellen Aufgabe wird ein neuer Actor erstellt. Durch das erstellen des Actors ist auch dessen Adresse bekannt.
 \end{description}
 
-
-Für jede empfange Nachricht kann ein Actor auf eine oder mehrere der folgenden Arten reagieren \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka}:
+In aktuellen Interpretertionen eines Actors, wie beispielsweise \cite{Vernon2015ReactiveAkka} oder \cite{Brown2016ReactiveAkka.net.} wird jedoch nicht mehr von Aufgaben sondern nurmehr von Nachrichten gesprochen. Diese enthalten jedoch ebenfalls immer eine Adresse sowie einen Nachrichteninhalt. Die Identifikation der Nachricht wird in modernen Systemen jedoch nicht mehr verwendet. \\
+Empfängt ein Actor eine Nachricht, so kann dieser auf unterschiedliche Arten reagieren. In \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka} werden die Unterschiedlichen Arten wie folgt beschrieben:
 \begin{itemize}
     \item Eine oder mehrere Nachrichten an andere Actoren senden.
     \item Einen neuen Actor erstellen.
     \item Das eigene Verhalten (siehe \ref{actorBehaviour}) für zukünftige Nachrichten ändern.
     \item Den eigenen, privaten Zustand verändern.
 \end{itemize}
-
-Es können auch mehrere dieser Aktionen pro empfangener Nachricht sequentiell durchgeführt werden. \\
+Es können auch mehrere Aktionen pro empfangener Nachricht sequentiell durchgeführt werden. \\
 Das erstellen von neuen Actors während der Behandlung einer empfangen Nachricht ermöglicht es, komplexe oder Zeitintensive Rechenaufgaben auf andere Actors auszulagern. Da die Abhandlung einer Nachricht, wie bereits erwähnt, pro Actor sequentiell erfolgt und innerhalb eines Actors keine direkte parallelität erlaubt ist
 
 
