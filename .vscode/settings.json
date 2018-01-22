@@ -68,4 +68,14 @@
     "cSpell.words": [
       "Actoren"
     ],
+    "files.exclude": {
+      "**/*.aux": true,
+      "**/*.toc": true,
+      "**/*.lot": true,
+      "**/*.lol": true,
+      "**/*.lof": true,
+      "**/*.blg": true,
+      "**/*.bbl": true,
+      "**/*.out": true,
+    },
 }
