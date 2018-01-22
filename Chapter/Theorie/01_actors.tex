@@ -35,7 +35,7 @@ In aktuellen Interpreterionen eines Actors, wie beispielsweise \cite{Vernon2015R
 \label{actorBehaviour}
 Empfängt ein Actor eine Nachricht welche für ihn bestimmt ist, so kann dieser auf mehrere unterschiedliche Arten reagieren. In \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka} werden folgende möglichkeiten eines Actors beschrieben:
 \begin{description}
-    \item[Neue Nachricht] Erfordert die bearbeitung der empfangen Nachricht neue Berechnungen, kann eine, oder auch mehrere neue Nachrichten erstellt werden. Diese Nachrichten können dann an andere Actors, gesendet werden. Auch Resultate welche durch die bearbeitung der Nachricht erfolgen können so bekannt gegeben werden.
+    \item[Neue Nachricht erstellen] Erfordert die bearbeitung der empfangen Nachricht neue Berechnungen, kann eine, oder auch mehrere neue Nachrichten erstellt werden. Diese Nachrichten können dann an andere Actors, gesendet werden. Auch Resultate welche durch die bearbeitung der Nachricht erfolgen können so bekannt gegeben werden.
     \item[Actor erstellen] Sind teile der aktuellen Nachricht nicht vom bearbeitenden Actor bearbeitbar, kann von diesem ein neuer Actor erstellt werden welcher für diese Aufgabe besser geignet ist. Diesem neuen Actor wird dann eine Nachricht mit der Teilaufgabe zugesendet.
     \item[Verhalten ändern] Das Resultat einer bearbeitung kann sein das die nächsten Nachrichten an diesen Actor in einer anderen Art und weiße erfolgen muss. Daher kann der Actor sich für die nächste Nachricht ein neues verhalten bestimmen.
     \item[Zustand verändern] Während der abarbeitung einer Nachricht kann der Actor auch seinen eigenen privaten Zustand verändern.
@@ -49,5 +49,14 @@ Jeder Actor kann jederzeit an jeden anderen Actor in einem System eine Nachricht
 \subsubsection{Parallelität}
 Obwohl ein Actor ankommende Nachrichten nur sequentiell bearbeitend kann, ist das Actor Model Ideal für parallele Aufgaben.\citep{Agha1985ActorsSystems} Durch das weiterreichen von Subaktionen an andere Actoren ist jedoch höchste Parallelität gegeben. In einem laufenden Actor System sind meist eine vielzahl an einzelnen Actors parallel am Nachrichten abarbeiten. Dadurch kann ein Mehrkernprozessor optimal genützt werden.
 
+\subsection{Actor System}
+
+\section{Reactive Messaging}
+
+\section{Actor Grafik Legende}
+
+\section{Actor basierte Architekturmuster}
+
+\section{Evaluierung}
 %todo
 %Agha zitate kontrollieren
