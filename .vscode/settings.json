@@ -67,7 +67,8 @@
     "editor.wrappingIndent": "same",
     "cSpell.words": [
       "Actoren",
-      "allokieren"
+      "allokieren",
+      "bearbeitbar"
     ],
     "files.exclude": {
       "**/*.aux": true,
