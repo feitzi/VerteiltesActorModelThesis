@@ -15,19 +15,20 @@ Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalte
 Ein Actor ist eine logische, atomare Einheit welche Nachrichten empfangen kann. Nachrichten sind die einzige Möglichkeit wie Actors untereinander, sowie mit externen Komponenten, kommunizieren können \citep{Agha1985ConcurrentParallelism}. Nachrichten werden an einen Actor gesendet und von diesem abgearbeitet. Dabei muss ein Actor folgende Bedingungen erfüllen.
 
 \begin{description}
-    \item[Kein Zugriff von außen]\label{actor:requirements:shareNothing}
+    \item[1. Kein Zugriff von außen]\label{actor:requirements:shareNothing}
     Die interne Repräsentation eines Actors ist nur für den Actor selbst bestimmt. Es darf keine Möglichkeit geben Werte eines Actors von anderen Actoren oder sonstigen Codestellen zu lesen oder zu manipulieren. Änderungen und lesezugriffe sind ausschließlich über Nachrichten möglich (siehe \ref{actors:messages}). 
-    \item[Asynchrone Kommunikation]\label{actor:requirements:AsynchronCommunication}
+    \item[2. Asynchrone Kommunikation]\label{actor:requirements:AsynchronCommunication}
     Kommunikation mit anderen Actoren erfolgt Asynchrone. Wird eine Nachricht an einen anderen Actor gesendet, wird nicht auf eine Antwort von diesem gewartet. Somit ist eine zügige Abarbeitung einer Nachricht möglich.
-    \item[Sequentielle Abarbeitung von Nachrichten]
+    \item[3. Sequentielle Abarbeitung von Nachrichten]
     Jeder Actor kann gleichzeitig exakt eine Nachricht zu gleichen Zeit abarbeiten. Alle anderen Nachrichten müssen in einer Warteschlange auf die Abarbeitung warten (siehe \ref{actor:Mailbox}).
-    \item[Frei von Sperrmechanismen]
-    Durch die Bedingungen 
-    \item[Kleinst mögliches Aufgabengebiet]
+    \item[4. Frei von Sperrmechanismen]
+    Durch die Bedingungen {1.} und  {3.} ist es ausgeschlossen, dass ein Codeteil innerhalb eines Actors von ausßen, order gar von einem anderen Thread, ausgeführt wird. Daher sind Sperrmechanismen, wie unter \ref{actor:parallelism} beschrieben, nicht nötig.
+    \item[5. Kleinst mögliches Aufgabengebiet]
+    Ein einzelner Actor soll ein möglichst kleines Aufgabengebiet behandeln und andere Aufgaben an andere Actoren abgeben.  
 \end{description}
 
 \subsubsection{Arbeitsaufgaben und Nachrichten}\label{actors:messages}
-In \cite{Agha1985ActorsSystems} wird beschrieben das in einem Actor System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträge vorliegen. Diese Aufgaben werden in einem Actor System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor Systems wie folgt repräsentiert:
+In \cite{Agha1985ActorsSystems} wird beschrieben, dass in einem Actor System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträge vorliegen. Diese Aufgaben werden in einem Actor System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor Systems wie folgt repräsentiert:
 \begin{description}
     \item[Identifikation] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
     \item[Ziel Adresse] Adresse an wenn der Auftrag gerichtet ist.
@@ -55,7 +56,7 @@ Empfängt ein Actor eine Nachricht welche für ihn bestimmt ist, so kann dieser 
 Jeder Actor kann jederzeit an jeden anderen Actor in einem System eine Nachricht zukommen lassen. Da ein einzelner Actor jedoch zur gleichen Zeit nur exakt eine Nachrichten bearbeitend kann muss gew sein das wartende Nachrichten nicht verloren gehen. Nachrichten an ein Actor werden nach dem {FIFO-Prinzip} abgearbeitet. 
 \graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} Um dies zu gewährleisten, benötigt ein Actor eine Nachrichten Warteschlange.\citep{Agha1985ActorsSystems}. Eine abgeschlossene Nachricht kann abschließend verworfen werden. 
 
-\subsubsection{Parallelität}
+\subsubsection{Parallelität}\label{actor:parallelism}
 Obwohl ein Actor ankommende Nachrichten nur sequentiell bearbeitend kann, ist das Actor Model Ideal für parallele Aufgaben.\citep{hewitt1973session} Durch das weiterreichen von Subaktionen an andere Actoren ist jedoch höchste Parallelität gegeben. In einem laufenden Actor System sind meist eine vielzahl an einzelnen Actors parallel am Nachrichten abarbeiten. Dadurch kann ein Mehrkernprozessor optimal genützt werden. \citep{Agha1985ActorsSystems} \\
 Durch die gleichzeitige Bearbeitung von maximal einer Nachricht pro Actor sowie die Unterbindung von Lesezugriffen auf den eigenen, internen State durch andere Actors (siehe \ref{actor:requirements:shareNothing}), benötigt es keine Sperrmechanismen innerhalb eines Actors. Dadurch wird erstens der Sourcecode übersichtlicher und zweitens entfällt das aufwändige allokieren von Sperreressourcen.\citep{Vernon2015ReactiveAkka}
 Wird nun bedacht das ein Actor grundsätzlich nur jeweils für eine kleine Aufgabe optimiert wird, und andere Aufgaben an andere Actors abgibt, wird mit dem entfallen von Sperrmechanismen die Abarbeitungszeit für eine einzelne Nachricht pro Actor auf ein absolutes minimum gebracht. \cite{Vernon2015ReactiveAkka} \\
