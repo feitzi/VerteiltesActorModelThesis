@@ -12,14 +12,21 @@ Weiters kapseln sie zusammengehörende Informationen und beinhalten das Verhalte
 % nicht alles ist ein actor in praktischen umgebungen. das ist nur in der theorie so!!!!
 
 \subsection{Actor}
-Ein Actor ist eine logische Einheit welche Nachrichten empfangen kann. Nachrichten sind die einzige Möglichkeit wie Actors untereinander, sowie mit externen Komponenten, kommunizieren können \citep{Agha1985ConcurrentParallelism}. Nachrichten werden an einen Actor gesendet und von diesem abgearbeitet. 
+Ein Actor ist eine logische, atomare Einheit welche Nachrichten empfangen kann. Nachrichten sind die einzige Möglichkeit wie Actors untereinander, sowie mit externen Komponenten, kommunizieren können \citep{Agha1985ConcurrentParallelism}. Nachrichten werden an einen Actor gesendet und von diesem abgearbeitet. Dabei muss ein Actor folgende Bedingungen erfüllen.
 
 \begin{description}
-    \item[Kein Zugriff von außen]
-    \item[]
+    \item[Kein Zugriff von außen]\label{actor:requirements:shareNothing}
+    Die interne Repräsentation eines Actors ist nur für den Actor selbst bestimmt. Es darf keine Möglichkeit geben Werte eines Actors von anderen Actoren oder sonstigen Codestellen zu lesen oder zu manipulieren. Änderungen und lesezugriffe sind ausschließlich über Nachrichten möglich (siehe \ref{actors:messages}). 
+    \item[Asynchrone Kommunikation]\label{actor:requirements:AsynchronCommunication}
+    Kommunikation mit anderen Actoren erfolgt Asynchrone. Wird eine Nachricht an einen anderen Actor gesendet, wird nicht auf eine Antwort von diesem gewartet. Somit ist eine zügige Abarbeitung einer Nachricht möglich.
+    \item[Sequentielle Abarbeitung von Nachrichten]
+    Jeder Actor kann gleichzeitig exakt eine Nachricht zu gleichen Zeit abarbeiten. Alle anderen Nachrichten müssen in einer Warteschlange auf die Abarbeitung warten (siehe \ref{actor:Mailbox}).
+    \item[Frei von Sperrmechanismen]
+    Durch die Bedingungen 
+    \item[Kleinst mögliches Aufgabengebiet]
 \end{description}
 
-\subsubsection{Arbeitsaufgaben und Nachrichten}
+\subsubsection{Arbeitsaufgaben und Nachrichten}\label{actors:messages}
 In \cite{Agha1985ActorsSystems} wird beschrieben das in einem Actor System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträge vorliegen. Diese Aufgaben werden in einem Actor System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor Systems wie folgt repräsentiert:
 \begin{description}
     \item[Identifikation] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
@@ -44,19 +51,19 @@ Empfängt ein Actor eine Nachricht welche für ihn bestimmt ist, so kann dieser 
 \end{description}
 % Das erstellen von neuen Actors während der Behandlung einer empfangen Nachricht ermöglicht es, komplexe oder Zeitintensive Rechenaufgaben auf andere Actors auszulagern. Da die Abhandlung einer Nachricht, wie bereits erwähnt, pro Actor sequentiell erfolgt und innerhalb eines Actors keine direkte parallelität erlaubt ist
 
-\subsubsection{Nachrichten Eingang}
+\subsubsection{Nachrichten Eingang}\label{actor:Mailbox}
 Jeder Actor kann jederzeit an jeden anderen Actor in einem System eine Nachricht zukommen lassen. Da ein einzelner Actor jedoch zur gleichen Zeit nur exakt eine Nachrichten bearbeitend kann muss gew sein das wartende Nachrichten nicht verloren gehen. Nachrichten an ein Actor werden nach dem {FIFO-Prinzip} abgearbeitet. 
 \graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} Um dies zu gewährleisten, benötigt ein Actor eine Nachrichten Warteschlange.\citep{Agha1985ActorsSystems}. Eine abgeschlossene Nachricht kann abschließend verworfen werden. 
 
 \subsubsection{Parallelität}
 Obwohl ein Actor ankommende Nachrichten nur sequentiell bearbeitend kann, ist das Actor Model Ideal für parallele Aufgaben.\citep{hewitt1973session} Durch das weiterreichen von Subaktionen an andere Actoren ist jedoch höchste Parallelität gegeben. In einem laufenden Actor System sind meist eine vielzahl an einzelnen Actors parallel am Nachrichten abarbeiten. Dadurch kann ein Mehrkernprozessor optimal genützt werden. \citep{Agha1985ActorsSystems} \\
-Durch die gleichzeitige Bearbeitung von maximal einer Nachricht pro Actor sowie die Unterbindung von Lesezugriffen auf den eigenen, internen State durch andere Actors (siehe \ref{??}), benötigt es keine Sperrmechanismen innerhalb eines Actors. Dadurch wird erstens der Sourcecode übersichtlicher und zweitens entfällt das aufwändige allokieren von Sperreressourcen.\citep{Vernon2015ReactiveAkka}
+Durch die gleichzeitige Bearbeitung von maximal einer Nachricht pro Actor sowie die Unterbindung von Lesezugriffen auf den eigenen, internen State durch andere Actors (siehe \ref{actor:requirements:shareNothing}), benötigt es keine Sperrmechanismen innerhalb eines Actors. Dadurch wird erstens der Sourcecode übersichtlicher und zweitens entfällt das aufwändige allokieren von Sperreressourcen.\citep{Vernon2015ReactiveAkka}
 Wird nun bedacht das ein Actor grundsätzlich nur jeweils für eine kleine Aufgabe optimiert wird, und andere Aufgaben an andere Actors abgibt, wird mit dem entfallen von Sperrmechanismen die Abarbeitungszeit für eine einzelne Nachricht pro Actor auf ein absolutes minimum gebracht. \cite{Vernon2015ReactiveAkka} \\
 Zu beachten ist bei diesem Konzept das bei der Abarbeitung einer Nachricht nicht auf eine andere Nachricht gewartet werden soll. Dies führt zu neuen Architekturmustern welche Auszugsweise unter \ref{theory:actorArchitecture} beschrieben werden.
 
 \subsection{Actor System}
 Ein einzelner Actor alleine kann Aufgrund seiner begrenzten möglichkeiten nur relativ wenig bewirken. Der große Vorteil erwirkt das Actor Model erst durch die Macht von vielen einzelnen Actors welche miteinander interagieren. Eine solche Bildung von vielen Actors wird als Actor System bezeichnet.\citep{Agha1985ActorsSystems}
-\subsubsection{Kommunikation mit fremden Komponenten}
+\subsubsection{Kommunikation ausserhalb des Systems}
 Nachrichten werden prinzipiell nur unter Actors innerhalb eines Actor System ausgetauscht. In \cite{Agha1985ActorsSystems} wird erläutert, dass für die kommunikation mit Komponenten außerhalb eines Actor System sogenannte Rezeptionisten Actors benötigt werden.\\
 Ein solcher Rezeptionist ist prinzipiell ein gewöhnlicher Actor, welcher jedoch darauf Spezialisiert ist mit nicht Actors zu kommunizieren. Dafür benötigt ein solcher Rezeptionist eine definierte Schnittstelle. Über diese Schnittstelle können dann Codeteile (Webservices, GUI Implementieren usw..) Nachrichten in ein Actor System einbringen. Weiters ist es auch über diese speziellen Actors möglich auf eine Antwort einer eingebrachten Nachricht zu warten. Die eigentliche Abarbeitung der externen Nachricht wird vom Rezeptionist an dafür zuständige Actors innerhalb des Actor Systems geliefert.\citep{Agha1985ActorsSystems}\\
 Neben der Möglichkeit vom Einsatz eines Rezeptionisten um mit externen Komponenten zu kommunizieren wird in \cite{Agha1985ActorsSystems} auch die Möglichkeit beschrieben mit externen Actor System zu interagieren. Dies ist Nötig um beispielsweise zwei getrennt Entwickelte Actor Systeme zu verbinden. Hierfür wird ein Set an externen Actoren definiert. Diese wissen zwar von der existenz eines externen Actor Systems, kennen aber dessen Implementierung nicht. Über definierte externe Actoren können so trotzdem Nachrichten zwischen zwei fremden Actor Systemen ausgetauscht werden. \\
