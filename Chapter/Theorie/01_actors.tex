@@ -47,16 +47,20 @@ Jeder Actor kann jederzeit an jeden anderen Actor in einem System eine Nachricht
 \graffito{Bei {First In, First Out}, kurz {FIFO}, wird immer die älteste Nachricht in einer Warteschlange behandelt.} Um dies zu gewährleisten, benötigt ein Actor eine Nachrichten Warteschlange.\citep{Agha1985ActorsSystems}. Eine abgeschlossene Nachricht kann abschließend verworfen werden. 
 
 \subsubsection{Parallelität}
-Obwohl ein Actor ankommende Nachrichten nur sequentiell bearbeitend kann, ist das Actor Model Ideal für parallele Aufgaben.\citep{Agha1985ActorsSystems} Durch das weiterreichen von Subaktionen an andere Actoren ist jedoch höchste Parallelität gegeben. In einem laufenden Actor System sind meist eine vielzahl an einzelnen Actors parallel am Nachrichten abarbeiten. Dadurch kann ein Mehrkernprozessor optimal genützt werden.
+Obwohl ein Actor ankommende Nachrichten nur sequentiell bearbeitend kann, ist das Actor Model Ideal für parallele Aufgaben.\citep{hewitt1973session} Durch das weiterreichen von Subaktionen an andere Actoren ist jedoch höchste Parallelität gegeben. In einem laufenden Actor System sind meist eine vielzahl an einzelnen Actors parallel am Nachrichten abarbeiten. Dadurch kann ein Mehrkernprozessor optimal genützt werden. \citep{Agha1985ActorsSystems} \\
+Durch die gleichzeitige Bearbeitung von maximal einer Nachricht pro Actor sowie die Verbietung von Lesezugriffen auf den eigenen, internen State durch andere Actors (siehe \ref{??}), benötigt es keine Sperrmechanismen innerhalb eines Actors. Dadurch wird erstens der Sourcecode übersichtlicher und zweitens entfällt das aufwändige allokieren von Sperreressourcen.\citep{Vernon2015ReactiveAkka}
+Wird nun bedacht das ein Actor grundsätzlich nur jeweils für eine kleine Aufgabe optimiert wird, und andere Aufgaben an andere Actors abgibt, wird mit dem entfallen von Sperrmechanismen die Abarbeitungszeit für eine einzelne Nachricht pro Actor auf ein absolutes minimum gebracht. \cite{Vernon2015ReactiveAkka} \\
+Zu beachten ist bei diesem Konzept das bei der Abarbeitung einer Nachricht nicht auf eine andere Nachricht gewartet werden soll. Dies führt zu neuen Architekturmustern welche Auszugsweise unter \ref{theory:actorArchitecture} beschrieben werden.
 
 \subsection{Actor System}
+Ein einzelner Actor alleine kann Aufgrund seiner begrenzten möglichkeiten nur relativ wenig bewirken. Der große Vorteil erwirkt das Actor Model erst durch die Macht von vielen einzelnen Actors welche miteinander interagieren. Eine solche Bildung von vielen Actors wird als Actor System bezeichnet.\citep{Agha1985ActorsSystems} \\ Nachrichten werden prinzipiell nur unter Actors innerhalb eines Actor System ausgetauscht. 
 
 \section{Reactive Messaging}
 
 \section{Actor Grafik Legende}
 
 \section{Actor basierte Architekturmuster}
-
+\label{theory:actorArchitecture}
 \section{Evaluierung}
 %todo
 %Agha zitate kontrollieren
