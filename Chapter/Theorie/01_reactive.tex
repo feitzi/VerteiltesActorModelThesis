@@ -1,5 +1,5 @@
 \section{Reactive Manifesto}
-Das {Reactive Manifesto} (siehe \cite{reactiveManifesto}), ist eine Sammlung an Anforderungen welche Anwendungen erfüllen sollen um große Datenmengen in der größenordnung von bis zu mehreren Petabytes in Millisekunden zu bewerkstelligen. 
+Das {Reactive Manifesto} (siehe \cite{reactiveManifesto}), ist eine Sammlung an Anforderungen welche eine Software Architektur erfüllen soll um große Datenmengen in der Größenordnung von bis zu mehreren Petabytes in der Millisekunden zu bewerkstelligen. 
 \graffito{Ein Petabyte sind  $10^{15}$ {Bytes}, oder $1000$ {Terabytes}}
 Wie in \cite{reactiveManifesto} angegeben, ist das {reactive Manifest} bestens geignet um Cloud Anwendungen zu erstellen, welche in mehreren Rechenzentren verteilt betrieben werden. \\
 Die Autoren des Manifestes fordern von einer Anwendung vier grundlegende Eigenschaften damit sie dem {Ractive Manifest} entsprechen und somit als {Reactive Anwendung} angesehen werden kann. Das Manifest sieht diese Anforderungen als Grundstein für eine erfolgreiche Software Architektur welche für verteilte Applikationen entworfen wird. 
@@ -18,3 +18,6 @@ Die Autoren des Manifestes fordern von einer Anwendung vier grundlegende Eigensc
 Die vier {Reaktive} Anforderungen Antwortbereitschaft, Wiederstandfähigkeit, Elastizität und Nachrichtenorientiertheit müssen in einer Applikation zu jedem Zeitpunkt gewährleistet werden und in der Konzeptionsphase einer Reaktiven Anwendung immer mit einfließen. Durch die Einhaltung dieser vier Grundrichtlinien, kann eine Anwendung von vornhinhein auf Verteilung und Skalierung designt werden.
 
 \subsection{Reactive Anwendungen und das Actor-Model}
+Die Anforderungen des {Reactive Manifesto} ähnelt der Definition des Actor-Models (siehe \ref{actor:definition}). Laut \cite{Vernon2015ReactiveAkka} ist das Actor-Model die führende Architektur bei der Implementierung und Umsetzung von Reaktiven Anwendung, jedoch schließt das Reaktive Manifest andere Softwaremuster nicht aus. \\
+Jedoch sind bei der Umsetzung mit dem Actor-Model die Elastizität sowie die Nachrichtenorientiertheit des {Reactive Manifesto} implizit gegeben, da das Actor-Model diese, wie in \ref{actor:definition} und \ref{actor:Mailbox} beschrieben explizit vorgibt.\\
+Eine Applikation welche korrekt mit dem Actor-Model Umgesetzt wird kann als Reactive Applikation angesehen werden wenn die Anforderung {Wiederstandfähigkeit} mit eingebracht wird. Diese ist im Actor-Model nicht definiert, jedoch bieten moderne Implementierung des Actor Models diese Anforderung im Form von {Supervision}, siehe hierzu \ref{actor:supervision}.
