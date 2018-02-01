@@ -1,0 +1,17 @@
+\section{Reactive Manifesto}
+Das {Reactive Manifesto} (siehe \cite{reactiveManifesto}), ist eine Sammlung an Anforderungen welche Anwendungen erfüllen sollen um große Datenmengen in der größenordnung von bis zu mehreren Petabytes in Millisekunden zu bewerkstelligen. 
+\graffito{Ein Petabyte sind  $10^{15}$ {Bytes}, oder $1000$ {Terabytes}}
+Wie in \cite{reactiveManifesto} angegeben, ist das {reactive Manifest} bestens geignet um Cloud Anwendungen zu erstellen, welche in mehreren Rechenzentren verteilt betrieben werden. \\
+Die Autoren des Manifestes fordern von einer Anwendung vier grundlegende Eigenschaften damit sie dem {Ractive Manifest} entsprechen und somit als {Reactive Anwendung} angesehen werden kann. Das Manifest sieht diese Anforderungen als Grundstein für eine erfolgreiche Software Architektur welche für verteilte Applikationen entworfen wird. 
+\begin{description}
+    \item{Antwortbereit}\label{reactivo:responsive}
+    Ein Reaktives System Antwortet auf alle Anfragen immer innerhalb eines vorab definierten Zeitfensters. Der einzige Umstand der zu keiner Antwort führt, ist wenn das System in einem Fehlerzustand ist. In allen anderen Fällen muss auf jede Anfrage in des Zeitfensters eine Antwort gesendet werden.\\
+    Laut \cite{reactiveManifesto} ist diese Regel der Grundstein einer {Reactiven} Applikation.
+    \item{Widerstandsfähig}\label{reactivo:resilient}
+    Bei einem Ausfall von Komponenten des Systems wie Hard- oder Software wird die Reaktive Anforderung {Antwortbereitsch} des Systems nicht beeinflusst. Daher darf ein ausfall einer Komponente keine Auswirkungen auf das Antwortverhalten der Applikation haben.\\
+    Wiederstandfähigkeit kann laut \cite{reactiveManifesto} durch Delegieren von Verantwortung an verschiedene Komponenten sowie das Replizieren von Komponenten erreicht werden. Weiters ist durch Isolation der Komponenten zu verhindern das ein Fehler einer Komponente auf andere Komponenten übergreift. Dadurch bleibt der ausfall einer Komponente für das gesamte System ein überschaubares Problem. Ebenfalls ist es Notwendig, beim Auftretten eines Fehlers im Systems die Behebung dieses, im Idealfall automatisch, so schnell wie möglich durchzuführen.
+    \item{Elastisch}\label{reactivo:elastic}
+    Das Antwortverhalten einer Reactiven Anwendung darf auch durch einen plötzlichen Anstieg der eintreffenden Anfragen und somit der Last nicht beeinträchtigt werden. Dies kann erreicht werden das ähnlich wie bei der Wiederstandfähigkeit auf Replizierung der Komponenten gesetzt wird. Jedoch wird für die Elastizität des System auf eine automatische Replikation der betroffenden Komponenten gesetzt. Vor dem erreichen der Maximallast einer Komponente, wird diese an einem anderen Ort Repliziert und teilt sich somit die Last. 
+    \item{Nachrichtenorientiert}\label{reactivo:messageDriven}
+    Ein Reactives System besteht, wie aus den vorhergegangenen Anforderung abzuleiten ist, aus mehreren gelösten Komponenten. Die Kommunikation zwischen den Komponenten muss, um als Reactive zu gelten, laut \cite{reactiveManifesto}  über asynchrone Nachrichten erfolgen. Durch den einsatz von asynchronität ist eine Komponente während der Kommunikation mit einer anderen Komponente nicht von dieser Abhängig. Weiters können Nachrichten ortsungebunden versendet werden und ermöglicht somit die Skalierung von Komponenten. 
+\end{description} 
