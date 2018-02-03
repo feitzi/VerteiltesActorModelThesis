@@ -24,11 +24,11 @@ Ein Actor ist eine logische, atomare Einheit welche Nachrichten empfangen kann. 
     \item[4. Frei von Sperrmechanismen]
     Durch die Bedingungen {1.} und  {3.} ist es ausgeschlossen, dass ein Codeteil innerhalb eines Actors von außen, oder gar von einem anderen Thread, ausgeführt wird. Daher sind Sperrmechanismen, wie unter \ref{actor:parallelism} beschrieben, nicht nötig.
     \item[5. Kleinst mögliches Aufgabengebiet]
-    Ein einzelner Actor soll ein möglichst kleines Aufgabengebiet behandeln und andere Aufgaben an andere Actoren abgeben. Dadurch wird einerseits ein hoher durchsatz gewährleistet und einerseits die Komplexität eines einzelnen Actors vermindert.
+    Ein einzelner Actor soll ein möglichst kleines Aufgabengebiet behandeln und andere Aufgaben an andere Actoren abgeben. Dadurch wird einerseits ein hoher Durchsatz gewährleistet und einerseits die Komplexität eines einzelnen Actors vermindert.
 \end{description}
 
 \subsubsection{Arbeitsaufgaben und Nachrichten}\label{actors:messages}
-In \cite{Agha1985ActorsSystems} wird beschrieben, dass in einem Actor-System eine beliebige Anzahl an zu bearbeitendenden Arbeitsaufträge vorliegen. Diese Aufgaben werden in einem Actor-System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor-System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor-Systems wie folgt repräsentiert:
+In \cite{Agha1985ActorsSystems} wird beschrieben, dass in einem Actor-System eine beliebige Anzahl an zu bearbeitendenden Arbeitsaufträgen vorliegt. Diese Aufgaben werden in einem Actor-System zwischen den Actors zugewissen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor-System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor-Systems wie folgt repräsentiert:
 \begin{description}
     \item[Identifikation] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
     \item[Ziel Adresse] Adresse an wenn der Auftrag gerichtet ist.
