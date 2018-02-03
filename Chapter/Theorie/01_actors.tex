@@ -45,8 +45,8 @@ In aktuellen Interpretationen des Actor-Models, wie beispielsweise \cite{Vernon2
 \label{actorBehaviour}
 Empfängt ein Actor eine Nachricht welche für ihn bestimmt ist, so kann dieser auf mehrere unterschiedliche Arten reagieren. In \citep{Agha1985ActorsSystems} und \citep{Vernon2015ReactiveAkka} werden folgende Möglichkeiten eines Actors beschrieben:
 \begin{description}
-    \item[Neue Nachricht erstellen] Erfordert die Bearbeitung der empfangenen Nachricht neue Berechnungen, kann eine, oder auch mehrere neue Nachrichten erstellt werden. Dies neue Nachrichten können dann an andere Actors, gesendet werden. Auch Resultate welche durch die bearbeitung der Nachricht erfolgen können so bekannt gegeben werden.
-    \item[Actor erstellen] Sind teile der aktuellen Nachricht nicht vom bearbeitenden Actor bearbeitbar, kann von diesem ein neuer Actor erstellt werden welcher für diese Aufgabe besser geignet ist. Diesem neuen Actor wird dann eine Nachricht mit der Teilaufgabe zugesendet.
+    \item[Neue Nachricht erstellen] Erfordert die Bearbeitung der empfangenen Nachricht neue Berechnungen, kann eine, oder auch mehrere neue Nachrichten erstellt werden. Dies neue Nachrichten können dann an andere Actors, gesendet werden. Auch Resultate welche durch die Bearbeitung der Nachricht resultieren, können so dem aufrufenden Actor zurückgesendet werden.
+    \item[Actor erstellen] Sind Teile der aktuellen Nachricht nicht vom bearbeitenden Actor bearbeitbar, kann von diesem ein neuer Actor erstellt werden welcher für diese Aufgabe besser geignet ist. Diesem neuen Actor wird dann eine Nachricht mit der Teilaufgabe zugesendet.
     \item[Verhalten ändern] Das Resultat einer bearbeitung kann sein, dass die Verarbeitung der nächsten Nachrichten an diesen Actor in einer anderen Art und Weiße erfolgen muss. Daher kann der Actor sich für die nächste Nachricht ein neues verhalten bestimmen.
     \item[Zustand verändern] Während der abarbeitung einer Nachricht kann der Actor auch seinen eigenen privaten Zustand verändern.
 \end{description}
