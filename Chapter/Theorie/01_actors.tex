@@ -39,13 +39,8 @@ Um eine neue Aufgabe zu erstellen, muss somit die Adresse bekannt sein an welche
     \item[Bereits bekannt] Die Adresse eines anderen Actors ist durch die Bearbeitung früherer Aufgaben bereits bekannt.
     \item[In Inhalt enthalten] Im Inhalt der gerade bearbeitenden Aufgabe ist eine andere Adresse enthalten.
     \item[Neuer Actor] Während der Abarbeitung der aktuellen Aufgabe wird ein neuer Actor erstellt. 
-    Durch die schafung eines neuen Actors ist die Adresse dem Ersteller bekannt
-    Durch das Erstellen des Actors ist auch dessen Adresse dem Ersteller bekannt.
-% * <feitzinger.magdalena@gmail.com> 2018-02-06T19:45:06.093Z:
-% 
-% Formulier da letschte satz andersch. du hosch do so oft erstellen/ersteller dina. des verwirrt. 
-% 
-% ^.
+    Durch die Schaffung eines neuen Actors ist die Adresse dem Ersteller bekannt.
+    
 \end{description}
 In aktuellen Interpretationen des Actor-Models, wie beispielsweise \cite{Vernon2015ReactiveAkka} oder \cite{Brown2016ReactiveAkka.net.}, wird jedoch im Kontext von Actors nicht mehr von Aufgaben sondern nur mehr von Nachrichten gesprochen. Diese enthalten jedoch ebenfalls immer eine Adresse sowie einen Nachrichteninhalt. Die Identifikation der Nachricht wird in modernen Systemen jedoch nicht mehr verwendet.   \\
 In der \textit{Domain-Driven}-Theorie (siehe \cite{Evans2004Domain-drivenSoftware}) werden Nachrichten, welche zwischen zwei Actors versendet werden, in drei Kategorien unterteilt. Einerseits werden Befehle als \textit{Commands} bezeichnet und andererseits Ereignisse welche im System auftreten als \textit{Events} benannt.  Zusätzlich gibt es Nachrichten welche rein zur Übertragung von Daten dienen ohne ein  Verarbeitung der enthaltenden Daten zu verlangen. Eine solche Nachricht wird als \textit{Document} bezeichnet.  Ein \textit{Document} kann zum Beispiel eine Antwortnachricht auf eine \textit{Command} sein welches bestimmte Informationen anfordert.\\
