@@ -27,16 +27,11 @@ Ein Actor ist eine logische, atomare Einheit welche Nachrichten empfangen und be
 \end{description}
 
 \subsubsection{Arbeitsaufgaben und Nachrichten}\label{actors:messages}
-In \cite{Agha1985ActorsSystems} wird beschrieben, dass in einem Actor-System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträgen vorliegt. Diese Aufgaben werden in einem Actor-System zwischen den Actors zugewiesen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor-System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor-Systems wie folgt repräsentiert:
-% * <feitzinger.magdalena@gmail.com> 2018-02-06T19:38:42.087Z:
-% 
-% isch des wort "zwischen" do richtig? 
-% moasch du ned eher, dass die aufgaben den einzelnen actos zugeteilt werdn. 
-% 
-% ^.
+In \cite{Agha1985ActorsSystems} wird beschrieben, dass in einem Actor-System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträgen vorliegt. Diese Aufgaben werden in einem Actor-System den einzelnen Actors zugewiesen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor-System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor-Systems wie folgt repräsentiert:
+
 \begin{description}
     \item[Identifikation] Jede Aufgabe bekommt eine eindeutige Identifikation, welche sie von anderen Aufgaben unterscheidbar macht.
-    \item[Ziel Adresse] Ziel Adresse an welchen Actor die Nachricht gerichtet ist.
+    \item[Ziel Adresse] Jede Nachricht wird an einen Actor zugestellt. Deshalb ist hier 
 % * <feitzinger.magdalena@gmail.com> 2018-02-06T19:40:49.849Z:
 % 
 % du hosch do zwoa mol neabsanand zieladresse stoh. es tät i ändra. stell da satz um, oder formuliers andersch. 
