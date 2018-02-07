@@ -1,10 +1,5 @@
 \section{Actor Grafik Legende}\label{actor:diagram:description}
-Um den Ablauf in einem Actor-System besser zu verstehen, bietet sich die visuelle Darstellung in Form von Diagrammen eines Actors oder eines Actor-Systems an. In den Werken \cite{kuhn2017reactive} und \cite{Vernon2015ReactiveAkka} wurde eine einheitliche, grafische Notation für das Actor Model vorgeschlagen welche auch für diese Arbeit herangezogen wird. Im folgenden nun eine kurze Einführung in diese Notation, welche die für diese Arbeit notwendigen Notationen enthält und deshalb kein Anspruch auf Vollständigkeit stellt.\\
-% * <feitzinger.magdalena@gmail.com> 2018-02-06T21:13:12.848Z:
-% 
-% I denk, bim ersta satz kannsch "eines Actors oder eines Actor-Systems" weglo.  
-% 
-% ^.
+Um den Ablauf in einem Actor-System besser zu verstehen, bietet sich die visuelle Darstellung in Form von Diagrammen an. In den Werken \cite{kuhn2017reactive} und \cite{Vernon2015ReactiveAkka} wurde eine einheitliche, grafische Notation für das Actor Model vorgeschlagen welche auch für diese Arbeit herangezogen wird. Im folgenden nun eine kurze Einführung in diese Notation, welche die für diese Arbeit notwendigen Notationen enthält und deshalb kein Anspruch auf Vollständigkeit stellt.\\
 \subsection{Actors darstellen}
 Ein einzelner Actor wird als Kreis dargestellt, innerhalb dieses Kreises steht der Name des Actors. In Abbildung~\ref{fig:actor:diagram:longLiveActor} wird ein Actor dargestellt welcher persistent existiert, im Gegensatz dazu steht ein Actor welcher nur für eine kurze Zeit existiert dieser wird mit gestrichelter Linien, siehe Abbildung~\ref{fig:actor:diagram:shortLiveActor}, dargestellt. Ein Actor welcher nur für kurze Zeit existiert, wird meist verwendet um eine einzelne spezielle Nachricht abzuarbeiten.
 \begin{figure}
@@ -42,7 +37,7 @@ Das erstellen von Actoren durch einen Actor wird durch zwei kreise abgebildet. I
 \end{figure}
 
 \subsection{Darstellung eines Ablaufes}
-Um einen konkreten Ablauf eines Actors darstellen zu können, benötigt man die darstellung der Nachrichteneingangsreihenfolge. Diese wird von \cite{kuhn2017reactive} und \cite{Vernon2015ReactiveAkka} als Linie dargestellt auf welcher sich Kreise befinden. Die abarbeitung wird von oben nach unten dargestellt. In Abbildung~\ref{fig:actor:diagram:asynchronMessageReceivment} bekommt der Actor zwei Nachrichten zugesendet, und sendet eine Nachricht dazwischen ab. Durch diese Abbildung ist es möglich, sequentielle Abläufe darzustellen 
+Um einen konkreten Ablauf eines Actors darstellen zu können, benötigt man die Darstellung der Nachrichteneingangsreihenfolge. Diese wird von \cite{kuhn2017reactive} und \cite{Vernon2015ReactiveAkka} als Linie dargestellt auf welcher sich Kreise befinden. Die Abarbeitung wird von oben nach unten dargestellt. In Abbildung~\ref{fig:actor:diagram:asynchronMessageReceivment} bekommt der Actor zwei Nachrichten zugesendet, und sendet eine Nachricht dazwischen ab. Durch diese Abbildung ist es möglich, sequentielle Abläufe darzustellen 
 \begin{figure}
     \centering
     \includegraphics[height=6cm]{gfx/actor/actorAsynchMessgeFlow}
