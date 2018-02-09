@@ -12,3 +12,24 @@ Dieses Pattern gilt als Grundlage für die alle weiteren Patterns und veranschau
     \label{fig:actor:patterns:requestReplay}
 \end{figure}
 
+% todo correlation identifier erklären
+
+\subsection{Return Adress}
+Damit ein Actor eine Nachricht an einen anderen Actor senden kann, benötigt er wie in \ref{sec:actors:messages} erklärt, eine Adresse dessen. Diese kann auch in einer bereits empfangenen Nachricht enthalten sein. \\
+In Abbildung \ref{fig:actor:patterns:returnAdress} ist zu sehen das ein Actor ein \textit{Command} and einen anderen Actor sendet, und in diesem \textit{Command} anweist die Antwort an einen seiner \textit{Childs zu senden}. \\
+Diese so bekannt gegebene Adresse könnte auch für zukünftige Verarbeitungen von Nachrichten verwendet werden. In \cite{Vernon2015ReactiveAkka} wird beispielsweise ein Server/Client Prinzip zwischen Actors besprochen. Der Client-Actor bekommt dann zu beginn seines Lebenszyklus die Adresse eines Server-Actors übermittelt. Alle Informationen die der Client im weiteren verlauf erarbeitet, werden dann an den Server übermittelt.
+\subsubsection{BILD RETURN ADRESS}\label{fig:actor:patterns:returnAdress}
+
+\subsection{Processor}
+
+
+\subsection{Routing}
+
+\subsection{Aggregator}
+
+\subsection{Grantierte Nachrichtenzustellung}
+AtLeastOnceDelivery
+
+
+
+

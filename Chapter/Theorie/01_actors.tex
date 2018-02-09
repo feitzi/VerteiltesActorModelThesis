@@ -15,7 +15,7 @@ Ein Actor ist eine logische, atomare Einheit welche Nachrichten empfangen und be
 
 \begin{description}
     \item[1. Kein Zugriff von außen]\label{actor:requirements:shareNothing}
-    Die interne Repräsentation eines Actors ist nur für den Actor selbst bestimmt. Es darf keine Möglichkeit geben Werte eines Actors von anderen Actoren oder sonstigen Codestellen zu lesen oder zu manipulieren. Änderungen und Lesezugriffe sind ausschließlich über Nachrichten möglich (siehe \ref{actors:messages}). 
+    Die interne Repräsentation eines Actors ist nur für den Actor selbst bestimmt. Es darf keine Möglichkeit geben Werte eines Actors von anderen Actoren oder sonstigen Codestellen zu lesen oder zu manipulieren. Änderungen und Lesezugriffe sind ausschließlich über Nachrichten möglich (siehe \ref{sec:actors:messages}). 
     \item[2. Asynchrone Kommunikation]\label{actor:requirements:AsynchronCommunication}
     Die Kommunikation mit anderen Actors erfolgt asynchron und frei von Wartemechanismen. Wird eine Nachricht an einen anderen Actor gesendet, wird nicht auf eine Antwort von diesem gewartet. Somit ist eine zügige Abarbeitung einer Nachricht möglich.
     \item[3. Sequentielle Abarbeitung von Nachrichten]
@@ -26,7 +26,7 @@ Ein Actor ist eine logische, atomare Einheit welche Nachrichten empfangen und be
     Ein einzelner Actor soll ein möglichst kleines Aufgabengebiet behandeln und andere Aufgaben an andere Actors abgeben. Dadurch wird einerseits ein hoher Nachrichtendurchsatz gewährleistet und andererseits die Komplexität eines einzelnen Actors vermindert, was wiederum zur Verständlichkeit des Quellcodes führt.
 \end{description}
 
-\subsubsection{Arbeitsaufgaben und Nachrichten}\label{actors:messages}
+\subsubsection{Arbeitsaufgaben und Nachrichten}\label{sec:actors:messages}
 In \cite{Agha1985ActorsSystems} wird beschrieben, dass in einem Actor-System eine beliebige Anzahl an zu bearbeitenden Arbeitsaufträgen vorliegt. Diese Aufgaben werden in einem Actor-System den einzelnen Actors zugewiesen. Während der Abarbeitung einer Aufgabe können neue Aufgaben erstellt und in das Actor-System eingebracht werden. Eine Aufgabe wird im Kontext eines Actor-Systems wie folgt repräsentiert:
 
 \begin{description}
