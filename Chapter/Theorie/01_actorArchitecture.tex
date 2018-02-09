@@ -18,14 +18,31 @@ Dieses Pattern gilt als Grundlage für die alle weiteren Patterns und veranschau
 Damit ein Actor eine Nachricht an einen anderen Actor senden kann, benötigt er wie in \ref{sec:actors:messages} erklärt, eine Adresse dessen. Diese kann auch in einer bereits empfangenen Nachricht enthalten sein. \\
 In Abbildung \ref{fig:actor:patterns:returnAdress} ist zu sehen das ein Actor ein \textit{Command} and einen anderen Actor sendet, und in diesem \textit{Command} anweist die Antwort an einen seiner \textit{Childs zu senden}. \\
 Diese so bekannt gegebene Adresse könnte auch für zukünftige Verarbeitungen von Nachrichten verwendet werden. In \cite{Vernon2015ReactiveAkka} wird beispielsweise ein Server/Client Prinzip zwischen Actors besprochen. Der Client-Actor bekommt dann zu beginn seines Lebenszyklus die Adresse eines Server-Actors übermittelt. Alle Informationen die der Client im weiteren verlauf erarbeitet, werden dann an den Server übermittelt.
-\subsubsection{BILD RETURN ADRESS}\label{fig:actor:patterns:returnAdress}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{gfx/actor/patterns/returnAddress}
+    \caption{Der Processor empfängt von Actor A ein Kommando. Die Nachricht enthält jedoch die Information, das Ergebnisse nicht an den Absender zu senden sind, sondern an den Actor B.}
+    \label{fig:actor:patterns:returnAdress}
+\end{figure}
+
 
 \subsection{Processor}
+Eine möglichkeit komplexe Prozesse mit dem Actor-Model abzubilden, ist ein \textit{Processor}-Actor. Dieser koordiniert, abgestimmt auf einen bestimmen Geschäftsprozess, alle Vorgänge und liefert, falls gewünscht, abschließend oder periodisch ein Ergebnis zurück. Es gibt verschiedenste Varianten von \textit{Processor}-Actoren. 
+Oft verwenden \textit{Processors} auch \textit{Router} (siehe \ref{sec:actor:patterns:routing}) und \textit{Aggregatoren} (siehe \ref{sec:actor:patterns:aggregator}) um Ihren Prozesse in einem Actor-System abzubilden. \\
+Ein Typisches Beispiel kann in Form eines Bestellprozesses gezeigt werden. Im Ablauf des schemenhaft gezeigten \textit{Order Processors} in Abbildung \ref{fig:actor:patterns:orderProcesseor} sind drei andere Komponenten, welche hier als Actors dargestellt werden, beteiligt. Der Statistik Actor sowie die zwei \textit{Inventories} können sich auch aus mehreren Actors formieren, ist jedoch für den \textit{Order-Processor} nicht relevant. Vielmehr, ist der \textit{Processor} in diesem Fall Verantwortlich den Bestellprozesses vollständig auszuführen, in dem er die Beteiligten Actors über den Vorgang Informiert bzw. weitere Kommandos an diese Abgibt. Sind alle erforderlichen Antworten eingetroffen kann er die Bestellung abschließen und dies wiederum über eine \textit{Event}-Nachricht an den Besteller signalisieren. \\
+In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator}, da er auf mehrere Nachrichten wartet, und anhand dieser eine Antwort generiert. 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{gfx/actor/patterns/simpleOrderProcesor}
+    \caption{Ein schemenhafter Bestellprozess welcher mehrere andere Actors miteinbezieht.}
+    \label{fig:actor:patterns:orderProcesseor}
+\end{figure}
 
-\subsection{Routing}
+\subsection{Routing}\label{sec:actor:patterns:routing}
 
-\subsection{Aggregator}
+\subsection{Aggregator}\label{sec:actor:patterns:aggregator}
 
 \subsection{Grantierte Nachrichtenzustellung}
 AtLeastOnceDelivery
