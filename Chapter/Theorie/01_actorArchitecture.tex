@@ -16,8 +16,8 @@ Dieses Pattern gilt als Grundlage für die alle weiteren Patterns und veranschau
 
 \subsection{Return Adress}
 Damit ein Actor eine Nachricht an einen anderen Actor senden kann, benötigt er wie in \ref{sec:actors:messages} erklärt, eine Adresse dessen. Diese kann auch in einer bereits empfangenen Nachricht enthalten sein. \\
-In Abbildung \ref{fig:actor:patterns:returnAdress} ist zu sehen das ein Actor ein \textit{Command} and einen anderen Actor sendet, und in diesem \textit{Command} anweist die Antwort an einen seiner \textit{Childs zu senden}. \\
-Diese so bekannt gegebene Adresse könnte auch für zukünftige Verarbeitungen von Nachrichten verwendet werden. In \cite{Vernon2015ReactiveAkka} wird beispielsweise ein Server/Client Prinzip zwischen Actors besprochen. Der Client-Actor bekommt dann zu beginn seines Lebenszyklus die Adresse eines Server-Actors übermittelt. Alle Informationen die der Client im weiteren verlauf erarbeitet, werden dann an den Server übermittelt.
+In Abbildung \ref{fig:actor:patterns:returnAdress} ist zu sehen, dass ein Actor ein \textit{Command} and einen anderen Actor sendet, und diesen \textit{Command} Anweist die Antwort an einen anderen Actor zu senden. \\
+Diese somit bekannt gegebene Adresse könnte auch für zukünftige Verarbeitungen von Nachrichten verwendet werden. In \cite{Vernon2015ReactiveAkka} wird beispielsweise ein Server/Client Prinzip zwischen Actors besprochen. Der Client-Actor bekommt dann zu Beginn seines Lebenszyklus die Adresse eines Server-Actors übermittelt. Alle Informationen die der Client im weiteren Verlauf erarbeitet, werden dann an den Server übermittelt.
 
 \begin{figure}
     \centering
@@ -28,7 +28,7 @@ Diese so bekannt gegebene Adresse könnte auch für zukünftige Verarbeitungen v
 
 
 \subsection{Processor}
-Eine möglichkeit komplexe Prozesse mit dem Actor-Model abzubilden, ist ein \textit{Processor}-Actor. Dieser koordiniert, abgestimmt auf einen bestimmen Geschäftsprozess, alle Vorgänge und liefert, falls gewünscht, abschließend oder periodisch ein Ergebnis zurück. Es gibt verschiedenste Varianten von \textit{Processor}-Actoren. 
+Eine Möglichkeit komplexe Prozesse mit dem Actor-Model abzubilden, ist ein \textit{Processor}-Actor. Dieser koordiniert, abgestimmt auf einen bestimmen Geschäftsprozess, alle Vorgänge und liefert, falls gewünscht, abschließend oder periodisch ein Ergebnis zurück. Es gibt verschiedenste Varianten von \textit{Processor}-Actoren. \citep{Vernon2015ReactiveAkka}
 Oft verwenden \textit{Processors} auch \textit{Router} (siehe \ref{sec:actor:patterns:routing}) und \textit{Aggregatoren} (siehe \ref{sec:actor:patterns:aggregator}) um Ihren Prozesse in einem Actor-System abzubilden. \\
 Ein Typisches Beispiel kann in Form eines Bestellprozesses gezeigt werden. Im Ablauf des schemenhaft gezeigten \textit{Order Processors} in Abbildung \ref{fig:actor:patterns:orderProcesseor} sind drei andere Komponenten, welche hier als Actors dargestellt werden, beteiligt. Der Statistik Actor sowie die zwei \textit{Inventories} können sich auch aus mehreren Actors formieren, ist jedoch für den \textit{Order-Processor} nicht relevant. Vielmehr, ist der \textit{Processor} in diesem Fall Verantwortlich den Bestellprozesses vollständig auszuführen, in dem er die Beteiligten Actors über den Vorgang Informiert bzw. weitere Kommandos an diese Abgibt. Sind alle erforderlichen Antworten eingetroffen kann er die Bestellung abschließen und dies wiederum über eine \textit{Event}-Nachricht an den Besteller signalisieren. \\
 In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator}, da er auf mehrere Nachrichten wartet, und anhand dieser eine Antwort generiert. 
@@ -41,6 +41,15 @@ In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator},
 \end{figure}
 
 \subsection{Routing}\label{sec:actor:patterns:routing}
+In einem Actor System versteht man laut \cite{Vernon2015ReactiveAkka} und \cite{kuhn2017reactive} eine Komponente, welche ankommende Nachrichten an einen oder mehrere Actors weitersendet. \\
+In \cite{Vernon2015ReactiveAkka} sind eine vielzahl an unterschiedlichsten Routern beschrieben. Wie die meisten anderen Komponenten auch, ist ein Router ein Actor. Dieser Actor bekommt dann die Aufgabe einkommende Nachrichten entsprechend weiterzuleiten. Dazu kann ein Router verschiedene Faktoren für das Routing einbeziehen. Als Beispiel ist unter anderem zu nennen, dass, der Router Informationen aus der Nachricht entnimmt, und anhand dieser das Routing vornimmt. Weiters können auch Einflüsse des Actor-System einbezogen werden. In \cite{Vernon2015ReactiveAkka} und \cite{Akka.netCommunityAkka.NETDocumentation} ist zu lesen, das ein Router CPU oder Speicherauslastung von verschiedenen Systemen überwacht, und neue Nachrichten an das am wenigsten ausgelastete System zukommen lässt. \\
+\cite{Vernon2015ReactiveAkka} kategorisiert Router in drei grobe Kategorien. 
+\begin{description}
+    \item[Einfache Router] 
+    \item[Zusammengesetzte Router]
+    \item[Architektonische Router]
+\end{description}
+
 
 \subsection{Aggregator}\label{sec:actor:patterns:aggregator}
 
@@ -50,3 +59,4 @@ AtLeastOnceDelivery
 
 
 
+ 
