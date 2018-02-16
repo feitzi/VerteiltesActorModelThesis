@@ -27,10 +27,10 @@ Diese somit bekannt gegebene Adresse könnte auch für zukünftige Verarbeitunge
 \end{figure}
 
 
-\subsection{Processor}
+\subsection{Processor}\label{sub:actor:patterns:processor}
 Eine Möglichkeit komplexe Prozesse mit dem Actor-Model abzubilden, ist ein \textit{Processor}-Actor. Dieser koordiniert, abgestimmt auf einen bestimmen Geschäftsprozess, alle Vorgänge und liefert, falls gewünscht, abschließend oder periodisch ein Ergebnis zurück. Es gibt verschiedenste Varianten von \textit{Processor}-Actoren. \citep{Vernon2015ReactiveAkka}
 Oft verwenden \textit{Processors} auch \textit{Router} (siehe \ref{sec:actor:patterns:routing}) und \textit{Aggregatoren} (siehe \ref{sec:actor:patterns:aggregator}) um Ihren Prozesse in einem Actor-System abzubilden. \\
-Ein Typisches Beispiel kann in Form eines Bestellprozesses gezeigt werden. Im Ablauf des schemenhaft gezeigten \textit{Order Processors} in Abbildung \ref{fig:actor:patterns:orderProcesseor} sind drei andere Komponenten, welche hier als Actors dargestellt werden, beteiligt. Der Statistik Actor sowie die zwei \textit{Inventories} können sich auch aus mehreren Actors formieren, ist jedoch für den \textit{Order-Processor} nicht relevant. Vielmehr, ist der \textit{Processor} in diesem Fall Verantwortlich den Bestellprozesses vollständig auszuführen, in dem er die Beteiligten Actors über den Vorgang Informiert bzw. weitere Kommandos an diese Abgibt. Sind alle erforderlichen Antworten eingetroffen kann er die Bestellung abschließen und dies wiederum über eine \textit{Event}-Nachricht an den Besteller signalisieren. \\
+Ein Typisches Beispiel kann in Form eines Bestellprozesses gezeigt werden. Im Ablauf des schemenhaft gezeigten \textit{Order Processors} in Abbildung \ref{fig:actor:patterns:orderProcesseor} sind drei andere Komponenten, welche hier als Actors dargestellt werden, beteiligt. Der Statistik Actor sowie die zwei \textit{Inventories} können sich auch aus mehreren Actors formieren, ist jedoch für den \textit{Order-Processor} nicht relevant. Vielmehr, ist der \textit{Processor} in diesem Fall Verantwortlich den Bestellprozesses vollständig auszuführen, in dem er die Beteiligten Actors über den Vorgang Informiert bzw. weitere Kommandos an diesen abgibt. Sind alle erforderlichen Antworten eingetroffen, kann er die Bestellung abschließen und dies wiederum über eine \textit{Event}-Nachricht an den Besteller signalisieren. \\
 In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator}, da er auf mehrere Nachrichten wartet, und anhand dieser eine Antwort generiert. 
 
 \begin{figure}
@@ -43,15 +43,25 @@ In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator},
 \subsection{Routing}\label{sec:actor:patterns:routing}
 In einem Actor System versteht man laut \cite{Vernon2015ReactiveAkka} und \cite{kuhn2017reactive} eine Komponente, welche ankommende Nachrichten an einen oder mehrere Actors weitersendet. \\
 In \cite{Vernon2015ReactiveAkka} sind eine vielzahl an unterschiedlichsten Routern beschrieben. Wie die meisten anderen Komponenten auch, ist ein Router ein Actor. Dieser Actor bekommt dann die Aufgabe einkommende Nachrichten entsprechend weiterzuleiten. Dazu kann ein Router verschiedene Faktoren für das Routing einbeziehen. Als Beispiel ist unter anderem zu nennen, dass, der Router Informationen aus der Nachricht entnimmt, und anhand dieser das Routing vornimmt. Weiters können auch Einflüsse des Actor-System einbezogen werden. In \cite{Vernon2015ReactiveAkka} und \cite{Akka.netCommunityAkka.NETDocumentation} ist zu lesen, das ein Router CPU oder Speicherauslastung von verschiedenen Systemen überwacht, und neue Nachrichten an das am wenigsten ausgelastete System zukommen lässt. \\
-\cite{Vernon2015ReactiveAkka} kategorisiert Router in drei grobe Kategorien. 
+\cite{Vernon2015ReactiveAkka} kategorisiert Router in folgende drei Kategorien. 
 \begin{description}
-    \item[Einfache Router] 
-    \item[Zusammengesetzte Router]
-    \item[Architektonische Router]
+    \item[Einfache Router] Werden Nachrichten von einem Actor an einen anderen Actor weitergeleitet spricht man von einem einfachen Router. Diese Router leiten Nachrichten anhand des Inhaltes oder anderen Faktoren an andere Actors weiter. Weiters ist es auch möglich das ein Router eine einzelne Nachricht in mehrere Nachrichten aufteilt, und diese dann einzeln an andere Actoren weiterleitet. Die Möglichkeiten von Routern ist umfangreich und daher gibt es unzählig verschiedene.
+    \item[Zusammengesetzte Router] Da einfache Router nur exakt eine einzige Aufgabe vollführen, können für komplexere Aufgaben mehrere einfache Router zusammen verwendet werden und bilden dann einen zusammengesetzten Router. Für den verwender eines zusammengesetzten Routers spielt es jedoch keine Rolle welche einfachen Router dafür verwendet werden.
+    \item[Architektonische Router] Um die Entkoppelung von Komponenten und Actoren zu ermöglichen, können Router eingesetzt werden, dessen Aufgabe es ist diese Entkoppelung zu erwirken. Sie werden zwar nicht für den konkreten Ablauf eines Prozesses benötigt, bewirken jedoch Verbesserungen beim Durchsatz und der Erweiterbarkeit. 
 \end{description}
-
+Durch den Einsatz von Routern können Prozesse und Abläufe durch Actors abgebildet werden und eine optimale, an das Aufgabengebiet angepasste Verteilung erwirkte werden. Die in \cite{Vernon2015ReactiveAkka} diskutierten Router Beispiele zeigen auf, welche Vielzahl an Einsatzmöglichkeiten ein Actor als Router ermöglichen kann. 
 
 \subsection{Aggregator}\label{sec:actor:patterns:aggregator}
+Wie bereits im Beispiel in Kapitel \ref{sub:actor:patterns:processor} gezeigt, kann ein Actor di Aufgabe haben, auf verschiedene Nachrichten zu warten,um abschließend eine Antwort zu erstellen und zu versenden. Der Actor aggregiert somit eine beliebige Anzahl an Nachrichten und erzeugt daraus neue Nachrichten. \\
+Der Aggregator kann durch folgende, in \cite{Vernon2015ReactiveAkka} gelisteten Kriterien, erkennen wann die Aggregation abgeschlossen ist.
+\begin{itemize}
+    \item Auf alle Nachrichten warten
+    \item Nach Ablauf eines Zeitfensters
+    \item Nachricht mit optimalen Kriterien eingetroffen
+    \item Externes Event eingetreten
+    \item Ablauf eines Zeitfensters oder eines der anderen Kriterien
+\end{itemize}
+Welches der fünf Kriterien ein Aggregator für die Terminierung verwendet, hängt stark von der eigentlichen Aufgabe ab. Ein Aggregator selber kann, wie in \cite{Vernon2015ReactiveAkka} beschrieben, auch als Router fungieren, dies ist jedoch nicht zwingend erforderlich.
 
 \subsection{Grantierte Nachrichtenzustellung}
 AtLeastOnceDelivery
