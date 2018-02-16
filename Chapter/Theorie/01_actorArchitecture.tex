@@ -35,7 +35,7 @@ In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator},
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{gfx/actor/patterns/simpleOrderProcesor}
+    \includegraphics[width=0.9\linewidth]{gfx/actor/patterns/simpleOrderProcesor}
     \caption{Ein schemenhafter Bestellprozess welcher mehrere andere Actors miteinbezieht.}
     \label{fig:actor:patterns:orderProcesseor}
 \end{figure}
@@ -52,19 +52,30 @@ In \cite{Vernon2015ReactiveAkka} sind eine vielzahl an unterschiedlichsten Route
 Durch den Einsatz von Routern können Prozesse und Abläufe durch Actors abgebildet werden und eine optimale, an das Aufgabengebiet angepasste Verteilung erwirkte werden. Die in \cite{Vernon2015ReactiveAkka} diskutierten Router Beispiele zeigen auf, welche Vielzahl an Einsatzmöglichkeiten ein Actor als Router ermöglichen kann. 
 
 \subsection{Aggregator}\label{sec:actor:patterns:aggregator}
-Wie bereits im Beispiel in Kapitel \ref{sub:actor:patterns:processor} gezeigt, kann ein Actor di Aufgabe haben, auf verschiedene Nachrichten zu warten,um abschließend eine Antwort zu erstellen und zu versenden. Der Actor aggregiert somit eine beliebige Anzahl an Nachrichten und erzeugt daraus neue Nachrichten. \\
+Wie bereits im Beispiel in Kapitel \ref{sub:actor:patterns:processor} gezeigt, kann ein Actor die Aufgabe haben, auf verschiedene Nachrichten zu warten, um abschließend eine Antwort zu erstellen und zu versenden. Der Actor aggregiert somit eine beliebige Anzahl an Nachrichten und erzeugt daraus neue Nachrichten. \\
 Der Aggregator kann durch folgende, in \cite{Vernon2015ReactiveAkka} gelisteten Kriterien, erkennen wann die Aggregation abgeschlossen ist.
 \begin{itemize}
-    \item Auf alle Nachrichten warten
-    \item Nach Ablauf eines Zeitfensters
+    \item Alle zu erwartenden Nachrichten sind eingetroffen
+    \item Zeitfenster ist abgelaufen
     \item Nachricht mit optimalen Kriterien eingetroffen
-    \item Externes Event eingetreten
-    \item Ablauf eines Zeitfensters oder eines der anderen Kriterien
+    \item Ein externes Event ist eingetreten
+    \item Ablauf eines Zeitfensters oder eines der anderen vier Kriterien
 \end{itemize}
 Welches der fünf Kriterien ein Aggregator für die Terminierung verwendet, hängt stark von der eigentlichen Aufgabe ab. Ein Aggregator selber kann, wie in \cite{Vernon2015ReactiveAkka} beschrieben, auch als Router fungieren, dies ist jedoch nicht zwingend erforderlich.
 
-\subsection{Grantierte Nachrichtenzustellung}
-AtLeastOnceDelivery
+\subsection{Garantierte Nachrichtenzustellung}
+Die Zustellung von Nachrichten zu einem Actor unterliegt allgemein keiner Garantie das sie dort auch ankommt, geschweige den Verarbeitet wird. Schon in \cite{Agha1985ConcurrentParallelism} wird dieses Problem skiziert. Auch \cite{Vernon2015ReactiveAkka} oder \cite{CloudComputingPatterns2014} verweisen auf dieses Problem das nicht gewährleistet werden kann, das eine Nachricht an einen Actor auch ankommt. In \cite{CloudComputingPatterns2014} generalisiert dieses Problem das Nachrichten zwischen Komponenten generell keiner garantierten Zustellung unterliegen. \\
+Um in einem solchen System jedoch die Zustellung von Nachrichten zu gewährleisten gibt es Muster welche die Zustellung einer Nachricht überwachen. In \cite{messagedeliveryreliabilityakkadocumentation} sowie \cite{hughmckee_2017} werden drei Kategorien für die Zustellung von Nachrichten genannt.
+\begin{description}
+    \item [Höchstens einmal] Eine Nachricht wird entweder garnicht oder maximal einmal zugestellt. Diese Kategorie wird erreicht, wenn eine Nachricht ohne spezielle vorkehrungen an einen Actor gesendet wird. Sie kommt entweder an, oder sie geht verloren.
+    \item [Mindestens einmal] Die Nachricht wird mindestens einmal oder beliebig oft zugestellt. Die Nachricht wird so oft verwendet, bis eine Bestätigung eintrifft. Das führt jedoch zu dem Umstand, falls die Bestätigung während der Zustellung verloren geht, auch die Nachricht selbst öfters zugestellt werden kann.
+    \item [Exakt einmal] Die Nachricht wird exakt einmal zugestellt. Erfordert jedoch viele Ressourcen und ist nur schwer Realisierbar.
+\end{description}
+\cite{Vernon2015ReactiveAkka} zeigt eine variante der garantierten Nachrichtenzustellung mit dem \textit{Actor-Model}, welche die zustellung mindestens einmal garantiert. Dabei wird beim versenden die gesendete Nachricht in einem permantenten Speicher abgespeichert. Trifft die Bestätigung der gesendeten Nachricht ein, wird die gespeicherte Nachricht entsprechend markiert. Vergeht nach dem versenden der Nachricht ein definiertes Zeitfenster ohne eintreffen einer Bestätigung, so wird die Nachricht erneut versendet. Dies geschieht solange bis die Bestätigung einlangt. \\
+Generell ist jedoch immer zu beachten, das das versenden einer Nachricht fehlschlagen kann. Je nach Anwendungsfall muss dies vom Entwickler beachtet werden, und entsprechende Maßnahmen dafür getroffen werden. Die Gründe weshalb eine Nachricht nicht Ordnungsgemäß zugestellt wird sind zahlreich. So kann beispielsweise die Nachricht über ein Netzwerk gesendet werden und somit kann auch das Paket verloren gehen. Weiters ist es möglich, das der Empfänger der Nachricht nicht reagiert weil die Mailbox voll ist oder der Prozess welchen den Empfänger beherbergt nicht reagiert. Die Gründe für die Unzustellbarkeit sind zahllos, weshalb die Zustellbarkeit auch nicht garantiert werden kann. \citep{messagedeliveryreliabilityakkadocumentation}
+
+
+
 
 
 
