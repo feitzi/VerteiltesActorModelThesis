@@ -1,11 +1,33 @@
-\chapter{Verteilte Systeme}
+\chapter{Verteilte Systeme}\label{cha:distributedSystems}
 Mit dem Beginn des Computerzeitalters in den 50er Jahren galten Leistungsstarke Rechner als kostenintensiv, benötigten viel Platz und operierten meist unabhängig und autark von anderen Geräten. Durch die Weiterentwicklung von Hardware sowie auch Software konnte im lauf der Zeit diese Entwicklung von Geräten so weit gebracht werden, dass heute Computer kostengünstig sowie platzsparend sind. Weiters ist die Entwicklung der Netzwerktechnologien so weit fortgeschritten, dass eine vernetzung der Geräte keine all zu große Herausforderung mehr ist. Die Geräte jedoch optimal miteinander kommunizieren zu lassen stellt Entwickler von verteilten Systemen immer wieder vor neuen Herausforderungen. \citep{tanenbaum2007distributed} \\
 Dieses Kapitel soll eine Zusammenfassung über Verteile Systeme geben und dessen Problematiken aufzeigen sowie  bekannte Lösungsvorschläge erarbeiten.
 
-\section{Definition Verteilte Systeme}
+\section{Definition Verteilte Systeme}\label{sec:distributedSystems:definition}
 Der Begriff \textit{Verteilte Systeme} fasst eine große Anzahl an Themenblöcken zusammen, demenstprechend gibt es auch eine mehrzahl an verschiedenen Definitionen welche sich zum Teil auch voneinander grob unterscheiden. Eine weitläufige und angesehene Definition ist jene von \cite{tanenbaum2007distributed}:
 \begin{quote}
-    Ein verteiltes System ist eine Ansammlung von unabhängigen Rechnern, die den Anwendern als ein einziges kohärentes System erscheint.
+    Ein verteiltes System ist eine Ansammlung von eigenständigen Rechnern, die den Anwendern als ein einziges kohärentes System erscheint.
     \label{quote:distributedSystem:tanenbaum}
 \end{quote}
+In dieser Definition legt \cite{tanenbaum2007distributed} den Schwerpunkt auf die Beteiligten Komponenten, welche die Computer sowie die Benutzer sind. Die beteiligten Rechner arbeiten unabhängig voneinander in einem Verbund. Benutzer des Systems sehen jedoch die vernetzen Rechner nicht und müssen auch nichts darüber wissen, für den Benutzer erscheint das verteilte System als ein einzelnes zusammenhängedes System. Dadurch spürt der Benutzer zuerst keinen Unterschied, ob er mit einem einzelnen Rechner, einem Mainframe oder eben mit einem verteilten System interagiert \citep{tanenbaum2007distributed}. \\
 
+\section{Ziele eines Verteilen Systemes}\label{sec:distributedSystems:goales}
+Verteilte Systeme bieten viele Vorteile und sind in einigen Bereichen von bedeutender Wichtigkeit. Jedoch ist der Einsatz eines verteilten Systems mit hohem Aufwand verbunden, weshalb nicht alle Probleme damit gelöst werden können. In \cite{tanenbaum2007distributed} werden die Ziele welche ein Verteiltes System verfolgt erläutert. Bei der Entscheidung ob ein Verteiltes System zur bewerkstelligung eines Problems beiträgt, sollte das zu lösende Problem mit den folgende Zielen vereinbar sein.
+
+\subsection{Zuverfügungstellen von Ressourcen}\label{sec:distributedSystems:goales:resourceAccess} Das Hauptziel eines jeden Verteilten Systems ist es laut \cite{tanenbaum2007distributed} Ressourcen zu Verfügung zu stellen. Welche Art von Ressource ist unerheblich. Es kann sich um typische Web Ressourcen wie Files oder Texte handeln, oder auch physikalische Ressourcen wie beispielsweise Drucker, Scanner oder Fahrzeuge handeln.\\
+Dies kann erforderlich sein um aus kostengründen, teure Ressourcen, einer möglichst breiten Maße an Benutzern zu verfügung zu stellen. Weiters kann der gemeinsame Zugriff auf eine oder mehrere Ressourcen zu einer besseren zusammenarbeit zwischen verteilten Teams führen. Durch die Weltweiter vernetzung durch das Internet bekommt die Vernetzung von verteilten Teams eine große Bedeutung zu. 
+\subsection{Transperenz der Verteilung}\label{sec:distributedSystems:goales:Transperency} Wie schon aus der Definition aus Abschnitt \ref{sec:distributedSystems:definition} hervorgeht, ist ein primäres Ziel eines verteilen Systems die Transparenz des internen Aufbaues. Um transparenz gewährleisten zu können  müssen laut \cite{iec1995open} sowie \cite{tanenbaum2007distributed} folgende Punkte in einem verteilten System erfüllt sein:
+\begin{description}
+    \item[Transparenter Zugang] Es ist nicht relevant wie auf eine Ressource zugegriffen gibt. Bei differenzierten Zugriffsarten ist das Ergebnisse sowie die Möglichkeiten der Verarbeitung der Ressource die selbe. 
+    \item[Orsunabhängig] Eine laut \cite{tanenbaum2007distributed} bedeutende Eigenschaft der Transparenz in einem Verteilten System ist der Ortsunabhängige zugriff auf eine Ressource. Der Benutzer muss nicht den physikalischen Ort einer Ressource wissen um darauf zugreifen zu können. 
+    \item[Migration] Wird eine bereits im System befindliche Ressource an einen neuen Ort verschoben, so ist diese weiterhin über die gleiche Adresse wie zuvor erreichbar.
+    \item [Standortwechsel] Eine Ressource welche von einem Benutzer gerade in Verwendung ist und physikalisch an einen neuen Ort Migriert wird, ist ohne Unterbrechung weiterhin für den Benutzer verwendbar.
+    \item[Replizierung] Wird eine einzelne Ressource repliziert, bekommt der Verwender von dieser Replizierung nichts mit und kann diese so verwenden wie wenn die Replizierung nicht vorhanden ist. 
+    \item[Gleichzeitiger Zugriff] Eine Ressource kann unter umständen auch von mehreren Benutzern gleichzeitig verwendet werden. Dieser zugriff von mehreren unterschiedlichen Benutzern ist für den einzelnen Benutzern nicht spürbar,
+    \item[Fehlerresistent] Tritt bei einer Ressource ein Fehler auf, wird dieser vom User verborgen behoben. 
+\end{description}
+
+
+
+\subsection{Offenheit}\label{sec:distributedSystems:goales:openness}
+\subsection{Skalierung}\label{sec:distributedSystems:goales:scalability}
+\subsection{Pitfalls}\label{sec:distributedSystems:goales:Pitfalls}
