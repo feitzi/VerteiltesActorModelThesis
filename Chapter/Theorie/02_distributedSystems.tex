@@ -10,7 +10,7 @@ Der Begriff \textit{Verteilte Systeme} fasst eine große Anzahl an Themenblöcke
 \end{quote}
 In dieser Definition legt \cite{tanenbaum2007distributed} den Schwerpunkt auf die Beteiligten Komponenten, welche die Computer sowie die Benutzer sind. Die beteiligten Rechner arbeiten unabhängig voneinander in einem Verbund. Benutzer des Systems sehen jedoch die vernetzen Rechner nicht und müssen auch nichts darüber wissen, für den Benutzer erscheint das verteilte System als ein einzelnes zusammenhängedes System. Dadurch spürt der Benutzer zuerst keinen Unterschied, ob er mit einem einzelnen Rechner, einem Mainframe oder eben mit einem verteilten System interagiert \citep{tanenbaum2007distributed}. \\
 
-\section{Ziele eines Verteilen Systemes}\label{sec:distributedSystems:goales}
+\section{Ziele eines Verteilen Systems}\label{sec:distributedSystems:goales}
 Verteilte Systeme bieten viele Vorteile und sind in einigen Bereichen von bedeutender Wichtigkeit. Jedoch ist der Einsatz eines verteilten Systems mit hohem Aufwand verbunden, weshalb nicht alle Probleme damit gelöst werden können. In \cite{tanenbaum2007distributed} werden die Ziele welche ein Verteiltes System verfolgt erläutert. Bei der Entscheidung ob ein Verteiltes System zur bewerkstelligung eines Problems beiträgt, sollte das zu lösende Problem mit den folgende Zielen vereinbar sein.
 
 \subsection{Zuverfügungstellen von Ressourcen}\label{sec:distributedSystems:goales:resourceAccess} Das Hauptziel eines jeden Verteilten Systems ist es laut \cite{tanenbaum2007distributed} Ressourcen zu Verfügung zu stellen. Welche Art von Ressource ist unerheblich. Es kann sich um typische Web Ressourcen wie Files oder Texte handeln, oder auch physikalische Ressourcen wie beispielsweise Drucker, Scanner oder Fahrzeuge handeln.\\
@@ -23,11 +23,31 @@ Dies kann erforderlich sein um aus kostengründen, teure Ressourcen, einer mögl
     \item [Standortwechsel] Eine Ressource welche von einem Benutzer gerade in Verwendung ist und physikalisch an einen neuen Ort Migriert wird, ist ohne Unterbrechung weiterhin für den Benutzer verwendbar.
     \item[Replizierung] Wird eine einzelne Ressource repliziert, bekommt der Verwender von dieser Replizierung nichts mit und kann diese so verwenden wie wenn die Replizierung nicht vorhanden ist. 
     \item[Gleichzeitiger Zugriff] Eine Ressource kann unter umständen auch von mehreren Benutzern gleichzeitig verwendet werden. Dieser zugriff von mehreren unterschiedlichen Benutzern ist für den einzelnen Benutzern nicht spürbar,
-    \item[Fehlerresistent] Tritt bei einer Ressource ein Fehler auf, wird dieser vom User verborgen behoben. 
+    \item[Fehlerresistent] Tritt bei einer Ressource ein Fehler auf, wird dieser vom User verborgen behoben oder eine andere Maßnahme ergriffen welche dem Benutzer, so gut wie möglich, ein ungehindertes Weiterarbeiten ermöglicht.
 \end{description}
+Eine weitere Definition von \textit{Leslie Lampert} besagt, dass ein Benutzer erst merkt mit einem Verteilten System zu arbeiten, wenn ein Rechner, von dessen existenz er bisher nichts wusste, nicht mehr funktioniert und unmittelbar Auswirkung auf seine Arbeit hat am System hat \citep{Schroeder:1993}. Die Definition von Lampert zeigt nochmals die Bedeutung Transparenz für ein verteiltes System. \\
+Jedoch ist in praktischen Beispielen eine volle Transparenz eines Verteilten Systems nicht immer optimal. Wie in \cite{tanenbaum2007distributed} beschrieben sind beispielsweise transparente Zeitunterschiede in verteilten Systemen nicht immer für den Benutzer optimal. Deshalb ist eine sinnolle Abwägung von Transparenz bestimmter Bestandteile des Systems gegenüber dem konkreten Anwendungsfall vorzunehmen. 
 
+\subsection{Offenheit}\label{sec:distributedSystems:goales:openness} 
+Ein Verteiltes System besteht in der Regel aus verschiedensten Komponenten welche unterscheider sowie mit externen Teilnehmer kommunizieren. Um eine solche Kommunikation zu ermöglichen müssen Verteilte Systeme Schnittstelldefinitionen offen und standardisiert anbieten. Weiters ist es notwendig das ein Verteiltes System erweiterbar ist, sprich neue Komponenten während des Betriebes hinzugefügt werden können. Auch wenn neue Komponenten gänzlich andere Eigenschaften haben, wie beispielsweise Betriebsystem, Hardware etc..., so ist es möglich wenn sich alle beteiligen Komponenten an die definierten Schnittstellen halten. Durch diese Vorgehensweise ist ein System offen.  
 
+\subsection{Skalierung}\label{sec:distributedSystems:goales:scalability} 
+Das vierte Ziel eines Verteilten Systems ist die Möglichkeit sich auf veränderte Rahmenbedingungen einzustellen. Skalierung in einem Computersystem kann laut \cite{Neuman1993Scale} in drei Dimmensionen unterteilt werden. Diese sind wie folgt:
+\begin{description}
+    \item[Numerisch] Die erste Dimmension zielt auf die Anzahl an Beteiligten Ressourcen sowie Benutzern ab. Diese variiert kann in einem verteilen System stark variieren.
+    \item[Geografisch] Die geografische Dimension betrachtet bei der Skalierung die geografischen Distanzen zwischen den beteiligten Komponenten. Dabei entseht für den Benutzer kein Nachteil wenn eine Komponenten hinzugefügt wird, welche sich geografisch weit weg befindet.
+    \item[Administrativ] In einem verteilen System können mehrere Organisationen beteiligt sein. Die Administrative Dimmension bei der Skalierung zeigt die Beteiligten Organisationen welche das System betreiben auf.
+\end{description}
+Ein System ist demnach laut \cite{Neuman1993Scale} skalierbar wenn der Anstieg an Benutzern und Ressourcen bewältigt werden kann, ohne das Administrationsaufwand sowie Performance darunter benachteiligt wird. \\
 
-\subsection{Offenheit}\label{sec:distributedSystems:goales:openness}
-\subsection{Skalierung}\label{sec:distributedSystems:goales:scalability}
-\subsection{Pitfalls}\label{sec:distributedSystems:goales:Pitfalls}
+\subsubsection{Probleme der Skalierung}
+Das skalieren eines Systems stellt Entwickler vor immense Hürden. Ein häufiges Problem sind laut \cite{tanenbaum2007distributed} einzelne Komponenten, welche nicht skalierbar sein. Steigt nun die Anzahl an Zugriffen auf diese Komponente, kann dies zu einem Flaschenhals für das gesamte System werden. Jedoch sind unter bestimmten Umständen, solche zentralisierten Komponenten nicht verhinderbar. Deshalb sollten laut \cite{tanenbaum2007distributed} diese zentralisierten Teile so gut wie möglich vom Rest des Systems entkoppelt sein. Generell sind in \cite{tanenbaum2007distributed} folgende vier Regeln angegeben, welche ein Ablauf innerhalb eines skalierbaren, verteilen Systems erfüllen muss:
+\begin{enumerate}
+    \item Keine Komponente hat einen kompletten Überblick über das System
+    \item Entscheidungen innerhalb einer Komponente werden nur aufgrund lokalen Informationen getroffen
+    \item Ein Fehler einer einzelnen Komponente lässt den Ablauf nicht fehlschalgen
+    \item Keine Entscheidung fällt aufgrund der Basis das es eine synchronisierte Zeit gibt
+\end{enumerate}
+Der vierte und letzte Punkt, ist laut \cite{tanenbaum2007distributed} deshalb nötig, weil es in einer verteilten Umgebung technisch unmöglich ist, eine Zeit exakt zu synchronisieren. Dieses Problem wird in \cite{lamport1978time} näher erläutert.\\
+Skalierung eines Systems ist eine große Herausforderung und benötigt ein passendes, auf den Anwendungsfall angepasstes Konzept. In einem verteiltem System ist Skalierung jedoch ein äußert wichtiges Prinzip. \cite{tanenbaum2007distributed}
+ 
