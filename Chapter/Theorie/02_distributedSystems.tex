@@ -51,3 +51,25 @@ Das skalieren eines Systems stellt Entwickler vor immense Hürden. Ein häufiges
 Der vierte und letzte Punkt, ist laut \cite{tanenbaum2007distributed} deshalb nötig, weil es in einer verteilten Umgebung technisch unmöglich ist, eine Zeit exakt zu synchronisieren. Dieses Problem wird in \cite{lamport1978time} näher erläutert.\\
 Skalierung eines Systems ist eine große Herausforderung und benötigt ein passendes, auf den Anwendungsfall angepasstes Konzept. In einem verteiltem System ist Skalierung jedoch ein äußert wichtiges Prinzip. \cite{tanenbaum2007distributed}
  
+\section{Limitierungen in Verteilten Systeme }
+\subsection{Die acht falschen Annhamen einer Verteilten Anwendung}
+Durch die komplexität eines verteilten Systems kommt es, auch durch erfahrene Entwickler, immer wieder zu falschen Annahmen während der Konzeptionsphase. Die häufigsten fehlerhaften Annahmen wurden in \cite{deutsch1994eight} zusammengefasst. Diese Liste an fehlerhaften Grundsatzregeln sollten bei der Entwicklung eines verteilen Systems beachtet werden. Nachfolgend eine Übersicht über die acht Punkten von \cite{deutsch1994eight} welche in \cite{rotem2006fallacies} genauer beschrieben werden.
+\begin{description}
+    \item[Das Netzwerk ist ausfallsicher]
+    Das verwenden eines Netzwerkes, unabhängig von der Ausführung dieses, kann immer zu Fehlern führen. Ein Netzwerk besteht laut \cite{rotem2006fallacies} immer aus Komponenten bei welchen plötzliche Störungen auftretten können. Daraus lässt sich folgend ableitend, dass bei der Entwicklung eines Systems nie darauf vertraut werden kann, dass Komponenten, welche über ein Netzwerk angebunden sind, auch tatsächlich erreicht werden können. In Muster aus Abschnitt \ref{sec:actor:patterns:guaranteedDelivery} wird dies beispielsweise bereits beachtet.
+    \item[Das Netzwerk ist sicher]
+    Informationen welche über Netzwerke versendet werden, sind Grundsätzlich nicht davor gesichert, von unbefugten gelesen zu werden. Der verwender des Netzwerkes muss sich deshalb selbst um die Sicherheit der Daten kümmern.
+    \item[Das Netzwerk ist homogen]
+    ????????
+    \item[Die Netzwerktopologie ändert sich nicht]
+    Die verwendete Netzwerkinfrastruktur sowie deren Konfiguration ist laut \cite{rotem2006fallacies} nur auf den ersten blick beständig. In einem Testszenario liegt meist die Konfiguration und der Aufbau der Infrastruktur in den Händen des Entwicklerteams. In Produktionsumgebung liegt überliegt dies jedoch meist fremden Netzwerkadministratoren welche änderungen im Netzwerk vornehmen welche für die Entwickler der Anwendung nicht vorhersehbar sind. Das bedeutet das Entwickler einer verteilten Anwendung diese so Umsetzen, das sie mögliche änderungen des Netzwerkes unterstützen.  Beispiele hierführ sind neue Routingstrecken, andere Netzwerkadressen oder der wechsel von Netzwerkressourcen. 
+    \item[Die Latenz ist null]
+    Die Zeitdauer welche vergeht bis ein Datenpaket in einem Netzwerk übertagen wird, nennt sich Latenz. Die Latenz ist aufgrund physikalischer Gesetze niemals null. Sie variiert jedoch stark, je nach dem welches Übertragungsmedium verwendet wird und welche Strecke überwunden werden soll. Eine häufige  Fehlerquellen ist \cite{rotem2006fallacies}, dass Tests und Probeläufe für ein verteiltes System unter optimale Netzwerkbedingungen durchgeführt werden, wo die Latenz gering ist. In der Produktionsumgebung steigt jedoch dann aufgrund unterschiedlicher Faktoren die Latenz, was in weiterer folge dazu führt das die Anwendung in einen Fehlerzustand resultiert. 
+    \item[Der Datendurchsatz ist unendlich]
+    Im Gegensatz zur Latenz wird beim Datendurchsatz gemessen wie viele Daten gleichzeitig übertragen werden können. Diese ist in Netzwerken ebenfalls stark begrenzt. Jedoch hat sich dieser Faktor in modernen Netzwerken laut \cite{rotem2006fallacies} stark verbessert. Trotzdem ist der Datendurchsatz nicht unendlich und eine Verteile Anwendung muss darauf achten welche Datenmengen übertragen werden.  
+    \item[Die Datenübertragung ist kostenfrei]
+    \item[Es gibt nur einen Administrator]
+\end{description}
+
+\section{CAP-Theorem}
+hier müssen min zwei seiten stehen
