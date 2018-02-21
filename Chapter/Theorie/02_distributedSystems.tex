@@ -35,7 +35,7 @@ Ein Verteiltes System besteht in der Regel aus verschiedensten Komponenten welch
 Das vierte Ziel eines Verteilten Systems ist die Möglichkeit sich auf veränderte Rahmenbedingungen einzustellen. Skalierung in einem Computersystem kann laut \cite{Neuman1993Scale} in drei Dimmensionen unterteilt werden. Diese sind wie folgt:
 \begin{description}
     \item[Numerisch] Die erste Dimmension zielt auf die Anzahl an Beteiligten Ressourcen sowie Benutzern ab. Diese variiert kann in einem verteilen System stark variieren.
-    \item[Geografisch] Die geografische Dimension betrachtet bei der Skalierung die geografischen Distanzen zwischen den beteiligten Komponenten. Dabei entseht für den Benutzer kein Nachteil wenn eine Komponenten hinzugefügt wird, welche sich geografisch weit weg befindet.
+    \item[Geografisch] Die geografische Dimension betrachtet bei der Skalierung die geografischen Distanzen zwischen den beteiligten Komponenten. Dabei entsteht für den Benutzer kein Nachteil wenn eine Komponenten hinzugefügt wird, welche sich geografisch weit weg befindet.
     \item[Administrativ] In einem verteilen System können mehrere Organisationen beteiligt sein. Die Administrative Dimmension bei der Skalierung zeigt die Beteiligten Organisationen welche das System betreiben auf.
 \end{description}
 Ein System ist demnach laut \cite{Neuman1993Scale} skalierbar wenn der Anstieg an Benutzern und Ressourcen bewältigt werden kann, ohne das Administrationsaufwand sowie Performance darunter benachteiligt wird. \\
@@ -51,7 +51,7 @@ Das skalieren eines Systems stellt Entwickler vor immense Hürden. Ein häufiges
 Der vierte und letzte Punkt, ist laut \cite{tanenbaum2007distributed} deshalb nötig, weil es in einer verteilten Umgebung technisch unmöglich ist, eine Zeit exakt zu synchronisieren. Dieses Problem wird in \cite{lamport1978time} näher erläutert.\\
 Skalierung eines Systems ist eine große Herausforderung und benötigt ein passendes, auf den Anwendungsfall angepasstes Konzept. In einem verteiltem System ist Skalierung jedoch ein äußert wichtiges Prinzip. \cite{tanenbaum2007distributed}
  
-\section{Limitierungen in Verteilten Systeme }
+\section{Limitierungen in Verteilten Systeme}
 \subsection{Die acht falschen Annhamen einer Verteilten Anwendung}
 Durch die komplexität eines verteilten Systems kommt es, auch durch erfahrene Entwickler, immer wieder zu falschen Annahmen während der Konzeptionsphase. Die häufigsten fehlerhaften Annahmen wurden in \cite{deutsch1994eight} zusammengefasst. Diese Liste an fehlerhaften Grundsatzregeln sollten bei der Entwicklung eines verteilen Systems beachtet werden. Nachfolgend eine Übersicht über die acht Punkten von \cite{deutsch1994eight} welche in \cite{rotem2006fallacies} genauer beschrieben werden.
 \begin{description}
@@ -72,6 +72,8 @@ Durch die komplexität eines verteilten Systems kommt es, auch durch erfahrene E
     \item[Es gibt nur einen Administrator]
     Wird eine Anwendung in einer größeren Umgebung ausgerollt, so sind auch mehr Personen daran beteiligt. Auch die Administration eines Netzwerkes kann dann unterschiedlichen Personen obliegen. Vorallem wenn die Umgebung in welchem die Anwendung läuft zwischen mehreren Organisationen aufgeteilt ist. Meist sind diese Personen auch nicht an der Entwicklung der Anwendung beteiligt. Deshalb ist es erforderlich Verwaltungstools oder ähnliches für diese Gruppe an Netzwerkadministratoren anzubieten damit diese einen überblick über die Anwendung bekommen \cite{rotem2006fallacies}.  
 \end{description}
+Diese acht Annahmen sind trotz ihres Alters auch heute noch wichtig und sollten von Architekten für verteilte Systeme immer wieder beachtet werden. Auch wenn die Regeln meist logisch und klar erscheinen werden sie immer wieder aufgrund unterschiedlichster Gründe gebrochen. \cite{rotem2006fallacies} 
 
 \section{CAP-Theorem}
+Eine weitere Bedeutende Limitierung in einem verteilten System stellt das CAP-Theorem dar.
 hier müssen min zwei seiten stehen
