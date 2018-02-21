@@ -52,7 +52,7 @@ Der vierte und letzte Punkt, ist laut \cite{tanenbaum2007distributed} deshalb n�
 Skalierung eines Systems ist eine große Herausforderung und benötigt ein passendes, auf den Anwendungsfall angepasstes Konzept. In einem verteiltem System ist Skalierung jedoch ein äußert wichtiges Prinzip. \cite{tanenbaum2007distributed}
  
 \section{Limitierungen in Verteilten Systeme}
-\subsection{Die acht falschen Annhamen einer Verteilten Anwendung}
+\subsection{Die acht falschen Annhamen einer Verteilten Anwendung}\label{sec:distributedSystems:wrongAssumptions} 
 Durch die komplexität eines verteilten Systems kommt es, auch durch erfahrene Entwickler, immer wieder zu falschen Annahmen während der Konzeptionsphase. Die häufigsten fehlerhaften Annahmen wurden in \cite{deutsch1994eight} zusammengefasst. Diese Liste an fehlerhaften Grundsatzregeln sollten bei der Entwicklung eines verteilen Systems beachtet werden. Nachfolgend eine Übersicht über die acht Punkten von \cite{deutsch1994eight} welche in \cite{rotem2006fallacies} genauer beschrieben werden.
 \begin{description}
     \item[Das Netzwerk ist ausfallsicher]
@@ -74,6 +74,17 @@ Durch die komplexität eines verteilten Systems kommt es, auch durch erfahrene E
 \end{description}
 Diese acht Annahmen sind trotz ihres Alters auch heute noch wichtig und sollten von Architekten für verteilte Systeme immer wieder beachtet werden. Auch wenn die Regeln meist logisch und klar erscheinen werden sie immer wieder aufgrund unterschiedlichster Gründe gebrochen. \cite{rotem2006fallacies} 
 
-\section{CAP-Theorem}
-Eine weitere Bedeutende Limitierung in einem verteilten System stellt das CAP-Theorem dar.
-hier müssen min zwei seiten stehen
+\section{CAP-Theorem}\label{sec:distributedSystems:capTheorem}
+Eine weitere bedeutende Limitierung innerhalb eines verteilten System stellt das \textit{CAP-Theorem}  dar. Das von Eric Brewer in \cite{Brewer2000TowardsSystems}  erstmals beschriebene Theorem beschreibt die Limitierung von drei gewünschten Eigenschaften in einem verteilen System. Diese drei Eigenschaften sind Konsistenz, Verfügbarkeit sowie Partition Toleranz. Nach dem \textit{CAP-Theorem} können in jedem System nur zwei der drei Eigenschaften garantiert werden. Auf eine der drei Eigenschaften muss auf jeden Fall verzichtet werden. In \cite{gilbertPerspectiveCAPTheorem2012} wird das \textit{CAP-Theorem} mit dem aktuellen Stand der Dinge wie folgt beschrieben.
+
+\begin{description}
+
+\item[Konsistenz]
+Die Konsistenz der Daten welche ein verteiltes System als Antwort an Anfragen gibt sollte gegeben sein. Das ist je nach Komplexitätsgrad der Anwendung unterschiedlich möglich. So sind laut \cite{gilbertPerspectiveCAPTheorem2012} der Koordinationsaufwand für die erhaltung der Daten ausschlaggebend für die erhaltung der Konsistenz eines Systems. Können die Daten aufgrund von statischen Berechnungen erzeugt werden ist die Konsistenz wesentlich leichter zu realisieren, als wenn die Daten über das gesamte Netzwerk verteilt werden müssen. Ein verteiltes System ist dann Konsistenz, wenn sichergestellt ist, dass jede beteiligte Komponente den gleichen Datenbestand sehen kann und somit keine inkonsistentem entstehen können.   
+
+\item[Verfügbarkeit]
+Die Verfügbarkeit eines Systems, wie bereits im {\textit{Reactive Manifesto}} in Kapitel \ref{reactivo:responsive} gefordert, bedeutet, dass das System zu jeder Zeit auf ankommende Anfragen beantworten kann. Die Antwort muss dabei innerhalb einer, zum Kontext der Aufgabe vertretbaren Zeit, erfolgen.
+
+\item[Partition Toleranz]
+Da das verteilte System aus mehreren beteiligten Komponenten besteht, müssen diese auch miteinander kommunizieren. Da, wie bereits in Abschnitt \ref{sec:distributedSystems:wrongAssumptions} besprochen, die Kommunikation in einem System nie garantiert werden kann, können durch Verbindungsunterbrechungen im Netzwerk Partitionen entstehen. Partitioniert sich ein Netzwerk, ist die Kommunikation zwischen den entstandenen Partitionen temporär nicht mehr möglich.
+\end{description}
