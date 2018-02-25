@@ -3,7 +3,7 @@ Mit dem Beginn des Computerzeitalters in den 50er Jahren galten Leistungsstarke 
 Dieses Kapitel soll eine Zusammenfassung über Verteile Systeme geben und dessen Problematiken aufzeigen sowie  bekannte Lösungsvorschläge erarbeiten.
 
 \section{Definition Verteilte Systeme}\label{sec:distributedSystems:definition}
-Der Begriff \textit{Verteilte Systeme} fasst eine große Anzahl an Themenblöcken zusammen, demenstprechend gibt es auch eine mehrzahl an verschiedenen Definitionen welche sich zum Teil auch voneinander grob unterscheiden. Eine weitläufige und angesehene Definition ist jene von \cite{tanenbaum2007distributed}:
+Der Begriff \textit{Verteilte Systeme} fasst eine große Anzahl an Themenblöcken zusammen, dementsprechend gibt es auch eine Mehrzahl an verschiedenen Definitionen welche sich zum Teil auch voneinander grob unterscheiden. Eine weitläufige und angesehene Definition ist jene von \cite{tanenbaum2007distributed}:
 \begin{quote}
     Ein verteiltes System ist eine Ansammlung von eigenständigen Rechnern, die den Anwendern als ein einziges kohärentes System erscheint.
     \label{quote:distributedSystem:tanenbaum}
@@ -52,6 +52,8 @@ Der vierte und letzte Punkt, ist laut \cite{tanenbaum2007distributed} deshalb n�
 Skalierung eines Systems ist eine große Herausforderung und benötigt ein passendes, auf den Anwendungsfall angepasstes Konzept. In einem verteiltem System ist Skalierung jedoch ein äußert wichtiges Prinzip. \cite{tanenbaum2007distributed}
  
 \section{Limitierungen in Verteilten Systeme}
+Verteilte Systeme sind aufgrund Ihrer komplexität dementsprechend schwer umzusetzen. Bei der Realisierung eines Systeme sind dementsprechend auch einige generell gültige Limitierungen zu berücksichtigen. Dazu gehören unter anderem die von Deutsch definierten inkorrekten Annahmen in einem verteilen System sowie das \textit{CAP-Theorem} von Brewer, welche beide Nachfolgend betrachtet werden.
+
 \subsection{Die acht falschen Annhamen einer Verteilten Anwendung}\label{sec:distributedSystems:wrongAssumptions} 
 Durch die komplexität eines verteilten Systems kommt es, auch durch erfahrene Entwickler, immer wieder zu falschen Annahmen während der Konzeptionsphase. Die häufigsten fehlerhaften Annahmen wurden in \cite{deutsch1994eight} zusammengefasst. Diese Liste an fehlerhaften Grundsatzregeln sollten bei der Entwicklung eines verteilen Systems beachtet werden. Nachfolgend eine Übersicht über die acht Punkten von \cite{deutsch1994eight} welche in \cite{rotem2006fallacies} genauer beschrieben werden.
 \begin{description}
@@ -78,7 +80,6 @@ Diese acht Annahmen sind trotz ihres Alters auch heute noch wichtig und sollten 
 Eine weitere bedeutende Limitierung innerhalb eines verteilten System stellt das \textit{CAP-Theorem}  dar. Das von Eric Brewer in \cite{Brewer2000TowardsSystems}  erstmals beschriebene Theorem beschreibt die Limitierung von drei gewünschten Eigenschaften in einem verteilen System. Diese drei Eigenschaften sind Konsistenz, Verfügbarkeit sowie Partition Toleranz. Nach dem \textit{CAP-Theorem} können in jedem System nur zwei der drei Eigenschaften garantiert werden. Auf eine der drei Eigenschaften muss auf jeden Fall verzichtet werden. In \cite{gilbertPerspectiveCAPTheorem2012} wird das \textit{CAP-Theorem} mit dem aktuellen Stand der Dinge wie folgt beschrieben.
 
 \begin{description}
-
 \item[Konsistenz]
 Die Konsistenz der Daten welche ein verteiltes System als Antwort an Anfragen gibt sollte gegeben sein. Das ist je nach Komplexitätsgrad der Anwendung unterschiedlich möglich. So sind laut \cite{gilbertPerspectiveCAPTheorem2012} der Koordinationsaufwand für die erhaltung der Daten ausschlaggebend für die erhaltung der Konsistenz eines Systems. Können die Daten aufgrund von statischen Berechnungen erzeugt werden ist die Konsistenz wesentlich leichter zu realisieren, als wenn die Daten über das gesamte Netzwerk verteilt werden müssen. Ein verteiltes System ist dann Konsistenz, wenn sichergestellt ist, dass jede beteiligte Komponente den gleichen Datenbestand sehen kann und somit keine inkonsistentem entstehen können.   
 
@@ -88,3 +89,4 @@ Die Verfügbarkeit eines Systems, wie bereits im {\textit{Reactive Manifesto}} i
 \item[Partition Toleranz]
 Da das verteilte System aus mehreren beteiligten Komponenten besteht, müssen diese auch miteinander kommunizieren. Da, wie bereits in Abschnitt \ref{sec:distributedSystems:wrongAssumptions} besprochen, die Kommunikation in einem System nie garantiert werden kann, können durch Verbindungsunterbrechungen im Netzwerk Partitionen entstehen. Partitioniert sich ein Netzwerk, ist die Kommunikation zwischen den entstandenen Partitionen temporär nicht mehr möglich.
 \end{description}
+Eie Regel, das in einem verteilten System eben nur zwei der drei genannten Kriterien gleichzeitig gewährleistet werden kann, führt dazu, dass man sich, abwiegend auf basis des Anwendungsfall, von einer der drei Eigenschaften trennen muss. Dies kann jedoch oft durch organisatorische Prozesse abgedeckt werden, was jedoch nichts mit dem \textit{CAP-Theorem} zu tun hat. Bei einem Ausfallsicheren verteilten System ist Partition Toleranz auf jeden Fall voraussetzung. Jedoch ist auch hier wieder die optimale Zusammensetzung von der konkreten umzusetzenden Thematik abhängig. Um beispielsweise einen kompromiss mit der Konsistenz der Daten zu erhalten bietet sich das in Kapitel \ref{sec:transactionTheory:base} beschriebene \textit{BASE-Prinzip} an.
