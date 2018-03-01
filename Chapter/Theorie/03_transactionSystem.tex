@@ -2,6 +2,8 @@
 Die Verarbeitung von Informationen in einem Rechnernetzwerk stellt je nach Anwendungsfall verschiedenste Ansprüche an das verarbeitende System. Eine Transaktion selbst ist nach \cite{rahm1993HochleistungsTransaktionssysteme} eine Gruppe von zusammengehörenden Operationen welche gemeinsam das \textit{ACID} Prinzip, siehe Abschnitt \ref{sec:transactionTheory:acid}, einhalten und somit keine Datenanomalien oder Inkonsistenzen zulassen. \\
 Durch den rapiden Anstieg an Anfragen an ein Transaktionssystem sowie die dadurch erfolgte Verteilung der Systeme, wie in \cite{li2017research} beschrieben, haben sich die Ansprüche an Transaktionssysteme in den letzten Jahren verändert. Die Verteilung von Datenverarbeitenden und Persistierenden Systemen führt zu neuen Herausforderungen und andere Kriterien, nicht zuletzt wegen dem \textit{CAP-Theorem}, siehe Kapitel \ref{sec:distributedSystems:capTheorem}, welche in diesem Kapitel diskutiert werden. 
 
+SAMUEL
+
 \section{Transaktionskonzepte}
 Ein Transaktionssystem muss nach \cite{rahm1993HochleistungsTransaktionssysteme}, einem definierten Konzept folgen und dieses jederzeit garantieren können, um so Transaktionen zu verarbeiten. Dabei haben sich zwei Grundlegende Konzepte, \textit{ACID} und \textit{BASE}, entwickelt, auf welche nachfolgend eingegangen wird. Welches der beiden Konzepte sich in der Praxis besser verwendet lässt, hängt vom Anwendungsfall ab. Weiters
 unterscheidet sich das Ziel dieser zwei Konzepte laut \cite{EdlichFriedlandHampeBrauer201010} grundsätzlich, weshalb sie sich zum teils nur schwer vergleichen lassen. Demnach ist \textit{ACID} mehr auf die Garantierung der Konsistenz hin optimiert, während \textit{BASE} die Verteilung der Anwendung priorisiert.
