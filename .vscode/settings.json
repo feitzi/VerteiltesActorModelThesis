@@ -69,7 +69,9 @@
       "Actoren",
       "Pattern",
       "allokieren",
-      "bearbeitbar"
+      "bearbeitbar",
+      "transaktionale",
+      "transaktionalen"
     ],
     "files.exclude": {
       "**/*.aux": true,
