@@ -51,12 +51,15 @@
 \usepackage{babel}
 \usepackage{nameref}
 \usepackage{subfig}
+\usepackage{numprint}
 
 \renewcaptionname{ngerman}{\contentsname}{Inhalt}
 \renewcaptionname{ngerman}{\listfigurename}{Abbildungen}
 \renewcaptionname{ngerman}{\listtablename}{Tabellen}
 \renewcaptionname{ngerman}{\figurename}{Abb.}
 \renewcaptionname{ngerman}{\tablename}{Tab.}
+
+\renewcommand{\floatpagefraction}{.9}
 
 \newcommand{\fullref}[1]{\hyperref[#1]{\ref*{#1}\ \nameref*{#1}}}
 \newcommand\litem[1]{\item{\bfseries #1 \\}}
