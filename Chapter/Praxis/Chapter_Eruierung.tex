@@ -1,0 +1,48 @@
+\chapter{Eruierung für ein verteiltes Transaktionales Actor System} \label{cha:Eruierung}
+Die in den vorhergegangenen Kapitel haben eine theoretische Einführung in die Thematik von verteilten Systemen sowie dem \textit{Actor-Model} selbst gegeben. Nachfolgend soll auf dem erarbeiteten praktischen Wissen ein praktisches Beispiel erarbeitet werden, welches in den nächsten Kapitel umgesetzt werden soll.  
+
+\section{Anforderungskatalog}\label{sec:Eruierung:technicalRequierements}
+Der folgende Anforderungskatalog soll die technischen Anforderungen an ein verteiltes, transaktionales System definieren um anschließend, in einem praktischen Beispiel, Lösungen dafür zu zeigen. Dabei werden aus den hervorgegangenen Kapitel die  wesentlichen Eckpunkte als Anforderung konzipiert. Aus diesen technischen Anforderungen wird anschließend ein Inhaltliches Beispiel gesucht, welches mit den technischen Anforderungen am besten Harmonisiert.
+
+\begin{enumerate}
+    \litem{Verteilbare Komponenten} 
+    Die Anwendung benötigt mehrere unterschiedliche Komponenten, welche selber mehrfach im System vorkommen können. Die Komponenten müssen untereinander Informationen austauschen ohne dabei strikt voneinander abhängig zu sein.
+    \litem{Automatische Skalierung}
+    Bei geringer Auslastung des Systems sollen keine unnötigen Ressourcen verbraucht werden. Steigt jedoch die Last auf die Anwendung, so soll die Anwendung selbst neue Ressourcen allokieren und benötigte Komponenten darauf ausrollen. Diese sollen ohne Menschliches zutun mit dem bereits laufenden System interagieren. Für den Benutzer sollte dieser Prozess keine spürbaren Auswirkungen haben.
+    \litem{Verteilte Daten}
+    Um die Probleme aus Kapitel \ref{cha:distributedSystems} aufzuzeigen, sollen die Daten der Anwendung über Komponenten hinweg verteilt sein. Weiters ist es für Benutzer des Systems nicht relevant wo im System sich die Daten befinden. 
+    \litem{Transaktionale Daten}
+    Die Anwendung soll Transaktionale Prozesse abbilden. Daher sollen verschiedene, nicht als Aggregat zusammengefasste, Daten innerhalb einer Transaktion verändert werden. Es soll auch gezeigt werden, dass die Transaktion bei Fehlern nicht abgeschlossen wird und der Datenbestand weiterhin konsistent bleibt.
+    \litem{Fehlerbeständig}
+    Bei Fehlern in einer Komponente soll es zu keinem Totalausfall des Systems kommen. Der Fehler soll vom System erkennt werden und vom Rest des Systems abgeschottet werden. Hierzu sollen die Anforderungen vom \textit{Reactive-Manifest} aus Kapitel \ref{reactiveManifesto} angewandt werden.
+    \litem{Netzwerk-Partition beständig}
+    Bei partitionierung des Netzwerkes welche die beteiligten Komponenten untereinander verbindet, soll zu keinem Stillstand der Anwendung führen. Nach dem \textit{CAP-Theorem} aus Abschnitt \ref{sec:distributedSystems:capTheorem}, soll demnach der Schwerpunkt auf Verfügbarkeit und Netzwerkpartitionierung gelegt werden. 
+\end{enumerate}
+Die aufgelisteten technischen Anforderungen werden in Kapitel \ref{cha:rating} anhand der Umsetzung des Praxisbeispiels bewertet und diskutiert. 
+
+\section{Anwendungsbeschreibung \textit{TyrolSky}}
+Für die Umsetzung eines praktische Beispiels wird eine Anwendung in Form eines Flugbuchungssystems für eine fiktive Airline namens \textit{TyrolSky} erstellt. Dabei sollen Prozesse entstehen, welche die Punkte aus dem technischen Anforderungskatalog \ref{sec:Eruierung:technicalRequierements} wiederspiegeln und anschaulich repräsentieren. \\
+Für Flugbuchungen der fiktiven Weltweit agierenden Airline \textit{TyrolSky} soll ein System entwickelt werden um Flüge der Airline weltweit anbieten zu können, um die aktuelle Auslastung der Flüge einsehen zu können. Für jeden Flug gibt es eine bestimmte Anzahl an Sitzplätzen, welche von Kunden gebucht werden kann. Eine Überbelegung eines Fluges ist nicht vorgesehen. Kunden können mit Angabe von Abflugort, Zielort und Flugdatum aus einer Liste an angebotenen Flügen wählen. Wird ein Flug ausgewählt kann der Kunde den Flug für 10 Minuten reservieren. Innerhalb dieser Zeit muss der Flug bezahlt werden, ansonsten werden die Plätze wieder freigegeben. Bereits bezahlte Tickets können nicht zurückgelegt werden.  \\
+Die Airline kann für jeden Flug eine aktuelle Passagierliste ausdrucken und so die aktuelle Auslastung einsehen. Das hinzufügen von neuen Flügen ist für die Airline über das System auch möglich. Bereits im System befindliche Flüge können storniert werden, was zur folge hat das der Flug selbst nicht mehr buchbar ist. \\
+
+\subsection{Prozess Beschreibungen}
+\begin{enumerate}
+    \litem{Flüg anlegen} Die Airline kann neue Flüge anlegen. Über den Flugzeugtyp, welcher bei der anlegung anzugeben ist, ergibt sich die maximale Anzahl an möglichen Passagieren. Nach einer erfolgreichen Anlegung im System kann der Flug von Kunden gebucht werden.
+    \litem{Flüg stornieren} Bereits im System befindliche Flüge können Storniert werden. Die stornierung führt dazu das der Flug nicht mehr gebucht werden kann. Bereits gebuchte Tickets werden dabei ersetzt, in dem der Kunde der Betrag gut  geschrieben wird.
+    \litem{Flüge suchen}
+    Kunden können Flüge über eine vereinfachte Suche finden. Dabei ist die Angabe von Abflugort, Zielort sowie Flugdatum möglich. Es ist jedoch nur jeweils eine Richtung buchbar. Sprich Rückflug muss separat gesucht und gebucht werden. 
+    \litem{Flug buchen}
+    
+    \litem{Passagierliste einsehen}
+\end{enumerate}
+
+\subsection{Annahmen}
+
+
+\section{Beschreibung des Praxisbeispieles}
+
+
+\section{Actor Frameworks}\label{sec:ActorFrameworks}
+Welche Möglichkeiten gibt es das Actor Model in der Praxis zu verwenden (Scala, Akka, Akka.Net, Orleans usw)
+
+\section{Testdaten}

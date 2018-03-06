@@ -1,41 +1,9 @@
-\chapter{Eruierung für ein verteiltes Transaktionales Actor System} \label{cha:Eruierung}
-Die in den vorhergegangenen Kapitel haben eine theoretische Einführung in die Thematik von verteilten Systemen sowie dem \textit{Actor-Model} selbst gegeben. Nachfolgend soll auf dem erarbeiteten praktischen Wissen ein praktisches Beispiel erarbeitet werden, welches in den nächsten Kapitel umgesetzt werden soll.  
-
-\section{Anforderungskatalog}
-Der folgende, zu erarbeitende Anforderungskatalog, soll die technischen Anforderungen an ein verteiltes, transaktionales System definieren um in einem praktischen Beispiel Lösungen dafür zu zeigen. Dabei werden aus den hervorgegangenen Kapitel die  wesentlichen Eckpunkte als Anforderung konzipiert. Aus diesen technischen Anforderungen wird anschließend ein Inhaltliches Beispiel gesucht, welches mit den technischen Anforderungen am besten Harmonisiert.
-
-\begin{enumerate}
-\litem{Verteilbare Komponenten} 
-Die Anwendung benötigt mehrere unterschiedliche Komponenten, welche selber mehrfach im System vorkommen können. Die Komponenten müssen untereinander Informationen austauschen.
-\litem{Automatische Skalierung}
-Bei geringer Auslastung des Systems sollen keine unnötigen Ressourcen verbraucht werden, steigt jedoch die Last auf die Anwendung so soll sie selbst neue Ressourcen allokieren und Komponenten auf neuen Hosts ausrollen. Diese sollen ohne Menschliches zutun mit dem System interagieren. Für den Benutzer sollte dieser Prozess keine Auswirkungen haben.
-\litem{Verteilte Daten}
-Um die Probleme aus Kapitel \ref{cha:transactionSystems}
-\litem{Transaktionale Daten}
-\litem{Fehlerbeständig}
-\litem{Netzwerk Partition beständig}
-
-\end{enumerate}
-
-
-
-
-
-
-\subsection{Benötigte Anforderungen}
-Anhand des theoretischen Teiles soll ein Anforderungskatalog für eine praktische Umsetzung erstellt werden.
-
-\section{Einführung in das Praxisbeispiel (Flugbuchungssystem)}
-
-\section{Actor Frameworks}\label{sec:ActorFrameworks}
-Welche Möglichkeiten gibt es das Actor Model in der Praxis zu verwenden (Scala, Akka, Akka.Net, Orleans usw)
-
-\section{Testdaten}
+\input{Chapter/Praxis/Chapter_Eruierung}
 
 \chapter{Umsetzung eines Verteilen Transaktionalen Systems mit dem Actor Model}\label{cha:practicalDevelopment}
 Wie wurde die praktische Implementierung Umgesetzt um den Anforderungskatalog zu erfüllen. Warum wurde welche Technologie gewählt? Welche Probleme gibt es? 
 
 \chapter{Evaluierung} \label{cha:evaluation}
 \section{Auseinandersetzung mit der Forschungsfrage}
-\section{Bewertung der Umsetzung}
+\section{Bewertung der Umsetzung}\label{cha:rating}
 \section{Weiterführende Diskussionen und Forschungsausblick}
