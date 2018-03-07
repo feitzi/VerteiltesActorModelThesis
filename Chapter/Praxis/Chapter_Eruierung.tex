@@ -1,8 +1,14 @@
 \chapter{Eruierung für ein verteiltes Transaktionales Actor System} \label{cha:Eruierung}
-Die in den vorhergegangenen Kapitel haben eine theoretische Einführung in die Thematik von verteilten Systemen sowie dem \textit{Actor-Model} selbst gegeben. Nachfolgend soll auf dem erarbeiteten praktischen Wissen ein praktisches Beispiel erarbeitet werden, welches in den nächsten Kapitel umgesetzt werden soll.  
+Die vorhergegangenen Kapiteln haben eine theoretische Einführung in die Thematik von verteilten Systemen sowie dem \textit{Actor-Model} selbst gegeben. Nachfolgend soll auf dem erarbeiteten theoretischen Wissen ein praktisches Beispiel erarbeitet werden, welches in den nächsten Kapiteln umgesetzt werden soll.  
 
 \section{Anforderungskatalog}\label{sec:Eruierung:technicalRequierements}
-Der folgende Anforderungskatalog soll die technischen Anforderungen an ein verteiltes, transaktionales System definieren um anschließend, in einem praktischen Beispiel, Lösungen dafür zu zeigen. Dabei werden aus den hervorgegangenen Kapitel die  wesentlichen Eckpunkte als Anforderung konzipiert. Aus diesen technischen Anforderungen wird anschließend ein Inhaltliches Beispiel gesucht, welches mit den technischen Anforderungen am besten Harmonisiert.
+Der folgende Anforderungskatalog soll die technischen Anforderungen an ein verteiltes, transaktionales System definieren um anschließend, in einem praktischen Beispiel, Lösungen dafür zu zeigen. Dabei werden aus den hervorgegangenen Kapitel die  wesentlichen Eckpunkte als Anforderung konzipiert. Aus diesen technischen Anforderungen wird anschließend ein inhaltliches Beispiel gesucht, welches mit den technischen Anforderungen am besten Harmonisiert.
+% * <feitzinger.magdalena@gmail.com> 2018-03-07T09:50:03.680Z:
+% 
+% > ein inhaltliches Beispiel 
+% was meinst du mit inhaltlich? 
+% 
+% ^.
 
 \begin{enumerate}
     \litem{Verteilbare Komponenten} 
@@ -16,31 +22,31 @@ Der folgende Anforderungskatalog soll die technischen Anforderungen an ein verte
     \litem{Fehlerbeständig}
     Bei Fehlern in einer Komponente soll es zu keinem Totalausfall des Systems kommen. Der Fehler soll vom System erkennt werden und vom Rest des Systems abgeschottet werden. Hierzu sollen die Anforderungen vom \textit{Reactive-Manifest} aus Kapitel \ref{reactiveManifesto} angewandt werden.
     \litem{Netzwerk-Partition beständig}
-    Bei partitionierung des Netzwerkes welche die beteiligten Komponenten untereinander verbindet, soll zu keinem Stillstand der Anwendung führen. Nach dem \textit{CAP-Theorem} aus Abschnitt \ref{sec:distributedSystems:capTheorem}, soll demnach der Schwerpunkt auf Verfügbarkeit und Netzwerkpartitionierung gelegt werden. 
+    Bei Partitionierung des Netzwerkes, welche die beteiligten Komponenten untereinander verbindet, soll es zu keinem Stillstand der Anwendung kommen. Nach dem \textit{CAP-Theorem} aus Abschnitt \ref{sec:distributedSystems:capTheorem} soll demnach der Schwerpunkt auf Verfügbarkeit und Netzwerkpartitionierung gelegt werden. 
 \end{enumerate}
 Die aufgelisteten technischen Anforderungen werden in Kapitel \ref{cha:rating} anhand der Umsetzung des Praxisbeispiels bewertet und diskutiert. 
 
 \section{Anwendungsbeschreibung \textit{TyrolSky}}
 Für die Umsetzung eines praktische Beispiels wird eine Anwendung in Form eines Flugbuchungssystems für eine fiktive Airline namens \textit{TyrolSky} erstellt. Dabei sollen Prozesse entstehen, welche die Punkte aus dem technischen Anforderungskatalog \ref{sec:Eruierung:technicalRequierements} wiederspiegeln und anschaulich repräsentieren. \\
-Für Flugbuchungen der fiktiven Weltweit agierenden Airline \textit{TyrolSky} soll ein System entwickelt werden um Flüge der Airline weltweit anbieten zu können, um die aktuelle Auslastung der Flüge einsehen zu können. Für jeden Flug gibt es eine bestimmte Anzahl an Sitzplätzen, welche von Kunden gebucht werden kann. Eine Überbelegung eines Fluges ist nicht vorgesehen. Kunden können mit Angabe von Abflugort, Zielort und Flugdatum aus einer Liste an angebotenen Flügen wählen. Wird ein Flug ausgewählt kann der Kunde den Flug für 10 Minuten reservieren. Innerhalb dieser Zeit muss der Flug bezahlt werden, ansonsten werden die Plätze wieder freigegeben. Bereits bezahlte Tickets können nicht zurückgelegt werden.  \\
-Die Airline kann für jeden Flug eine aktuelle Passagierliste ausdrucken und so die aktuelle Auslastung einsehen. Das hinzufügen von neuen Flügen ist für die Airline über das System auch möglich. Bereits im System befindliche Flüge können storniert werden, was zur folge hat das der Flug selbst nicht mehr buchbar ist. \\
+Für Flugbuchungen der fiktiven weltweit agierenden Airline \textit{TyrolSky} soll ein System entwickelt werden um Flüge der Airline weltweit anbieten zu können und um die aktuelle Auslastung der Flüge einsehen zu können. Für jeden Flug gibt es eine bestimmte Anzahl an Sitzplätzen, welche von Kunden gebucht werden können. Eine Überbelegung eines Fluges ist nicht vorgesehen. Kunden können mit Angabe von Abflugort, Zielort und Flugdatum aus einer Liste an angebotenen Flügen wählen. Wird ein Flug ausgewählt, kann der Kunde den Flug für 10 Minuten reservieren. Innerhalb dieser Zeit muss der Flug bezahlt werden, ansonsten werden die Plätze wieder freigegeben. Bereits bezahlte Tickets können nicht zurückgelegt werden.  \\
+Die Airline kann für jeden Flug eine aktuelle Passagierliste ausdrucken und so die aktuelle Auslastung einsehen. Das Hinzufügen von neuen Flügen ist für die Airline über das System auch möglich. Bereits im System befindliche Flüge können storniert werden, was zur Folge hat, dass der Flug selbst nicht mehr buchbar ist. \\
 
-\subsection{Prozess Beschreibungen}
+\subsection{Prozessbeschreibungen}
 \begin{enumerate}
-    \litem{Flüg anlegen} Die Airline kann neue Flüge anlegen. Über den Flugzeugtyp, welcher bei der anlegung anzugeben ist, ergibt sich die maximale Anzahl an möglichen Passagieren. Nach einer erfolgreichen Anlegung im System kann der Flug von Kunden gebucht werden.
-    \litem{Flüg stornieren} Bereits im System befindliche Flüge können Storniert werden. Die stornierung führt dazu das der Flug nicht mehr gebucht werden kann. Bereits gebuchte Tickets werden dabei ersetzt, in dem der Kunde der Betrag gut  geschrieben wird.
+    \litem{Flüge anlegen} Die Airline kann neue Flüge anlegen. Über den Flugzeugtyp, welcher bei der Anlegung anzugeben ist, ergibt sich die maximale Anzahl an möglichen Passagieren. Nach einer erfolgreichen Anlegung im System kann der Flug von Kunden gebucht werden.
+    \litem{Flüge stornieren} Bereits im System befindliche Flüge können storniert werden. Die Stornierung führt dazu, dass der Flug nicht mehr gebucht werden kann. Bereits gebuchte Tickets werden dabei ersetzt, indem der Kunde den Betrag gutgeschrieben bekommt.
     \litem{Flüge suchen}
     Kunden können Flüge über eine vereinfachte Suche finden. Dabei ist die Angabe von Abflugort, Zielort sowie Flugdatum möglich. Es ist jedoch nur jeweils eine Richtung buchbar. Ein möglicher Rückflug muss daher separat gesucht und gebucht werden. 
     \litem{Flug buchen}
-    Ein Flug kann gebucht werden, in dem zuerst eine Reservierung für eine bestimmte Anzahl an Sitzplätzen vorgenommen wird. Sind die Plätze reserviert muss der Kunde innerhalb von 10 Minuten die plätze bezahlen. Nach der erfolgreichen Bezahlung hat der Kunde die Plätze gebucht wird auf die Passagierliste gesetzt. 
+    Ein Flug kann gebucht werden, indem zuerst eine Reservierung für eine bestimmte Anzahl an Sitzplätzen vorgenommen wird. Sind die Plätze reserviert, muss der Kunde innerhalb von 10 Minuten die Plätze bezahlen. Nach der erfolgreichen Bezahlung hat der Kunde die Plätze gebucht und wird auf die Passagierliste gesetzt. 
     \litem{Passagierliste einsehen}
-    \textit{TyrolSky} kann für jeden im System befindlichen Flug eine aktuelle Passagierliste einsehen. Durch Angabe der Flugnummer, sowie des Flugdatums wird eine aktuelle Passagierliste ausgeliefert.
+    \textit{TyrolSky} kann für jeden im System befindlichen Flug eine aktuelle Passagierliste einsehen. Durch Angabe der Flugnummer sowie des Flugdatums wird eine aktuelle Passagierliste ausgeliefert.
 \end{enumerate}
-Die beschriebenen Prozesse sind rein fiktiv und dienen dazu eine anschauliche Anwendung zu entwickeln um Lösungsatze praktisch umzusetzen. 
+Die beschriebenen Prozesse sind rein fiktiv und dienen dazu eine anschauliche Anwendung zu entwickeln um Lösungsansätze praktisch umzusetzen. 
 
 \subsection{Annahmen und Abgrenzungen der Anwendung}
-Bei der Umsetzung der Anwendung soll der Schwerpunkt auf die Implementierung einer verteilten Anwendung stehen. Die Umsetzung einer grafischen Benutzeroberfläche ist deshalb nicht zielführend um Lösungsätze für verteilte Anwendungen auszuarbeiten. Daher wird auf die Umsetzung einer solchen verzichtet. Stattdessen soll die Anwendung eine Schnittstelle zur verfügung stellen, mit welcher die geforderten Prozesse von Benutzern gesteuert werden können. \\
-Für den Bezahlprozess soll eine fiktive Bankenanbindung erstellt und angebunden werden. Diese Bankenapplikation soll nicht Bestandteil der Buchungsanwendung sein, sondern vielmehr eine externe Komponente wie in Kapitel \ref{actor:actorSystem} beschrieben, darstellen. 
+Bei der Umsetzung der Anwendung soll der Schwerpunkt auf die Implementierung einer verteilten Anwendung stehen. Die Umsetzung einer grafischen Benutzeroberfläche ist deshalb nicht zielführend und es wird auf diese verzichtet. Im Vordergrund steht die Ausarbeitung von Lösungsansätze für verteilte Anwendungen. Stattdessen soll die Anwendung eine Schnittstelle zur Verfügung stellen, mit welcher die geforderten Prozesse von Benutzern gesteuert werden können. \\
+Für den Bezahlvorgang soll eine fiktive Bankenanbindung erstellt und angebunden werden. Diese Bankenapplikation soll nicht Bestandteil der Buchungsanwendung sein, sondern vielmehr eine externe Komponente wie in Kapitel \ref{actor:actorSystem} beschrieben, darstellen. 
 
 \section{Testdaten}
 Die Airline \textit{TyrolSky} bietet die in Tabelle \ref{tab:tab:TyrolSky:airplanes} enthaltenden Flugzeugtypen mit den darin angegebenen Kapazität an. 
@@ -61,11 +67,11 @@ Die Airline \textit{TyrolSky} bietet die in Tabelle \ref{tab:tab:TyrolSky:airpla
 \label{tab:TyrolSky:airplanes}
 \end{table}
 Die Airline bietet zwischen Juni 2018 bis Juni 2019 täglich die in Tabelle \ref{tab:TyrolSky:destinations} angeführten Verbindungen an. Zusätzliche Verbindungen können jederzeit in das System eingebracht werden. \\
-Aus den Beispiel Daten lässt sich ableiten, dass sich daher pro Tag aus den $18$ unterschiedlichen Flügen insgesamt \numprint{5323} Buchbare Plätze im System befinden, somit im gesamten Zeitraum \numprint{1942895} Plätze. \\
-Um mit den vielzahl an möglichen Plätzen eine Last für das System zu erzeugen, ist eine entsprechend große Menge an potenziellen Fluggästen nötig. Um die Benutzer zu simulieren ist deshalb auch ein eigenes Testsystem notwendig, welches die Benutzer simuliert und auch versucht Flüge zu überbuchen um zu zeigen, dass sich das System richtig verhält. \\
+Aus den Beispiel Daten lässt sich ableiten, dass sich daher pro Tag aus den $18$ unterschiedlichen Flügen insgesamt \numprint{5323} buchbare Plätze im System befinden, somit im gesamten Zeitraum \numprint{1942895} Plätze vorhanden. \\
+Um mit der Vielzahl an möglichen Plätzen eine Last für das System zu erzeugen, ist eine entsprechend große Menge an potenziellen Fluggästen nötig. Um die Benutzer zu simulieren ist deshalb auch ein eigenes Testsystem notwendig, welches die Benutzer simuliert und auch versucht Flüge zu überbuchen um zu zeigen, dass sich das System richtig verhält. \\
 
 \subsubsection{Benutzer Simulation}
-Die Simulationsanwendung erzeugt zufällige Benutzer, welche sich anschließend für einen oder mehrere Flüge interessieren und deshalb versuchen ein Ticket dafür zu kaufen. Die Anwendung ist über die Parameter Zeitraum, Anzahl Benutzer sowie einer Liste an zu Buchenden Flügen steuerbar. Jede von der Simulation durchgeführte Buchungsschritt ist in einer Datenbank abgelegt um die Simulierten Buchungen nachvollziehen zu können.
+Die Simulationsanwendung erzeugt zufällige Benutzer, welche sich für einen oder mehrere Flüge interessieren und deshalb versuchen ein Ticket zu kaufen. Die Anwendung ist über die Parameter Zeitraum, Anzahl Benutzer sowie einer Liste an zu buchenden Flügen steuerbar. Jede von der Simulation durchgeführte Buchungsschritt ist in einer Datenbank abgelegt um die Simulierten Buchungen nachvollziehen zu können.
 
 \begin{table}
     \centering
