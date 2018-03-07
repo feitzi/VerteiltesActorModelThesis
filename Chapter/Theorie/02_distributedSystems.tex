@@ -22,15 +22,10 @@ Verteilte Systeme bieten viele Vorteile und sind in einigen Bereichen von bedeut
 
 \subsection{Zur Verfügungstellung von Ressourcen}\label{sec:distributedSystems:goales:resourceAccess} Das Hauptziel eines jeden Verteilten Systems ist  laut \cite{tanenbaum2007distributed} Ressourcen zu Verfügung zu stellen. Welche Art von Ressource ist unerheblich. Es kann sich um typische Web Ressourcen wie Files oder Texte handeln, oder auch physikalische Ressourcen wie beispielsweise Drucker, Scanner oder Fahrzeuge handeln.\\
 Das zu verfügung stellen von teuren physischen Ressourcen kann erforderlich sein, um diese einer möglichst breiten Maße an Benutzern anzubieten. Weiters kann der gemeinsame Zugriff auf eine oder mehrere Ressourcen zu einer besseren Zusammenarbeit zwischen verteilten Teams führen. Durch die weltweite Vernetzung durch das Internet bekommt der Zusammenbringung von verteilten Teams eine große Bedeutung zu. 
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T17:14:44.195Z:
-% 
-% > Dies
-% Was ist mit dies gemeint? 
-% 
-% ^.
+
 \subsection{Transparenz der Verteilung}\label{sec:distributedSystems:goales:Transperency} Wie schon aus der Definition aus Abschnitt \ref{sec:distributedSystems:definition} hervorgeht, ist ein primäres Ziel eines verteilen Systems die Transparenz des internen Aufbaues. Um Transparenz gewährleisten zu können, müssen laut \cite{iec1995open} sowie \cite{tanenbaum2007distributed} folgende Punkte in einem verteilten System erfüllt sein:
 \begin{description}
-    \item[Transparenter Zugang] Es ist nicht relevant wie auf eine Ressource zugegriffen wird. Bei differenzierten Zugriffsarten ist das Ergebnis sowie die Möglichkeiten der Verarbeitung der Ressource dieselbe. 
+    \item[Transparenter Zugang] Es ist nicht relevant wie auf eine Ressource zugegriffen wird. Bei differenzierten Zugriffsarten sind die Abfrage Möglichkeiten sowie die Ergebnisse von Abfragen auf Ressourcen dieselben.
     \item[Ortsunabhängig] Eine laut \cite{tanenbaum2007distributed} bedeutende Eigenschaft der Transparenz in einem Verteilten System ist der ortsunabhängige Zugriff auf eine Ressource. Der Benutzer muss nicht den physikalischen Ort einer Ressource wissen um darauf zugreifen zu können. 
     \item[Migration] Wird eine bereits im System befindliche Ressource an einen neuen Ort verschoben, so ist diese weiterhin über die gleiche Adresse wie zuvor erreichbar.
     \item [Standortwechsel] Eine Ressource welche von einem Benutzer gerade in Verwendung ist und physikalisch an einen neuen Ort migriert wird, ist ohne Unterbrechung weiterhin für den Benutzer verwendbar.
@@ -60,14 +55,7 @@ Ein Verteiltes System besteht in der Regel aus verschiedensten Komponenten welch
 \subsection{Skalierung}\label{sec:distributedSystems:goales:scalability} 
 Das vierte Ziel eines Verteilten Systems ist die Möglichkeit sich auf veränderte Rahmenbedingungen einzustellen. Skalierung in einem Computersystem kann laut \cite{Neuman1993Scale} in drei Dimensionen unterteilt werden. Diese sind wie folgt: 
 \begin{description}
-    \item[Numerisch] Die erste Dimension zielt auf die Anzahl an beteiligten Ressourcen sowie Benutzern ab. Diese variiert  und kann in einem verteilen System stark variieren.
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T17:54:30.065Z:
-% 
-% > Diese variiert  und kann in einem verteilen System stark variieren.
-% 
-% verwirrender satz
-% 
-% ^.
+    \item[Numerisch] Die erste Dimension zielt auf die Anzahl an beteiligten Ressourcen sowie Benutzern ab. Die Anzahl an benötigten Ressourcen können in einem verteilten System stark variiere.
     \item[Geografisch] Die geografische Dimension betrachtet bei der Skalierung die geografischen Distanzen zwischen den beteiligten Komponenten. Dabei entsteht für den Benutzer kein Nachteil wenn eine Komponente hinzugefügt wird welche sich geografisch weit weg befindet.
     \item[Administrativ] In einem verteilen System können mehrere Organisationen beteiligt sein. Die administrative Dimension bei der Skalierung zeigt die beteiligten Organisationen auf welche das System betreiben.
 \end{description}
@@ -80,28 +68,16 @@ Das Skalieren eines Systems stellt Entwickler vor immense Hürden. Häufige Prob
     \item Entscheidungen innerhalb einer Komponente werden nur aufgrund lokaler Informationen getroffen
     \item Ein Fehler einer einzelnen Komponente lässt den gesamten Ablauf nicht fehlschlagen
     \item Keine Entscheidung fällt aufgrund der Basis, dass es eine synchronisierte Zeit gibt
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T18:06:35.210Z:
-% 
-% > Keine Entscheidung fällt aufgrund der Basis, dass es eine synchronisierte Zeit gibt
-% Satz umändern
-% 
-% ^.
 \end{enumerate}
 Der vierte und letzte Punkt ist laut \cite{tanenbaum2007distributed} deshalb nötig, weil es in einer verteilten Umgebung technisch unmöglich ist, eine Zeit exakt zu synchronisieren. Dieses Problem wird in \cite{lamport1978time} näher erläutert.\\
 Die Skalierung eines Systems ist eine große Herausforderung und benötigt ein passendes, auf den Anwendungsfall angepasstes Konzept. In einem verteiltem System ist Skalierung jedoch ein äußerst wichtiges Prinzip um Anfragen effizient abarbeiten zu können.\cite{tanenbaum2007distributed}
  
 \section{Limitierungen in Verteilten Systemen}
-Verteilte Systeme sind aufgrund Ihrer Komplexität dementsprechend schwer umzusetzen. Bei der Realisierung eines Systems sind somit einige generell gültige Limitierungen zu berücksichtigen. Dazu gehören unter anderem die von Deutsch definierten inkorrekten Annahmen in einem verteilen System sowie das \textit{CAP-Theorem} von Brewer, welche beide nachfolgend betrachtet werden.
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T19:48:22.784Z:
-% 
-% > Deutsch
-% 
-% bis jetzt hast du Namen immer kursiv gehalten. warum hier nicht? 
-% 
-% ^.
+Verteilte Systeme sind aufgrund Ihrer Komplexität schwer umzusetzen. Bei der Realisierung eines Systems sind somit einige generell gültige Limitierungen zu berücksichtigen. Dazu gehören unter anderem die von Deutsch definierten inkorrekten Annahmen in einem verteilen System sowie das \textit{CAP-Theorem} von \textit{Brewer}, welche beide nachfolgend betrachtet werden.
 
 \subsection{Die acht falschen Annahmen einer Verteilten Anwendung}\label{sec:distributedSystems:wrongAssumptions} 
-Durch die Komplexität eines verteilten Systems kommt es, auch durch erfahrene Entwickler, immer wieder zu falschen Annahmen während der Konzeptionsphase. Die häufigsten fehlerhaften Annahmen wurden in \cite{deutsch1994eight} zusammengefasst. Diese Liste an fehlerhaften Grundsatzregeln sollten bei der Entwicklung eines verteilen Systems beachtet werden. Nachfolgend eine Übersicht über die acht Punkten von \cite{deutsch1994eight},, welche in \cite{rotem2006fallacies} genauer beschrieben werden.
+Durch die Komplexität eines verteilten Systems kommt es, auch durch erfahrene Entwickler, immer wieder zu falschen Annahmen während der Konzeptionsphase. Die häufigsten fehlerhaften Annahmen wurden in \cite{deutsch1994eight} zusammengefasst. Diese Liste an fehlerhaften Grundsatzregeln sollten bei der Entwicklung eines verteilen Systems beachtet werden. Nachfolgend eine Übersicht über die acht Punkten von \cite{deutsch1994eight}, welche in \cite{rotem2006fallacies} genauer beschrieben werden.
+%todo rotem wird zu oft erwähnt
 \begin{description}
     \item[Das Netzwerk ist ausfallsicher]
     Das Verwenden eines Netzwerkes, unabhängig von der Ausführung dieses, kann immer zu Fehlern führen. Ein Netzwerk besteht laut \cite{rotem2006fallacies} aus Komponenten bei welchen plötzliche Störungen auftreten können. Daraus lässt sich ableiten, dass bei der Entwicklung eines Systems nie darauf vertraut werden kann, dass Komponenten, welche über ein Netzwerk angebunden sind, auch tatsächlich erreicht werden können. Im Architekturmuster aus Abschnitt \ref{sec:actor:patterns:guaranteedDelivery} wird dies bereits beachtet.
@@ -132,15 +108,9 @@ Eine weitere bedeutende Limitierung innerhalb eines verteilten System stellt das
 % ^.
 
 \begin{description}
+    %todo gilbert ist zu oft da
 \item[Konsistenz]
-Die Konsistenz der Daten, welche ein verteiltes System als Antwort an Anfragen gibt, sollte gegeben sein. Das ist je nach Komplexitätsgrad der Anwendung unterschiedlich möglich. So ist laut \cite{gilbertPerspectiveCAPTheorem2012} der Koordinationsaufwand für die Erstellung der Daten ausschlaggebend für die Erhaltung der Konsistenz eines Systems. Können die Daten aufgrund von statischen Berechnungen erzeugt werden, ist die Konsistenz wesentlich leichter zu realisieren als wenn die Daten über das gesamte Netzwerk verteilt werden müssen. Ein verteiltes System ist dann Konsistenz, wenn sichergestellt ist, dass jede beteiligte Komponente den gleichen Datenbestand sehen kann und somit keine Inkonsistenzen entstehen können.   
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T20:19:09.552Z:
-% 
-% > Ein verteiltes System ist dann Konsistenz
-% 
-% sollte es hier nicht konsistent heißen?
-% 
-% ^.
+Die Konsistenz der Daten, welche ein verteiltes System als Antwort an Anfragen gibt, sollte gegeben sein. Das ist je nach Komplexitätsgrad der Anwendung unterschiedlich möglich. So ist laut \cite{gilbertPerspectiveCAPTheorem2012} der Koordinationsaufwand für die Erstellung der Daten ausschlaggebend für die Erhaltung der Konsistenz eines Systems. Können die Daten aufgrund von statischen Berechnungen erzeugt werden, ist die Konsistenz wesentlich leichter zu realisieren als wenn die Daten über das gesamte Netzwerk verteilt werden müssen. Ein verteiltes System ist dann Konsistent, wenn sichergestellt ist, dass jede beteiligte Komponente den gleichen Datenbestand sehen kann und somit keine Inkonsistenzen entstehen können.   
 
 \item[Verfügbarkeit]
 Die Verfügbarkeit eines Systems, wie bereits im {\textit{Reactive Manifesto}} in Kapitel \ref{reactivo:responsive} gefordert, bedeutet, dass das System zu jeder Zeit ankommende Anfragen beantworten kann. Die Antwort muss dabei innerhalb einer, zum Kontext der Aufgabe vertretbaren Zeit, erfolgen.
@@ -156,3 +126,4 @@ Eine Regel, dass in einem verteilten System eben nur zwei der drei genannten Kri
 % wenige Aussagekraft. Satz zu verschachtelt 
 % 
 % ^.
+%todo satz kürzen
