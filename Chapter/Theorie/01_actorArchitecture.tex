@@ -1,20 +1,8 @@
 \section{Actor basiertes Architekturmuster}\label{sec:theory:actorArchitecture}
 Die Entwicklung von gängigen Designmustern, wie beispielsweise jene der \textit{Game of Four} (siehe \cite{gangOfFour1995design}), sind auf die objektorientierte Programmierung ausgerichtet. Im \textit{Actor Model} können eine Vielzahl dieser Muster nicht mehr verwendet werden bzw. ihre Stärken nicht mehr optimal ausspielen. Um die Stärken des \textit{Actor Models} optimal zu nutzen sind etliche Architekturmuster entstanden, welche unter anderem in \cite{Vernon2015ReactiveAkka} und \cite{kuhn2017reactive} beschrieben werden. Einige dieser Muster werden nachfolgend beschrieben um die Verständlichkeit mit der Arbeit des \textit{Actor Models} zu erhöhen.
 
-\subsection{Request-Replay} 
-Das einfachste und gleichzeitig wohl wichtigste Muster innerhalb des \textit{Atore-Models} ist das \textit{Request-Replay} Muster. Es wird benötigt um Inhalte von einem Actor abzufragen. Wie in Kapitel \ref{actor:requirements:shareNothing} beschrieben, darf ein Actor keine Informationen nach außen geben. Möchte nun ein Actor Informationen von einem anderen Actor haben, so muss dieser eine Nachricht an den betroffenden Actor senden. Der angeschriebene Actor sendet dann eine neue Nachricht mit den entsprechenden Informationen an den anfragenden Actor zurück. Die Antwort Nachricht kommt dabei nicht als direkte Antwort der Nachricht, sondern als eigenständige Nachricht an den fragenden Actor zurück. Es wird zwar von der Antwort gesprochen, wie jedoch in Abschnitt \ref{actor:requirements:AsynchronCommunication} beschrieben, ist jede Anfrage an einen Actor asynchron. Deshalb wird die Antwort wieder in die Mailbox des Empfängers zugesendet. Zur Vereinfachung wird jedoch von einer Antwort Nachricht gesprochen. \\
-% * <feitzinger.magdalena@gmail.com> 2018-03-05T16:57:31.772Z:
-% 
-% > Deshalb wird die Antwort wieder in die Mailbox des Empfängers zugesendet. 
-% 
-% Wieso wieder zugesendet?
-% 
-% ^.
-% * <feitzinger.magdalena@gmail.com> 2018-03-05T16:54:49.215Z:
-% 
-% Atore oder Actor-Modell?
-% 
-% ^.
+\subsection{RequestRequest-Replay} 
+Das einfachste und gleichzeitig wohl wichtigste Muster innerhalb des \textit{Actor-Models} ist das \textit{Request-Replay} Muster. Es wird benötigt um Inhalte von einem Actor abzufragen. Wie in Kapitel \ref{actor:requirements:shareNothing} beschrieben, darf ein Actor keine Informationen nach außen geben. Möchte nun ein Actor Informationen von einem anderen Actor haben, so muss dieser eine Nachricht an den betroffenden Actor senden. Der angeschriebene Actor sendet dann eine neue Nachricht mit den entsprechenden Informationen an den anfragenden Actor zurück. Die Antwort Nachricht kommt dabei nicht als direkte Antwort der Nachricht, sondern als eigenständige Nachricht an den fragenden Actor zurück. Es wird zwar von der Antwort gesprochen, wie jedoch in Abschnitt \ref{actor:requirements:AsynchronCommunication} beschrieben, ist jede Anfrage an einen Actor asynchron. Deshalb wird die Antwort wieder in die Mailbox des Empfängers zugestellt. Zur Vereinfachung wird jedoch von einer Antwort-Nachricht gesprochen. \\
 In der Abbildung \ref{fig:actor:patterns:requestReplay} ist das \textit{Request-Replay} abgebildet. Der Actor \textit{A} sendet eine \textit{Command-Message} an den Actor \textit{B}, dieser verarbeitet diese Nachricht und sendet eine neue \textit{Document-Message} zurück an Actor \textit{A}. Somit kann Actor \textit{A} mit den Informationen von Actor \textit{B} weiterarbeiten.  \\
 Dieses Pattern gilt als Grundlage für die alle weiteren Patterns und veranschaulicht das Prinzip eines typischen Workflows in einem Actor System. \citep{Vernon2015ReactiveAkka}
 \begin{figure}
@@ -71,23 +59,12 @@ Der Aggregator kann durch folgende, in \cite{Vernon2015ReactiveAkka} gelisteten 
     \item Zeitfenster ist abgelaufen
     \item Nachricht mit optimalen Kriterien eingetroffen
     \item Ein externes Event ist eingetreten
-    \item Ablauf eines Zeitfensters oder eines der anderen vier Kriterien
-% * <feitzinger.magdalena@gmail.com> 2018-03-05T17:33:14.652Z:
-%
-% >  Ablauf eines Zeitfensters oder eines der anderen vier Kriterien
-%
-% ^.
+    \item Ablauf eines Zeitfensters oder eines der anderen vier Kriterien.
 \end{itemize}
 Welches der fünf Kriterien ein Aggregator für die Terminierung verwendet, hängt stark von der eigentlichen Aufgabe ab. Ein Aggregator selber kann, wie in \cite{Vernon2015ReactiveAkka} beschrieben, auch als Router fungieren, dies ist jedoch nicht zwingend erforderlich.
 
 \subsection{Garantierte Nachrichtenzustellung}\label{sec:actor:patterns:guaranteedDelivery}
-Die Zustellung von Nachrichten zu einem Actor unterliegt allgemein keiner Garantie das sie dort auch ankommt, geschweige den verarbeitet wird. Schon in \cite{Agha1985ConcurrentParallelism} wird dieses Problem skiziert. Auch \cite{Vernon2015ReactiveAkka} oder \cite{CloudComputingPatterns2014} verweisen auf dieses Problem das nicht gewährleistet werden kann, dass eine Nachricht an einen Actor auch ankommt. In \cite{CloudComputingPatterns2014} generalisiert dieses Problem das Nachrichten zwischen Komponenten generell keiner garantierten Zustellung unterliegen. \\
-% * <feitzinger.magdalena@gmail.com> 2018-03-05T17:36:04.957Z:
-% 
-% > In \cite{CloudComputingPatterns2014} generalisiert dieses Problem das Nachrichten zwischen Komponenten generell keiner garantierten Zustellung unterliegen. \\
-% Undeutscher Satz. 
-% 
-% ^.
+Die Zustellung von Nachrichten zu einem Actor unterliegt allgemein keiner Garantie das sie dort auch ankommt, geschweige den verarbeitet wird. Schon in \cite{Agha1985ConcurrentParallelism} wird dieses Problem skiziert. Auch \cite{Vernon2015ReactiveAkka} oder \cite{CloudComputingPatterns2014} verweisen auf dieses Problem das nicht gewährleistet werden kann, dass eine Nachricht an einen Actor auch ankommt. \cite{CloudComputingPatterns2014} generalisieren das Problem, dass Nachrichten zwischen Komponenten generell keiner garantierten Zustellung unterliegen. \\
 Um in einem solchen System jedoch die Zustellung von Nachrichten zu gewährleisten, gibt es Muster welche die Zustellung einer Nachricht überwachen. In \cite{messagedeliveryreliabilityakkadocumentation} sowie \cite{hughmckee_2017} werden drei Kategorien für die Zustellung von Nachrichten genannt.
 \begin{description}
     \item [Höchstens einmal] Eine Nachricht wird entweder gar nicht oder maximal einmal zugestellt. Diese Kategorie wird erreicht wenn eine Nachricht ohne spezielle Vorkehrungen an einen Actor gesendet wird. Sie kommt entweder an oder sie geht verloren.
