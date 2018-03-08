@@ -7,13 +7,7 @@ Ein Transaktionssystem muss nach \cite{rahm1993HochleistungsTransaktionssysteme}
 
 \subsection{ACID}\label{sec:transactionTheory:acid}
 Der Begriff \textit{ACID} steht für die vier Eigenschaften \textit{Atomarität}, \textit{Konsistenz}, \textit{Isolation} und \textit{Dauerhaftigkeit}. Ein \textit{ACID} basierendes System gilt als restriktives Transaktionssystem welches durch die, vor und nach einer Transaktion,  immer geltenden Bedingungen von allen vier Eigenschaften nur äußert schwer verteil- und skalierbar ist- \cite{PritchettBASE}\\
-Ein System welches \textit{ACID} erfühlt, bietet laut \cite{haerder198Acid} für eine Transaktion immer folgende vier Eigenschaften.
-% * <feitzinger.magdalena@gmail.com> 2018-03-07T09:16:24.180Z:
-% 
-% > Ein System welches \textit{ACID} erfühlt, bietet laut \cite{haerder198Acid} für eine Transaktion immer folgende vier Eigenschaften.
-% umformulieren. die eigenschaften ergeben sich aus dem wort ACID. 
-% 
-% ^.
+Die vier Eigenschaften von \textit{ACID} sind in \cite{haerder198Acid} wie folgt beschrieben.
 
 \begin{description}
     \item[Atomarität] Alle Operationen welche sich innerhalb einer Transaktion befinden, werden atomar ausgeführt. Das bedeutet, es wird entweder alles ausgeführt oder gar nichts. Um das zu ermöglichen, muss das Transaktionssystem gewährleisten können, dass bei einem Rollback der Transaktion bereits ausgeführte Operationen auch wieder zurückgesetzt werden können. 
