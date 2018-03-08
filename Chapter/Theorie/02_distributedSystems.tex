@@ -99,13 +99,6 @@ Diese acht Annahmen sind trotz ihres Alters auch heute noch wichtig und sollten 
 
 \section{CAP-Theorem}\label{sec:distributedSystems:capTheorem}
 Eine weitere bedeutende Limitierung innerhalb eines verteilten System stellt das \textit{CAP-Theorem}  dar. Das von Eric Brewer in \cite{Brewer2000TowardsSystems}  erstmals beschriebene Theorem definiert die Limitierung von drei gewünschten Eigenschaften in einem verteilen System. Diese drei Eigenschaften sind Konsistenz, Verfügbarkeit sowie Partition Toleranz. Nach dem \textit{CAP-Theorem} können in jedem System nur zwei der drei Eigenschaften garantiert werden. Auf eine der drei Eigenschaften muss auf jeden Fall verzichtet werden. In \cite{gilbertPerspectiveCAPTheorem2012} wird das \textit{CAP-Theorem} mit dem aktuellen Stand der Dinge wie folgt beschrieben.
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T20:15:06.420Z:
-% 
-% >  Eric Brewer in \cite{Brewer2000TowardsSystems}
-% diese Quellenangabe ist doppelt. 
-% 
-% ^.
-
 \begin{description}
     %todo gilbert ist zu oft da
 \item[Konsistenz]
@@ -117,12 +110,4 @@ Die Verfügbarkeit eines Systems, wie bereits im {\textit{Reactive Manifesto}} i
 \item[Partition Toleranz]
 Da das verteilte System aus mehreren beteiligten Komponenten besteht, müssen diese auch miteinander kommunizieren. Nachdem die Kommunikation in einem System nie garantiert werden kann, wie bereits in Abschnitt \ref{sec:distributedSystems:wrongAssumptions} besprochen, können durch Verbindungsunterbrechungen im Netzwerk Partitionen entstehen. Partitioniert sich ein Netzwerk, ist die Kommunikation zwischen den entstandenen Partitionen temporär nicht mehr möglich.
 \end{description}
-Eine Regel, dass in einem verteilten System eben nur zwei der drei genannten Kriterien gleichzeitig gewährleistet werden kann, führt dazu, dass man sich, abwiegend auf Basis des Anwendungsfall, von einer der drei Eigenschaften trennen muss. Dies kann jedoch oft durch organisatorische Prozesse abgedeckt werden, was jedoch nichts mit dem \textit{CAP-Theorem} zu tun hat. Bei einem ausfallsicheren verteilten System ist Partition Toleranz auf jeden Fall Voraussetzung, da sich das Netzwerk jederzeit partitionieren kann. Jedoch ist auch hier wieder die optimale Zusammensetzung der drei \textit{CAP}-Parameter von der konkret umzusetzenden Thematik abhängig. Um beispielsweise einen Kompromiss mit der Konsistenz der Daten zu erhalten, bietet sich das in Kapitel \ref{sec:transactionTheory:base} beschriebene \textit{BASE-Prinzip} an.
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T20:28:12.357Z:
-% 
-% > Eine Regel, dass in einem verteilten System eben nur zwei der drei genannten Kriterien gleichzeitig gewährleistet werden kann, führt dazu, dass man sich, abwiegend auf Basis des Anwendungsfall, von einer der drei Eigenschaften trennen muss. 
-% 
-% wenige Aussagekraft. Satz zu verschachtelt 
-% 
-% ^.
-%todo satz kürzen
+Eine Regel, dass in einem verteilten System eben nur zwei der drei genannten Kriterien gleichzeitig gewährleistet werden kann, führt dazu, dass man sich von einer der drei Eigenschaften trennen muss. Dies kann jedoch oft durch organisatorische Prozesse abgedeckt werden, was jedoch nichts mit dem \textit{CAP-Theorem} zu tun hat. Bei einem ausfallsicheren verteilten System ist Partition Toleranz auf jeden Fall Voraussetzung, da sich das Netzwerk jederzeit partitionieren kann. Jedoch ist auch hier wieder die optimale Zusammensetzung der drei \textit{CAP}-Parameter von der konkret umzusetzenden Thematik abhängig. Um beispielsweise einen Kompromiss mit der Konsistenz der Daten zu erhalten, bietet sich das in Kapitel \ref{sec:transactionTheory:base} beschriebene \textit{BASE-Prinzip} an.
