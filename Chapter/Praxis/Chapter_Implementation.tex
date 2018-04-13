@@ -11,13 +11,19 @@ Die Implementierung der hier beschriebenen Anwendung erfolgt für die \textit{CL
 \subsection{Ein Actor in \textit{Akka.Net}}
 Wie bereits erwähnt wird eine Anwendung auf Basis von \textit{Akka.Net} mit der Objektorientierten Sprache \textit{C\#} geschrieben. Somit werden auch Actors als Klassen repräsentiert. In \textit{Akka.Net} gibt dafür Basisklassen welche die Funktionalität eines Actors, wie die Nachrichtenübermittelung oder das Verhalten auf empfangene Nachrichten, beinhalten. Die Actor Klasse selbst bietet jedoch für andere Klassen keine eigenen Methoden zur verfügung. Somit ist der Zugriff von Außen, wie in Abschnitt \ref{actor:requirements:shareNothing} beschrieben, nicht möglich. \\
 
+\subsubsection{Erstellung eines Actors}
+\label{subsec:implementation:actorCreation}
+
 \subsubsection{Nachrichten}
-Da ein Actor selbst keine Methoden anbietet erfolgt die Interaktion mit der Umwelt des Actors über Nachrichten. Dies wird in \textit{Akka.Net} durch Objekte sichergestellt. Eine Nachricht selbst muss in \textit{Akka.Net} keine bestimmte Struktur aufweisen, kann somit von jedem beliebigen Datentyp sein. Um jedoch die zustellung von Nachrichten über verschiedene Hosts zu gewähreisten, siehe dazu Abschnitt \ref{sub:sec:implementation:ApplicationDistribution}, sollte eine Nachricht serialisierebar sein. 
+Da ein Actor selbst keine Methoden anbietet erfolgt die Interaktion mit der Umwelt des Actors über Nachrichten. Dies wird in \textit{Akka.Net} durch Objekte sichergestellt. Eine Nachricht selbst muss in \textit{Akka.Net} keine bestimmte Struktur aufweisen, kann somit von jedem beliebigen Datentyp sein. Um jedoch die zustellung von Nachrichten über verschiedene Hosts zu gewähreisten, siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, sollte eine Nachricht serialisierebar sein. Dies ist jedoch für Nachrichten welche innerhalb einer Laufzeitinstanz übertragen werden nicht relevant. \\
+Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, benötigt an welche die Nachricht gerichtet ist. Auf diese Referenz, welche ja selbst eine Instanz vom Typ \textit{ActorRef} ist, können nun für die übermittlung der Nachricht die Methoden \textit{Tell} oder \textit{Ask} aufgerufen werden.
+\begin{description}
+    \item[Tell()] Möchte man eine Nachricht an einen Actor senden ohne auf dessen Antwort zu warten, so wie es das theoretische \textit{Actor Model} auch vorsieht, sollte die Methode \textit{Tell} verwendet werden. Die Methode selbst blockiert nicht, und die Nachricht wird in einem Thread an den Actor zugestellt. 
+    \item[Ask()] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt das die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die zustellung von Nachrichten nur im Ausnahmefall zu empfehlen.  
+\end{description}
+Nachrichten welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Enthält der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor aus der Mailbox genommen wird, diese Abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein Verhalten, so wird die Nachricht verworfen, der Sender der Nachricht bekommt dies jedoch nicht mit
 
 \subsubsection{Erstellung}
-
-
- 
 
 \section{Service Architektur}
 
@@ -32,7 +38,7 @@ Da ein Actor selbst keine Methoden anbietet erfolgt die Interaktion mit der Umwe
 \section{Implementierung von Event Sourcing}
 
 \section{Verteilung der Anwendung}
-\label{sub:sec:implementation:ApplicationDistribution}
+\label{subsec:implementation:ApplicationDistribution}
 
 \subsection{Fixe Dienste}
 
