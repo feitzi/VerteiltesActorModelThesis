@@ -1,8 +1,20 @@
 {
     "editor.fontSize": 20,
 
-    "latex-workshop.latex.toolchain": [
+    "latex-workshop.latex.recipes": [{
+      "name": "texify",
+      "tools": [
+        "tool1",
+        "tool2",
+        "tool3",
+        "tool4",
+        
+      ]
+    }],
+
+    "latex-workshop.latex.tools": [
       {
+        "name": "tool1",
         "command": "pdflatex",
         "args": [
           "-synctex=1",
@@ -11,11 +23,13 @@
           "%DOC%"
         ]
       }, {
+        "name": "tool2",
         "command": "bibtex",
         "args": [
           "%DOCFILE%"
         ]
       }, {
+        "name": "tool3",
         "command": "pdflatex",
         "args": [
           "-synctex=1",
@@ -24,6 +38,7 @@
           "%DOC%"
         ]
       }, {
+        "name": "tool4",
         "command": "pdflatex",
         "args": [
           "-synctex=1",
