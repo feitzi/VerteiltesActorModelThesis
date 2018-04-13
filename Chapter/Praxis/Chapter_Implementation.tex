@@ -21,7 +21,12 @@ Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , s
     \item[Tell()] Möchte man eine Nachricht an einen Actor senden ohne auf dessen Antwort zu warten, so wie es das theoretische \textit{Actor Model} auch vorsieht, sollte die Methode \textit{Tell} verwendet werden. Die Methode selbst blockiert nicht, und die Nachricht wird in einem Thread an den Actor zugestellt. 
     \item[Ask()] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt das die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die zustellung von Nachrichten nur im Ausnahmefall zu empfehlen.  
 \end{description}
-Nachrichten welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Enthält der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor aus der Mailbox genommen wird, diese Abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein Verhalten, so wird die Nachricht verworfen, der Sender der Nachricht bekommt dies jedoch nicht mit
+Nachrichten welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Enthält der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor aus der Mailbox genommen wird, diese Abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein Verhalten, so wird die Nachricht verworfen, der Sender der Nachricht bekommt dies jedoch nicht mit.
+
+\begin{lstlisting}[caption=a test for a C$^\sharp$ code, label=lst:test]
+    ActorRef.Tell(new SpecificMessage());
+\end{lstlisting}
+
 
 \subsubsection{Erstellung}
 
