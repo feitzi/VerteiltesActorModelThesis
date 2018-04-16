@@ -43,29 +43,63 @@ Die Erstellung einer Instanz eines Actors erfolgt nicht über das Schlüsselwort
 Durch die Verwendung einer eigenen, Framework basiertem Referenz anstatt einer direkten Referenz auf den Actor, können Actors ortsungebunden instanziert werden ohne das der Anwender des Actors dies im Code beachten muss. Die Verwendung eines Actors unterscheidet sich somit nicht davon ob er sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet und die Verbindung zu diesem Actor über ein Netzwerk hergestellt wird. Die Informationen wo die einzelnen Actors wirklich instanziert werden, wird über eine Konfigurations Datei gesteuert. Somit kann das Verhalten des Systems einfach geändert werden und die Verteilung der gesamten Applikation wird erleichtert.
 
 \section{Service Architektur}
+Um dasFlugbuchungssystem zu realisieren wurde auf eine Komponenten und Serviceorientierte Architektur geachtet. Dazu wurden die Anforderungen selbst in einzelne Kategorien unterteilt und daraus verschiedene Komponenten abgeleitet. \\
+Einerseits besteht die Applikation aus einer Schnittstelle zu den Endbenutzer welche über \textit{HTTP} Aufrufe Anfragen an das System durchführen können. Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos welche Daten im System verändern können. Alle Prozessebezogenen Inhalte werden in der Komponente \textit{Domain Model} behandelt. In dieser befindet sich die Logik des Flugbuchungssystem welche auch für die einhaltung der Datenkonsistenz zuständig ist. \\
+Abschließend wird noch eine Komponente benötigt welche diese Komponenten miteinander in Verbindung bringt. Ableitend aus der \textit{Akka.Net} Community wird diese \textit{Lighthouse} genannt. Somit existieren in der \textit{TyrolSky} Anwendung folgende Komponenten:
+\begin{itemize}
+    \item API
+    \item Query-Service
+    \item Command-Service
+    \item Domain-Service
+    \item Lighthouse
+\end{itemize}
+Von jeder dieser Komponenten kann es zur Laufzeit mehrere Instanzen davon geben. 
+Jeder dieser Komponenten kann mehrfach Instanziert werden und somit die Last verteilen. Für eine korrekt Arbeitendes System ist es erforderlich das von jeder Komponente mindestens eine Instanz am System teilnimmt. Jedoch können teile des System auch funktionieren wenn nicht alle Komponenten verfügbar sind. So ist es beispielsweise möglich das Abfragen auf das System durchführbar sind obwohl keine Instanz von \textit{Domain Service} oder \textit{Command-Service} verfügbar sind. Jedoch können dann Befehle wie Tickets kaufen nicht durchgeführt werden und würden zu einem Fehler beim Benutzer führen. \\
+Nun wird auf die genauere Funktionsweise und zuständigkeiten der einzelnen Komponenten eingegangen.
 
 \subsection{\textit{Lighthouse}}
+Dieser Service ist der einfachste und beinhaltet keine Logik welche speziell für die \textit{TyrolSky} Anwendung gedacht ist. Die für die vorliegende Anwendung eingesetzte  Version ist eine Abwandlung des öffentlich zugänglichen Basiscodes einer Lighthouse, siehe hierzu \cite{lighthouse}. \\
+Die Komponente fungiert, wie ihr Name schon suggeriert, als Orientierungshilfe für neue Instanzen welche am gesamten System teilnehmen möchten. Diese Melden sich bei einem oder mehreren Laufenden Instanzen von \textit{Lighthouse} an und bekommen somit die Informationen von anderen Komponenten welche sich bereits im System befinden mit. Dieser Prozess wird in Abschnitt \ref{subsec:implementation:gossip} genauer beschrieben.
 
-\subsection{\textit{REST}-Schnittstelle}
+\subsection{\textit{API}-Schnittstelle}
+Anfragen von Endbenutzern werden über eine \textit{REST} Schnittstelle mittels \textit{HTTP} an das System übertragen. Diese Anfragen werden von der Komponente \textit{API} angenommen. Anschließend wird von dieser die Anfrage geprüft, und anschließend an eine verfügbare \textit{Query} oder \textit{Command} Komponente weitergeleitet. \\
+Für jede ankommende Anfrage, wird ein eigener Actor gestartet welche ausschließlich für diese konkrete Anfrage zuständig ist. Der Actor wartet auf eine Antwort von der Angefragten \textit{CQRS}-Komponente und beendet nach Abschließend die bestehende \textit{HTTP}-Verbindung zum Benutzer mit dem Entsprechenden Ergebnis. Wird von der Anfragten Komponente innherhalb eines Zeitfensters keine Antwort geliefert wird die Anfrage zum Benutzer mit einem Fehler abgebrochen. \\
+In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des Actor Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen das die API Komponente selbst über keine Komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten wie in Kapitel \ref{actor:actorSystem} fungieren und somit eine Schnittstelle zum eigentlichen Actor System selbst herstellen. \\
+Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actorsystem an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können gleiche Anfragen an die selbe API Instanz von unterschiedlichen Instanzen der zuständigen Komponente abgearbeitet werden. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{gfx/implementation/apiActorModel}
+    \caption{Actor Ansicht der API Komponente}
+    \label{fig:implementation:apiActorModel}
+\end{figure} 
 
-\subsection{Abfragen}
+\subsection{Query-Service}
+Die Anwendung separiert wie bereits erwähnt Abfragen und Befehle nach dem \textit{CQRS} Prinzip auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. Die Abfrage Seite wird in der Implementierung der \textit{TyrolSky} Anwendung in einer eigenen Komponente realisiert. \\
+Um Anfrage bearbeiten zu können welche eine Abfrage an das System stellen, überwacht die Komponente relevante Events welche im Event Sourcing, siehe dazu \ref{subsec:implementation:eventSouring}, aufgetreten sind. \\
+Für jeden Typ von Abfrage wird dazu ein vorbereitetes Ergebnis bereit gehalten. Wird ein relevantes Event im Event Sourcing gefunden, so wird das Ergebnis mit den neuen Eventdaten aktualisiert. Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. Jedoch sind die Resultate einer Abfrage nicht garantiert aktuell. Wird ein bereits eingetretendes Event zu spät in das vorbereitete Ergebnis miteingerechnet, bekommt der Anfragende das Ergebnis zurückgeliefert, welches vor dem Event gegolten hat. Deshalb wird diese Komponente nur für Anfragen von Benutzern verwendet und keine applikatorische Entscheidungen darauf aufgebaut.
 
-\subsection{Domain-Service}
+
+\subsection{Command-Service und Domain-Service}
 
 \section{Implementierung von Event Sourcing}
+\label{subsec:implementation:eventSouring}
 
 \section{Verteilung der Anwendung}
 \label{subsec:implementation:ApplicationDistribution}
 
-\subsection{Fixe Dienste}
+\section{Cluster}
+\label{subsec:implementation:gossip}
+Gossip, 
 
+\subsection{Fixe Dienste}
+wtf?
 \subsection{Verteilung transaktionaler Daten}
 Erklärung von Sharding
 
 \section{Garantierte Nachrichtenübermittelung}
 
 \section{Externe Schnittstellen}
-
+bank api
 \section{Testapplikation}
 
 \section{Verwendete Umgebung}
