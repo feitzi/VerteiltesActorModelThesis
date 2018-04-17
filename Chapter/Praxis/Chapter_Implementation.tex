@@ -56,10 +56,12 @@ Jeder dieser Komponenten kann mehrfach Instanziiert werden und somit die Last ve
 Nun wird auf die genauere Funktionsweise und zuständigkeiten der einzelnen Komponenten eingegangen.
 
 \subsection{\textit{Lighthouse}}
+\label{subsec:implementation:lighthouse}
 Dieser Service ist der einfachste und beinhaltet keine Logik welche speziell für die \textit{TyrolSky} Anwendung gedacht ist. Die für die vorliegende Anwendung eingesetzte  Version ist eine Abwandlung des öffentlich zugänglichen Basiscodes einer Lighthouse, siehe hierzu \cite{lighthouse}. \\
 Die Komponente fungiert, wie ihr Name schon suggeriert, als Orientierungshilfe für neue Instanzen welche am gesamten System teilnehmen möchten. Diese Melden sich bei einem oder mehreren Laufenden Instanzen von \textit{Lighthouse} an und bekommen somit die Informationen von anderen Komponenten welche sich bereits im System befinden mit. Dieser Prozess wird in Abschnitt \ref{subsec:implementation:gossip} genauer beschrieben.
 
 \subsection{\textit{API}-Schnittstelle}
+\label{subsec:implementation:apiComponente}
 Anfragen von Endbenutzern werden über eine \textit{REST} Schnittstelle mittels \textit{HTTP} an das System übertragen. Diese Anfragen werden von der Komponente \textit{API} angenommen. Anschließend wird von dieser die Anfrage geprüft, und anschließend an eine verfügbare \textit{Query} oder \textit{Command} Komponente weitergeleitet. \\
 Für jede ankommende Anfrage, wird ein eigener Actor gestartet welche ausschließlich für diese konkrete Anfrage zuständig ist. Der Actor wartet auf eine Antwort von der Angefragten \textit{CQRS}-Komponente und beendet nach Abschließend die bestehende \textit{HTTP}-Verbindung zum Benutzer mit dem Entsprechenden Ergebnis. Wird von der Anfragten Komponente innherhalb eines Zeitfensters keine Antwort geliefert wird die Anfrage zum Benutzer mit einem Fehler abgebrochen. \\
 In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des Actor Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen das die API Komponente selbst über keine Komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten wie in Kapitel \ref{actor:actorSystem} fungieren und somit eine Schnittstelle zum eigentlichen Actor System selbst herstellen. \\
@@ -80,14 +82,32 @@ Für jeden Typ von Abfrage wird dazu ein vorbereitetes Ergebnis bereit gehalten.
 Tretten neue Events auf, so wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate selbst wieder abgespeichert. Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden, und anschließend auf diesem weitergearbeitet werden. \\
 Die Speicherung von Ergebnis führt jedoch zu Problemen wenn man die Verteilung der Komponente beachtet. Da jede Instanz seine eigenen Ergebnisse vorbereitet müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben als auch beim Lesen konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen wird entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet. Jedoch erhöht dies den Wartungsaufwand der Komponente da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
 
-Eine weitere Möglichkeit ist die Persistierung der Ergebnis pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es jedoch erforderlich das Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen. Dafür wurde ein globaler Namensservice eingerichtet, der im gesamten verteilten System eindeutige Namen vergibt. Meldet sich eine Komponente vom System ab, werden alle Namen, welche an diese Komponente vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt diese die wieder freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten.   \\
+Eine weitere Möglichkeit ist die Persistierung der Ergebnis pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es jedoch erforderlich das Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen. Dafür wurde ein globaler Namensservice eingerichtet, der im gesamten verteilten System eindeutige Namen vergibt. Meldet sich eine Komponente vom System ab, werden alle Namen, welche an diese Komponente vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt diese die wieder freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten. Für die Umsetzung des globalen Namensservice wurde auf das Pattern \textit{Cluster Singelton}, welches in Abschnitt \ref{subsec:implementation:singeltons} erklärt wird. \\
+Durch die Verwendung einer globalen Datenbank, sowie auf daszurückgreifen eines globalen Namensservice ist während dem Betrieb der Anwendung der Wartungsaufwand auf ein minimum beschränkt. Weiters kann durch diese Variante sichergestellt werden, das bei bei einem neustart des Systems die Instanzen mit bereits zuvor erarbeiteten Resultaten weiterarbeiten können. 
 
+\subsubsection{Implementierte Abfrage}
+In der umgesetzten Implementierung werden Abfragen zur verfügung gestellt welche dem Benutzer eine Übersicht über angebotente Flüge sowie den Status von Flugtickets geben. Insgesamt sind drei unterschiedliche Abfragen möglich:
 
+\begin{enumerate}
+    \item Status eines Flugtickets Abfragen
+    \item Liste alle zur verfügung stehenden Flüge
+    \item Passagierliste eines bestimmten Fluges
+\end{enumerate}
 
+Für die dritte Abfrage wurde jedoch eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen (siehe dazu Abschnitt \ref{subsec:implementation:domainService}) weitergegeben. Dies führt dazu, dass die Abfrage selbst länger dauert, da keine Ergebnisse vorgehalten werden. Jedoch ist die abfrage selbst zeitlich exakter, und der Aufwand in der Entwicklung geringer. \\
+Das Beispiel zeigt, dass je nach Anwendungsfall entschieden werden sollte wie die Abfrage von Daten exakt implementiert wird.
 
+\subsubsection{Strukturierung}
+Für die abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, auch für die realisierung von Abfragen auf die Hilfe von kurzlebige Actoren gesetzt. Diese führen den eigentlichen Abfrageprozess durch, und verwenden dazu die enstprechenden Query Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query Komponente in Form von Actoren zu sehen. 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{gfx/implementation/QueringServiceActorModel}
+    \caption{Der Aufbau des Actor Systems der Query Komponente von \textit{TyrolSky}.}
+    \label{fig:implementation:queryActorModel}
+\end{figure} 
 
-\subsection{Command-Service und Domain-Service}
-
+\subsection{Command-Service  und Domain-Service}
+\label{subsec:implementation:domainService}
 \section{Implementierung von Event Sourcing}
 \label{subsec:implementation:eventSouring}
 
