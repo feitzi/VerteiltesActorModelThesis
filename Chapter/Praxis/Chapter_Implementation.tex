@@ -78,7 +78,12 @@ Für jeden Typ von Abfrage wird dazu ein vorbereitetes Ergebnis bereit gehalten.
 
 \subsubsection{Aufbereitung von Resultaten}
 Tretten neue Events auf, so wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate selbst wieder abgespeichert. Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden, und anschließend auf diesem weitergearbeitet werden. \\
-Die Speicherung von Ergebnis führt jedoch zu Problemen wenn man die Verteilung der Komponente beachtet. Da jede Instanz seine eigenen Ergebnisse vorbereitet müssen diese auch eigenständig gespeichert werden. Dafür kann entweder pro Instanz eine eigene Persistierung, wie beispielsweise eine Datenbank, vorgehalten werden. Jedoch erhöht dies den Wartungsaufwand der Komponente. Eine weitere möglichkeit ist dafür die \textit{Snapshot} Möglichkeiten von Event Sourcing, welche im Abschnitt \ref{subsec:implementation:eventSouring} beschrieben sind, zu verwenden. Dabei wird für die aktuelle Instanz 
+Die Speicherung von Ergebnis führt jedoch zu Problemen wenn man die Verteilung der Komponente beachtet. Da jede Instanz seine eigenen Ergebnisse vorbereitet müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben als auch beim Lesen konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen wird entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet. Jedoch erhöht dies den Wartungsaufwand der Komponente da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
+
+Eine weitere Möglichkeit ist die Persistierung der Ergebnis pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es jedoch erforderlich das Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen. Dafür wurde ein globaler Namensservice eingerichtet, der im gesamten verteilten System eindeutige Namen vergibt. Meldet sich eine Komponente vom System ab, werden alle Namen, welche an diese Komponente vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt diese die wieder freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten.   \\
+
+
+
 
 
 \subsection{Command-Service und Domain-Service}
@@ -88,6 +93,9 @@ Die Speicherung von Ergebnis führt jedoch zu Problemen wenn man die Verteilung 
 
 \section{Verteilung der Anwendung}
 \label{subsec:implementation:ApplicationDistribution}
+
+\subsection{Globale Dienste}
+\label{subsec:implementation:singeltons}
 
 \section{Cluster}
 \label{subsec:implementation:gossip}
