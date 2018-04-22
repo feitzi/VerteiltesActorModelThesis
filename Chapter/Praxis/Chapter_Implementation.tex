@@ -79,6 +79,7 @@ Um Anfrage bearbeiten zu können welche eine Abfrage an das System stellen, übe
 Für jeden Typ von Abfrage wird dazu ein vorbereitetes Ergebnis bereit gehalten. Wird ein relevantes Event im Event Sourcing gefunden, so wird das Ergebnis mit den neuen Eventdaten aktualisiert. Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. Jedoch sind die Resultate einer Abfrage nicht garantiert aktuell. Wird ein bereits eingetretendes Event zu spät in das vorbereitete Ergebnis miteingerechnet, bekommt der Anfragende das Ergebnis zurückgeliefert, welches vor dem Event gegolten hat. Deshalb wird diese Komponente nur für Anfragen von Benutzern verwendet und keine applikatorischen Entscheidungen darauf aufgebaut.
 
 \subsubsection{Aufbereitung von Resultaten}
+\label{subsubsub:implementation:queryActorModel:resultPreparator}
 Tretten neue Events auf, so wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate selbst wieder abgespeichert. Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden, und anschließend auf diesem weitergearbeitet werden. \\
 Die Speicherung von Ergebnis führt jedoch zu Problemen wenn man die Verteilung der Komponente beachtet. Da jede Instanz seine eigenen Ergebnisse vorbereitet müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben als auch beim Lesen konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen wird entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet. Jedoch erhöht dies den Wartungsaufwand der Komponente da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
 
@@ -97,8 +98,6 @@ In der umgesetzten Implementierung werden Abfragen zur verfügung gestellt welch
 Für die dritte Abfrage wurde jedoch eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen (siehe dazu Abschnitt \ref{subsec:implementation:domainService}) weitergegeben. Dies führt dazu, dass die Abfrage selbst länger dauert, da keine Ergebnisse vorgehalten werden. Jedoch ist die abfrage selbst zeitlich exakter, und der Aufwand in der Entwicklung geringer. \\
 Das Beispiel zeigt, dass je nach Anwendungsfall entschieden werden sollte wie die Abfrage von Daten exakt implementiert wird.
 
-\subsubsection{Strukturierung}
-Für die abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, auch für die realisierung von Abfragen auf die Hilfe von kurzlebige Actoren gesetzt. Diese führen den eigentlichen Abfrageprozess durch, und verwenden dazu die enstprechenden Query Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query Komponente in Form von Actoren zu sehen. 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{gfx/implementation/QueringServiceActorModel}
@@ -106,8 +105,13 @@ Für die abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \t
     \label{fig:implementation:queryActorModel}
 \end{figure} 
 
-\subsection{Command-Service  und Domain-Service}
-\label{subsec:implementation:domainService}
+\subsubsection{Strukturierung}
+Für die abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, auch für die realisierung von Abfragen auf die Hilfe von kurzlebige Actoren gesetzt. Diese führen den eigentlichen Abfrageprozess durch, und verwenden dazu die enstprechenden Query Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query Komponente in Form von Actoren zu sehen. Darin ist zu erkennen das für jeden Typ von Abfrage ein Actor existiert welcher die Abfragen bearbeitet, den soganannten \textit{Supplier} welche selbst einen Child Actor besitzt welche sich um die Aufbereitung der Abfragedaten wie in Abschnitt \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschrieben, kümmert. \\
+Jede einzelne Abfrage wird einem Worker Actor zugewissen, welcher nur für den Zeitraum der Abfrage selbst instanziert ist. Dieser Fragt die Daten vom zuständigen \textit{Supplier} ab. 
+
+\input{Chapter/Praxis/Implementation/Implementation_CommandService}
+
+\input{Chapter/Praxis/Implementation/Implementation_DomainService}
 \section{Implementierung von Event Sourcing}
 \label{subsec:implementation:eventSouring}
 
