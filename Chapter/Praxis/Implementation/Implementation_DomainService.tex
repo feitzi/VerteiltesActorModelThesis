@@ -6,9 +6,9 @@ Um eine Verteilung der Entitäten zu ermöglichen werden diese in Form von \text
 \begin{itemize}
     \item Flug Nummer (\textit{FlightNumber})
     \item Flug Ticket (\textit{FlightTicket})
-    \item Abbuchungs Koordination (\textit{ChargingCoordinator})
+    \item Buchungskoordinator (\textit{ChargingCoordinator})
 \end{itemize}
-Auf die genaue Aufgabe sowie die Implementierung dieser drei Actoren wird nun nachfolgen eingegangen.
+Auf die genaue Aufgabe sowie die Implementierung dieser drei Actoren wird nun nachfolgend eingegangen.
 
 \subsubsection{Flug Nummer}
 Die Repräsentation der angebotenen Flüge selbst wird mit dem Actor \textit{FlightNumber} dargestellt. Dieser beinhaltet Informationen über Start- und Zielort und den Zeitraum an welchem der Flug zur verfügung steht. Für Informationen über einen Flug an einem bestimmten Datum wird ein neuer Actor herangezogen welcher den Operativen Flug darstellt. Der Actor \textit{OperateFlight} verwaltet Informationen über den Typ des Flugzeuges und die Passagierkapazität welche für diesen Flug angeboten wird. Informationen über Passagiere für diesen Flug werden jedoch nicht über den Actor selber verwaltet sondern an einen weiteren Actor, den \textit{FlightPassengerList} Actor welcher für diese Aufgabe spezialisiert ist, weitergereicht. \\
@@ -33,3 +33,16 @@ Die Entität selbst repräsentiert eine Ticketreservierung welche eine eindeutig
 \end{enumerate}
 Für die Implementierung eines Zeitfensters für den Abblauf eines Tickets wird bei der reservierung des Tickets eine Nachricht geplant. Das bedeutet es wird zu beginn der reservierung vom Ticket selbst eine Nachricht an sich selbst versendet welche signalisiert das eine Zeitfenster abgelaufen ist. Jedoch wird dabei beim versenden mittels dem \textit{Akka.Net} Framework eine Zustellzeit angegeben. Wird die Nachricht zugestellt, kann der Actor selber entscheiden ob sie noch relevant ist. Ist beispielsweiße das Ticket mittlerweile in einem Zustand in welchem eine Stornierung nicht mehr notwendig ist, kann die Nachricht verworfen werden, ansonsten kann die Stornierung der Reservation gestartet werden. \\
 Der Bezahlprozess für die Buchung eines Tickets wird einem Koordinator übergeben welche die Buchung selbst steuert. Der \textit{FlightTicket} Actor erhält von diesem Koordinator nach dem Bezahlvorgang eine Nachricht über den ausgang des Vorgangs und ändert anschließend den Zustand des Tickets entsprechend. 
+
+\subsubsection{Buchungskoordinator}
+Wird ein bereits reserviertes Ticket gebucht, so erzeugt das Ticket für den Bezahlvorgang einen neuen Buchungskoordinator. Dieser Buchungskoordinator bekommt eine eigene Buchungs Identifikation vom Ticket zugewissen. Der Buchungskoordinator selbst wird wie auch die zuvor beschriebenen Entitäten über \textit{Sharding} verteilt. Somit kann ein Ticket und der dazugehörige Buchungskoordinator an einem unterschiedlichen Host instanziiert werden. \\
+Die Aufgabe des Buchungskoordinator ist es, den gewünschten Betrag von einer externen Bankenschnittstelle abzubuchen. Die Bankenschnittstelle selbst wurde für die Umsetzung dieses praktischen Beispieles simuliert und ist in Kapitel \ref{subsec:implementation:bankApi} näher beschrieben. Ein austausch von transaktionallen Informationen über eine externe Schnittstelle ist jedoch durch verschiedene Faktoren problematisch. Um die Konsistenz von Abbuchungen und Ticketstatus zu gewährleisten, darf es nicht dazu kommen das Informationen bei der Übertragung verloren gehen. Wie jedoch in Kapitel \ref{sec:distributedSystems:wrongAssumptions} bereits besprochen, kann ein Datenaustausch über ein Netzwerk immer Fehlschlagen. Deshalb prüft der Buchungskoordinator solange den Status einer Anfrage zum Bankensystem, bis von diesem eine nicht änderbares Buchungsresultat gesendet wird. \\
+Wird ein Buchungskoordinator erstellt, so werden folgende Schritte ausgeführt:
+\begin{enumerate}
+    \item Bezahlprozess bei Bank starten
+    \item Prüfen ob Bezahlvorgang bei der Bank abgeschlossen
+    \item Vorgang \textit{2.} solange wiederholen bis unveränderlichbares Ergebnis von der Bank empfangen wird.
+    \item Ersteller des Bezahlprozess mit Ergebnis der Bezahlung Informieren
+\end{enumerate}
+Durch den Umstand, das auch ein der \textit{ChargingCoordinator} mittels \textit{Event Sourcing} seinen zustand persistiert, kann auch nach einem Ausfall des Systems am Abbuchungsprozess weitergearbeitet werden sobald das System wieder startet. \\
+In Abbildung .... (todo eigene abbildung mit ChargingCoordinator)
