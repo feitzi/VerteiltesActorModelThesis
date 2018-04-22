@@ -45,4 +45,12 @@ Wird ein Buchungskoordinator erstellt, so werden folgende Schritte ausgeführt:
     \item Ersteller des Bezahlprozess mit Ergebnis der Bezahlung Informieren
 \end{enumerate}
 Durch den Umstand, das auch ein der \textit{ChargingCoordinator} mittels \textit{Event Sourcing} seinen zustand persistiert, kann auch nach einem Ausfall des Systems am Abbuchungsprozess weitergearbeitet werden sobald das System wieder startet. \\
-In Abbildung .... (todo eigene abbildung mit ChargingCoordinator)
+In Abbildung \ref{fig:implementation:ChargingCoordinatorSample} ist der Aufbau des \textit{ChargingCoordinators} abgebildet. Dabei ist zu erkennen das der Koordinator selbst keine weiteren \textit{Childs} mehr besitzt. Stattdessen wird für die eigentliche Abfrage an die Bankenschnittstelle ein anderer Actor verwendet, welche sich nicht unter ihm befindet. Dieser nimmt somit nicht am \text{Sharding} teil und ist fix an jedem Host verfügbar. Dadurch wird bei einer neuverteileing der \textit{Shards}, siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, eine bestehende Verbindung zur Bank nicht abgebrochen. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\linewidth]{gfx/implementation/ChargingCoordinatorSample}
+    \caption{Modelierung des verteilten Buchungskoordinator, welcher eine nicht verteilten Actor für Anfragen an Banken verwendet}
+    \label{fig:implementation:ChargingCoordinatorSample}
+\end{figure}
+
+
