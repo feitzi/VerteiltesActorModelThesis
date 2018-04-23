@@ -1,0 +1,21 @@
+\section{Verteilung der Anwendung}
+\label{subsec:implementation:ApplicationDistribution}
+Ein wesentliche Anforderung an die Praxisanwendung ist dem Anforderungskatalog unter Kapitel \ref{sec:Eruierung:technicalRequierements} entsprechend, die Fokusierung der Architektur der Software auf Verteilung. Um dies zu erreichen wurde bereits die Anwendung in verschiedene Services unterteilt. Diese wurden in Abschnitt \ref{sec:implementation:serviceAndComponentOrientation} näher beschrieben. \\
+Für die Instanziierung einer Komponente wurden vier verschiedene Konsolenanwendungen implementiert. Wobei für jeden Service ein eigene Anwendung geschrieben wurde, mit Ausnahme vom \textit{Domain-Service} und \textit{Command-Service}, welche in einer gemeinsamen Anwendung operieren. \\
+Die Verbindung zwischen den einzelnen Komponenten wird mit der Cluster Unterstützung, welche \textit{Akka.net} bietet und in Abschnitt \ref{subsec:implementation:akka:cluster} beschrieben ist, umgesetzt. 
+
+\subsection{Cluster}
+\label{subsec:implementation:akka:cluster}
+Die Cluster Funktionalität von \textit{Akka.net} bietet die möglichkeit zusammengehörende Anwendungen über ein Netzwerk zu verbinden und somit ein Cluster zu formen. Für den Bentzer der Anwendung harmoniert der Cluster als eine Einheit. Dazu wird mittels einem \textit{Peer-to-Peer} Netzwerk jede Teilnehmende Anwendung mit jeder anderen verbunden. Über ein Protokoll, das sogenannte \textit{Gossip} Protokoll, genauer beschrieben in Abschnitt \ref{subsec:implementation:gossip}, werden Informationen zum Zustand des Clusters ausgetauscht. \\
+Jede Anwendung bekommt Rollen zugewissen, welche es zur Laufzeit übernehmen kann. Eine Rolle definiert in \textit{Akka.net} ein Aufgabengebiet innerhalb des Clusters. Für \textit{TyrolSky} wurden die fünf bereits definierten Services in Abschnitt \ref{sec:implementation:serviceAndComponentOrientation} als Rollen herangenommen. Tritt eine Anwendung dem Cluster bei, so gibt sie zu Beginn bekannt, welche Rollen sie im Cluster übernehmen kann. Eine Rolle kann somit mehrfach im Cluster vorhanden sein.
+
+
+
+\subsection{Gossip}
+\label{subsec:implementation:gossip}
+
+\subsection{Globale Dienste}
+\label{subsec:implementation:singeltons}
+
+\subsection{Verteilung transaktionaler Daten}
+Erklärung von Sharding

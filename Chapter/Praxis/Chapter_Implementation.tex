@@ -41,6 +41,7 @@ Die Erstellung einer Instanz eines Actors erfolgt nicht über das Schlüsselwort
 Durch die Verwendung einer eigenen, Framework basiertem Referenz anstatt einer direkten Referenz auf den Actor, können Actors ortsungebunden instanziiert werden ohne das der Anwender des Actors dies im Code beachten muss. Die Verwendung eines Actors unterscheidet sich somit nicht davon ob er sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet und die Verbindung zu diesem Actor über ein Netzwerk hergestellt wird. Die Informationen wo die einzelnen Actors wirklich instanziert werden, wird über eine Konfigurations Datei gesteuert. Somit kann das Verhalten des Systems einfach geändert werden und die Verteilung der gesamten Applikation wird erleichtert.
 
 \section{Service Architektur}
+\label{sec:implementation:serviceAndComponentOrientation}
 Um dasFlugbuchungssystem zu realisieren wurde auf eine Komponenten und Serviceorientierte Architektur geachtet. Dazu wurden die Anforderungen selbst in einzelne Kategorien unterteilt und daraus verschiedene Komponenten abgeleitet. \\
 Einerseits besteht die Applikation aus einer Schnittstelle zu den Endbenutzer welche über \textit{HTTP} Aufrufe Anfragen an das System durchführen können. Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos welche Daten im System verändern können. Alle Prozessebezogenen Inhalte werden in der Komponente \textit{Domain Model} behandelt. In dieser befindet sich die Logik des Flugbuchungssystem welche auch für die einhaltung der Datenkonsistenz zuständig ist. \\
 Abschließend wird noch eine Komponente benötigt welche diese Komponenten miteinander in Verbindung bringt. Ableitend aus der \textit{Akka.Net} Community wird diese \textit{Lighthouse} genannt. Somit existieren in der \textit{TyrolSky} Anwendung folgende Komponenten:
@@ -115,20 +116,8 @@ Jede einzelne Abfrage wird einem Worker Actor zugewissen, welcher nur für den Z
 
 \input{Chapter/Praxis/Implementation/Implementation_EventSourcing}
 
-\section{Verteilung der Anwendung}
-\label{subsec:implementation:ApplicationDistribution}
+\input{Chapter/Praxis/Implementation/Implementation_DistributionCluster}
 
-\subsection{Globale Dienste}
-\label{subsec:implementation:singeltons}
-
-\section{Cluster}
-\label{subsec:implementation:gossip}
-Gossip, 
-
-\subsection{Fixe Dienste}
-wtf?
-\subsection{Verteilung transaktionaler Daten}
-Erklärung von Sharding
 
 \section{Garantierte Nachrichtenübermittelung}
 
