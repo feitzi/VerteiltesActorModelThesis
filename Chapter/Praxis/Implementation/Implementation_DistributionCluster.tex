@@ -6,16 +6,33 @@ Die Verbindung zwischen den einzelnen Komponenten wird mit der Cluster Unterstü
 
 \subsection{Cluster}
 \label{subsec:implementation:akka:cluster}
-Die Cluster Funktionalität von \textit{Akka.net} bietet die möglichkeit zusammengehörende Anwendungen über ein Netzwerk zu verbinden und somit ein Cluster zu formen. Für den Bentzer der Anwendung harmoniert der Cluster als eine Einheit. Dazu wird mittels einem \textit{Peer-to-Peer} Netzwerk jede Teilnehmende Anwendung mit jeder anderen verbunden. Über ein Protokoll, das sogenannte \textit{Gossip} Protokoll, genauer beschrieben in Abschnitt \ref{subsec:implementation:gossip}, werden Informationen zum Zustand des Clusters ausgetauscht. \\
-Jede Anwendung bekommt Rollen zugewissen, welche es zur Laufzeit übernehmen kann. Eine Rolle definiert in \textit{Akka.net} ein Aufgabengebiet innerhalb des Clusters. Für \textit{TyrolSky} wurden die fünf bereits definierten Services in Abschnitt \ref{sec:implementation:serviceAndComponentOrientation} als Rollen herangenommen. Tritt eine Anwendung dem Cluster bei, so gibt sie zu Beginn bekannt, welche Rollen sie im Cluster übernehmen kann. Eine Rolle kann somit mehrfach im Cluster vorhanden sein.
+Die Cluster Funktionalität von \textit{Akka.net} bietet die möglichkeit zusammengehörende Anwendungen über ein Netzwerk zu verbinden und somit ein Cluster zu formen. Für den Benutzer der Anwendung harmoniert der Cluster als eine Einheit. Dazu wird mittels einem \textit{Peer-to-Peer} Netzwerk jede Teilnehmende Anwendung mit jeder anderen verbunden. Über ein Protokoll, das sogenannte \textit{Gossip} Protokoll, genauer beschrieben in Abschnitt \ref{subsec:implementation:gossip}, werden Informationen zum Zustand des Clusters ausgetauscht. Jede am Cluster Teilnehmende Anwendung wird als Node bezeichnet. Somit bilden zwei oder mehr Nodes einen Cluster. \\
+Jede Anwendung bekommt Rollen zugewissen, welche es zur Laufzeit übernehmen kann. Eine Rolle definiert in \textit{Akka.net} ein Aufgabengebiet innerhalb des Clusters. Für \textit{TyrolSky} wurden die fünf bereits definierten Services in Abschnitt \ref{sec:implementation:serviceAndComponentOrientation} als Rollen herangenommen. Tritt eine Anwendung dem Cluster bei, so gibt sie zu Beginn bekannt, welche Rollen sie im Cluster übernehmen kann. Eine Rolle kann somit mehrfach im Cluster vorhanden sein. \\
+Die Kommunikation zwischen den Komponenten erfolgt innerhalb des \textit{Akka.net} Cluster entweder über Routing Mechanismen, siehe Abschnitt \ref{subsec:implementation:akkaRouting} oder über verteilte Daten, welche in Shards organisiert sind, siehe dazu Abschnitt \ref{subsec:implementation:akkaSharding}. 
+
+\subsection{Routing}
+\label{subsec:implementation:akkaRouting}
+In Kapitel \ref{sec:actor:patterns:routing} wurde bereits darauf eingegangen das es in einem System Actors geben kann, welche für die Verteilung von Nachrichten zuständig sind. Die Verteilung von Nachrichten in einem auf \textit{Akka.net} Cluster aufbauenden System wird durch eben solche Router bewerkstelligt. \\
+Das Framework bietet dabei bereits verschiedene Typen von Actors an, welche Nachrichten annehmen und an andere Actors auf entfernten Nodes weiterleitet. Diese, auf das weiterleiten von Nachrichten spezialisieren Actoren, werden Router genannt. Bei der erstellung eines Routers wird über Parameter angegeben, welche Actoren als Ziel dienen können und welche Routingsstrategie verwendet werden soll. Weiters können die möglichen Rollen, auf welchem sich die Ziele befinden, eingeschränkt werden. Nachfolgend wird die verwendeten Routingsstrategie innerhalb von \textit{TyrolSky} beschrieben. \\
+Sämtliche Anfragen an das System haben ihren Startpunkt bei der Komponente \textit{API-Service}. Von dieser müssen Anfragen an die betreffenden Komponenten weitergeleitet werden. Diese können, da die Anwendung mit dem \textit{CQRS} Prinzip arbeitet sich nur in den Rollen \textit{Command-Service} und \textit{Query-Service} befinden. Bei einer ankommenden Anfrage kann der \textit{API-Service} aufgrund der Anfrage entscheiden ob die weitere verarbeitung in einem \textit{Query} oder \textit{Command-Service} stattfinden soll. Dementsprechend wird die Anfrage an den Router, welcher für den entsprechenden Service zuständig ist, weitergeleitet. Der Router überwacht nun mithilfe der Informationen welche er über \textit{Gossip} erhält, den Status von anderen Nodes im Cluster. Empfängt der Router eine Nachricht, so kann er einen der in Frage kommenden, verfügbaren Nodes auswählen, und die Nachricht diesem zustellen. \\
+Bei der Auswahl des Nodes wird dabei für diesen Router das \textit{Round-Robin} Verfahren eingesetzt. Somit ist eine gleichmäßige verteilung der Nachrichten auf die unterschiedliche Host möglich. Es gibt neben dem \textit{Round-Robin} Routing Verfahren noch andere bereits implementierte Routingsstrategien innerhalb von \text{Akka.net} wie unter anderem Zufälliges Routing, Hashingrouting und andere. Jedoch wurden diese im zuge der Umsetzung von \textit{TyrolSky} nicht verwendet. \\
+In Abbildung \ref{fig:implementation:routing} ist das zusammenspiel der drei Komponenten \textit{API-Service}, \textit{Query-Service} und \textit{Command-Service} zu sehen, wobei von den zwei letzt genanten jeweils zwei Instanzen am Cluster teilnehmen. Die Router auf dem Node \textit{A} leiten die Nachrichten abwechselnd an die zwei Nodes \textit{B} und \textit{C} oder an \textit{D} und \textit{E}. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{gfx/implementation/ClusterRouter}
+    \caption{Ein verteiler \textit{Round-Robin} Router welcher Nachrichten von der Komponente \textit{API} auf andere Komponenten verteilt.}
+    \label{fig:implementation:routing}
+\end{figure} 
 
 
 
 \subsection{Gossip}
 \label{subsec:implementation:gossip}
-
+ 
 \subsection{Globale Dienste}
 \label{subsec:implementation:singeltons}
 
 \subsection{Verteilung transaktionaler Daten}
+\label{subsec:implementation:akkaSharding}
 Erklärung von Sharding
