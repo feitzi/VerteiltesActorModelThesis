@@ -29,7 +29,15 @@ In Abbildung \ref{fig:implementation:routing} ist das zusammenspiel der drei Kom
 
 \subsection{Gossip}
 \label{subsec:implementation:gossip}
- 
+Bereits in Abschnitt \ref{subsec:implementation:lighthouse} wurde die Komponente \textit{Lighthouse} vorgestellt, welche als Einstiegspunkt für alle Nodes verwendet wird. Die Verbindung zu den restlichen im Cluster vorhandenen Nodes, wird über das \textit{Gossip} Protokoll hergestellt. \\
+Der Name \textit{Gossip} leitet sich vom Geschwätz mehrerer Personen ab, jeder erzählt einem anderen etwas, und so wissen alle über jeden anderen  bescheid. Das gleiche Prinzip wird in diesem Protokoll verwendet, um Änderungen an einem einzelnen Node allen anderen Nodes im Cluster bekannt zu geben. \\
+Nodes mit der Rolle \textit{Lighthouse} sind der Start dieser Kommunikation. Deshalb müssen diese Nodes auch über eine fixe Adresse verfügen, im Fall von \textit{TyrolSky} sind das Ip-Addresse und Port. Komponenten welche nun dem Cluster beitreten wollen, melden sich bei einem der \textit{Lighthouse} Komponenten an, und geben bekannt über welche Adresse sie erreichbar sind. Über das \textit{Gossip} Protokoll wird nun jedem bereits im System beigetretenen Node mitgeteilt das sich ein neuer Node im Cluster befindet. \\
+In der Kommunikation zwischen den Nodes wird den anderen Nodes auch mitgeteilt, welche Rollen eine Komponenten besitzt. Dies wird dann anschließend von den Routern, siehe Abschnitt \ref{fig:implementation:routing}, verwendet, um Nachrichten an die diese Rollen zuzustellen. Weiters beinhaltet das Protokoll auch Informationen über den Zustand der einzelnen Nodes. Bei einer fehlerhaften Verbindung zwischen zwei Nodes werden alle anderen Nodes über den Fehlerzustand benachrichtigt. Ist ein Node nicht mehr erreichbar ohne das eine kontrollierte abmeldung vom Cluster stattgefunden hat, kann er jedoch nicht einfach aus dem Cluster entfernt werden sondern es muss eine Lösungsstrategie implementiert sein, siehe dazu den nachfolgenden Abschnitt \ref{subsec:implementation:splitBrain}. \\ 
+Das Protokoll dient neben der Zusammenfügung der einzelnen Node zu einem Cluster auch zum austausch von Informationen über den aktuellen Zustand des Clusters. Muss vom Protokoll eine entscheidung getroffen werde, wie beispielsweiße die Entscheidung über den Beitritt zum Cluster, wird ein Node ausgewählt, welcher die Führung über den Cluster übernimmt. Im Fall von \textit{TyrolSky} ist das immer der ältester Node im Cluster, wird dieser vom Cluster entfernt, übernimmt die Führung der nächst älteste Node.  
+
+\subsection{Split Brain} 
+\label{subsec:implementation:splitBrain}
+
 \subsection{Globale Dienste}
 \label{subsec:implementation:singeltons}
 
