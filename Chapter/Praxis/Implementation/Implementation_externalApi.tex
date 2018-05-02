@@ -1,0 +1,24 @@
+\section{Externe Schnittstelle}
+\label{sec:implementation:externalApi}
+Neben der Interaktion mit Benutzern der \textit{TyrolSky}-Anwendung über die \textit{API}-Komponente, wird auch eine Kommunikation mit einem Fremdsystem benötigt. Um Abbuchungen an einem Konto vorzunehmen, wird, wie im Anforderungskatalog unter Abschnitt \ref{sec:Eruierung:sec:Eruierung:technicalRequierements} gefordert, eine externe Anwendung angebunden. Diese Bankenanwendung operiert als eigenständige Anwendung, und simuliert eine Bankenschnittstelle um Kontoabbuchungen von Kunden vorzunehmen. Die Simulationsanwendung selbst ist im nachfolgenden Kapitel \ref{subsec:implementation:bankApi} genauer beschrieben. \\
+Der bereits in Abschnitt \ref{subsub:implementation:ChargingCoordinator}  beschriebene Buchungskoordinator verteilt Abbuchungstransaktionen mithilfe von \textit{Sharding} innerhalb des Clusters auf verschiedene Nodes. Jede Transaktion benötigt jedoch eine Kommunikation mit der Bankenschnittstelle, um die Transaktion durchzuführen und sie mit dem Bankensystem abzugleichen.  \\
+Dazu wird auf jedem Node welcher Buchungen durchführen kann, das sind alle Nodes mit der Rolle \textit{Domain-Service}, ein \textit{BankingActors} Actor gestartet, welcher für die Kommunikation mit dem Bankenanwendung zuständig ist.
+ Möchte nun eine Transaktion eine Kommunikation mit der Bankenanwendung durchführen, so sendet den Befehl zu Kommunikation in Form einer Nachricht an den \textit{BankingActor} welcher sich auf dem gleichen Host befindet wie der Transaktions-Actor. Wird während der Kommunikation zur Bank, der betroffene Transaktions-Actor durch \textit{Sharding} verschoben, betrifft dies nicht den BankingActor selbst, da dieser fix auf jedem Host als eigene Actor Instanz vorhanden ist. 
+
+\subsection{Banken API}
+Für die Anbindung einer externen Bank wurde eine eigene Software geschrieben, welche einen einfache Banken Schnittstelle zur verfügung stellt. Die \textit{BankChargingAPI} ist komplett getrennt von der restlichen Implementierung der \textit{TyrolSky} Anwendung und wird über eine eigene \textit{REST} Schnittstelle angesprochen. \\
+Die Kernaufgabe dieser Bankensimulation ist es, Bankkonnten zu verwalten. Dazu werden in einer relationalen Datenbank Kontoinformationen abgebildet. Dabei hat jedes Konto einen Namen sowie ein aktueller Guthabenstatus. Für die Bankentransaktionen, nicht zu verwechseln mit den Transaktion innerhalb der \textit{TyrolSky}-Anwendung, wird eine eine eigene Tabelle geführt welche Informationen über die Transaktion führt. Jede einkommende Anfrage für eine Kontobewegung wird in einer Transaktion abgebildet. Diese enthält Informationen über den Status der Transaktion sowie deren Transaktionsbetrag. Über die Schnittstelle kann auch der Status einer Transaktion abgefragt werden. Diese Transaktionsstatus Abfrage wird auch von der \textit{TyrolSky}-Anwendung verwendet um die eigene Flugbuchung zu kontrollieren, beschrieben unter Abschnitt \ref{subsub:implementation:ChargingCoordinator}. \\
+Für die Implementierung der Simulationsanwendung wurde auf eine \textit{SQL-Datenbank} zurückgegriffen. Jeder Zugriff auf die Datenbank erfolgt in einer Transaktion mit dem strengen Transaktionslevel \textit{Serializable}, wodurch keine Inkonsistenzen der Kontoinformationen entstehen können. Weiters ist durch die Transaktionstabelle eine Nachvollziehbarkeit der Transaktionen möglich. \\
+Die Simulationsanwendung \textit{BankChargingAPI} bietet folgende Schnittstellen zur an:
+\begin{itemize}
+    \litem{ChargeAccount}
+        Mit Angabe des gewünschten Kontos sowie des zu abbuchenden Betrages, wird eine Transaktion gestartet. Für den Aufruf, wird weiters eine Transaktionsnummer angegeben, mit welcher später der Status der Transaktion abgefragt werden kann.
+    \litem{GetTransactionStatus}
+        Durch angabe der Transaktionsnummer wird der aktuelle Status der Transaktion zurückgegeben. 
+\end{itemize}
+Durch die Aufteilung in zwei Methoden, ist es möglich im Fehlerfall Transaktionsinformationen nicht zu verlieren. Wird beim Aufruf der \textit{ChargeAccount} Schnittstelle kein Ergebnis zurückgeliefert so kann der Status trotzdem über \textit{GetTransactionStatus} zu einem späteren Zeitpunkt abgefragt werden.
+
+\label{subsec:implementation:bankApi}
+
+\section{Testapplikation}
+\label{subsec:implementation:TestApplikation} 
