@@ -21,7 +21,7 @@ Durch die Aufteilung in zwei Methoden, ist es möglich im Fehlerfall Transaktion
 
 \section{Testapplikation}
 \label{subsec:implementation:TestApplikation} 
-Die \textit{TyrolSky}-Anwendung bietet eine Schnittstelle für Enbenutzer an. Um jedoch eine größere Menge an Benutzern, und somit Anfragen zu simulieren wird jedoch eine eigene Testapplikation benötigt. Diese bietet die möglichkeit eine vielzahl an Flügen zu reservieren sowie zu buchen. Weiters wird für jede Anfrage an das \textit{TyrolSky}-System die Anfrage selbst Protokolliert und der Rückgabewert der Anfrage abgespeichert. Dadurch können nach einem Testdurchlauf die Resultate eingesehen und mit dem zustand des getesteten Systems verglichen werden. \\
+Die \textit{TyrolSky}-Anwendung bietet eine Schnittstelle für Endbenutzer an. Um jedoch eine größere Menge an Benutzern, und somit Anfragen zu simulieren wird jedoch eine eigene Testapplikation benötigt. Diese bietet die möglichkeit eine vielzahl an Flügen zu reservieren sowie zu buchen. Weiters wird für jede Anfrage an das \textit{TyrolSky}-System die Anfrage selbst Protokolliert und der Rückgabewert der Anfrage abgespeichert. Dadurch können nach einem Testdurchlauf die Resultate eingesehen und mit dem zustand des getesteten Systems verglichen werden. \\
 Die Umsetzung der Testapplikation fordert einen hohen Grad an Parallelisierung, da gleichzeitig eine vielzahl an Anfragen an das System gestellt werden sollen. Aufgrund der Anforderung an eine bestmögliche Parallelisierung, wird die Anwendung mit dem Actor-Model, welches ja für Parallelisierte Anwendungen konzipiert wurde siehe dazu \ref{actor:parallelism}, realisiert. Wie die Implementierung der externen Bankenanwendung, ist auch die Testapplikation eine vollständig eigenständige Anwendung welche, aus sicht der Implementation, keinen Zusammenhang mit der Implementierung der \textit{TyrolSky}-Anwendung besitzt. \\
 Jede Anfrage welche zum testenden System durchgeführt wird, wird in einer Datenbanktabelle Protokolliert. Dabei werden Informationen zur Anfrage selbst, wie Flugnummer, Flugdatum und Passagierinformation sowie Informationen zur Buchungs selbst abgespeichert. Der genaue Aufbau der Tabelle \textit{StressTest}, welche alle Informationen über eine Anfrage enthält, ist aus Abbildung \ref{fig:implementation:stressTestDbSchema} zu entnehmen.
 \begin{figure}
@@ -38,7 +38,12 @@ Nach dem Starten der Konsolenanwendung, werden die übergebenen Parameter ausgel
 Die einzelnen Buchungsjobs werden dabei nicht alle gleichzeitig gestartet. Alle zwei Sekunden werden 10 neue Jobs gestartet, welche jedoch anschließend parallel bis zur fertigstellung des Jobs weiterlaufen. Die Gesamtanzahl an Jobs wird über die Parameter der Anwendung gesteuert. Ist die Testanwendung beendet, kann das Resultat des Tests in der Datenbank abgefragt werden. Weiters können durch die Angabe der Kontoinformationen die Resultate mit der \textit{BankChargingAPI} Anwendung sowie mit den Entsprchenden Passagierlisten der \textit{TyrolSky} Anwendung verglichen werden.
 
 \subsection{Parameter Beschreibung}
-Für die Steuerung und Parametrisierung der \textit{TyrolSky} Testapplikation, können folgende Parameter im zuge des startes der Konsolenanwendung angewandt werden:
+Für die Steuerung und Parametrisierung der \textit{TyrolSky} Testapplikation, können folgende Parameter zum Starten  der Konsolenanwendung angewandt werden:
 
-
-
+\begin{itemize}
+    \litem{NumberOfBookings} Gesamtanzahl an zu buchenden Tickets
+    \litem{FlightsToBook} Angabe einer Liste an verschiedenen Flugnummern welche Gebucht werden sollen.
+    \litem{DateRangeStart und  DateRangeStop} Start und Enddatum für den Zeitraum innerhalb welcher der Flug stattfinden soll.
+    \litem{ChargingAccounts} Fiktive Bankkonto Informationen, mit welchen die Flüge bezahlt werden sollen
+\end{itemize}
+Die Testanwendung versucht anschließend die angegebene Anzahl an Tickets zu reservieren sowie zu buchen. Dabei wird für jedes Ticket zufällig ein Datum welches innerhalb des Zeitraumes, sowie eine zufällige Flugnummer, ausgewählt. 
