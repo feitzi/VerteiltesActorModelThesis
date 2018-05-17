@@ -111,7 +111,7 @@ Abschließend wird noch eine Komponente benötigt, welche die bereits beschriebe
     \item Domain-Service
     \item Lighthouse
 \end{itemize}
-Von jeder dieser fünf Komponenten kann es zur Laufzeit des Systems mehrere Instanzen  geben. 
+Von jeder dieser fünf Komponenten kann es, zur Laufzeit des Systems mehrere Instanzen  geben. 
 Jeder dieser Komponenten kann mehrfach Instanziiert werden und somit einen Teil der Last der gesamten Anwendung übernehmen. Für eine korrekt arbeitendes System ist es erforderlich, dass von jeder einzelnen Komponente mindestens eine Instanz im System vorhanden ist. Jedoch können einzelne Teile des System auch korrekt funktionieren wenn nicht alle Komponenten im System verfügbar sind. So ist es beispielsweise möglich, dass Abfragen auf das System durchführbar sind, obwohl keine Instanz von \textit{Domain Service} oder \textit{Command-Service} im System verfügbar sind. Jedoch können dann Befehle wie Flugtickets kaufen, nicht durchgeführt werden und würden zu einem Fehler führen. \\
 Für das Verständnis der genaueren Aufgaben der einzelnen Komponenten wird nachfolgend nun jede Komponente genauer beschrieben.
 Für das Verständnis der einzelnen Komponenten, sowie die genauen Aufgaben dieser, wird nachfolgend nun jede Komponente genauer beschrieben.
