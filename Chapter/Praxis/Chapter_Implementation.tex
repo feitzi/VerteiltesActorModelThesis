@@ -95,7 +95,13 @@ Durch die Verwendung einer eigenen Framework basierten Referenz, anstatt einer d
 \section{Service Architektur}
 \label{sec:implementation:serviceAndComponentOrientation}
 Um das Flugbuchungssystem entsprechend des Anforderungskataloges zu realisieren, wurde auf eine komponenten- und serviceorientierte Architektur geachtet. Dazu wurden die Anforderungen in einzelne Kategorien unterteilt und daraus verschiedene Komponenten abgeleitet. \\
-Einerseits besteht die Applikation aus einer Schnittstelle zu den Endbenutzern, welche über \textit{HTTP} Aufrufe Anfragen an das System durchführen können. Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos welche Daten im System verändern können. Alle Prozessebezogenen Inhalte werden in der Komponente \textit{Domain Model} behandelt. In dieser befindet sich die Logik des Flugbuchungssystem welche auch für die einhaltung der Datenkonsistenz zuständig ist. \\
+Einerseits besteht die Applikation aus einer Schnittstelle zu den Endbenutzern, welche über \textit{HTTP}-Aufrufe Anfragen an das System durchführen kann. Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos welche Daten im System verändern können. Alle Prozessebezogenen Inhalte werden in der Komponente \textit{Domain Model} behandelt. In dieser befindet sich die Logik des Flugbuchungssystem welche auch für die einhaltung der Datenkonsistenz zuständig ist. \\
+% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:41:56.317Z:
+% 
+% > Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos welche Daten im System verändern können. 
+% Beide Sätze sagen dasselbe aus. 
+% 
+% ^.
 Abschließend wird noch eine Komponente benötigt welche die bereits beschriebenen Komponenten miteinander in Verbindung bringt. Ableitend aus der \textit{Akka.Net} Community wird diese \textit{Lighthouse} genannt. Somit existieren in der \textit{TyrolSky} Anwendung folgende Komponenten:
 \begin{itemize}
     \item API
