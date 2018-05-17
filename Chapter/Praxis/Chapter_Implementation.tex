@@ -45,9 +45,15 @@ Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , s
 % ^.
 \begin{description}
     \item[Tell] Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Die Methode selbst blockiert nicht, und die Nachricht wird an den Actor zugestellt, welcher sie in einem eigenen Thread abarbeitet. 
+% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:24:36.090Z:
+% 
+% > Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Die Methode selbst blockiert nicht, und die Nachricht wird an den Actor zugestellt, welcher sie in einem eigenen Thread abarbeitet. 
+% Satz zusammenfassen, zu oft "Methode"
+% 
+% ^.
     \item[Ask] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt, dass die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die Zustellung von Nachrichten nur im Ausnahmefall zu empfehlen \citep{Akka.netCommunityAkka.NETDocumentation}.  
 \end{description}
-Nachrichten welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend Abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen, der Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}.  
+Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen. er Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}.  
 
 \begin{lstlisting}[caption=Versenden einer Nachricht an einen anderen Actor, label=code:actor:TellMethod]
     targetActorRef.Tell(new SpecificMessage());
