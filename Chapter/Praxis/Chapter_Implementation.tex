@@ -53,13 +53,13 @@ Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , s
 % ^.
     \item[Ask] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt, dass die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die Zustellung von Nachrichten nur im Ausnahmefall zu empfehlen \citep{Akka.netCommunityAkka.NETDocumentation}.  
 \end{description}
-Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen. er Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}.  
+Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen. Der Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}.  
 
 \begin{lstlisting}[caption=Versenden einer Nachricht an einen anderen Actor, label=code:actor:TellMethod]
     targetActorRef.Tell(new SpecificMessage());
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Hier wird für den Actor \textit{MyTargetActor} das Verhalten für eine einkommende Nachricht vom Typ \textit{SpecificMessage} festgellegt., label=lst:test]
+\begin{lstlisting}[caption=Hier wird für den Actor \textit{MyTargetActor} das Verhalten für eine einkommende Nachricht vom Typ \textit{SpecificMessage} festgelegt., label=lst:test]
     public sealed class MyTargetActor : ReceiveActor {
         public MyTargetActor() {
             Become<SpecificMessage>(x => {
