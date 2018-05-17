@@ -60,6 +60,11 @@ Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden
 \end{lstlisting}
 
 \begin{lstlisting}[caption=Hier wird für den Actor \textit{MyTargetActor} das Verhalten für eine einkommende Nachricht vom Typ \textit{SpecificMessage} festgelegt., label=lst:test]
+% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:27:19.390Z:
+%
+% > Hier wird für den Actor \textit{MyTargetActor} das Verhalten für eine einkommende Nachricht vom Typ \textit{SpecificMessage} festgelegt.
+%
+% ^.
     public sealed class MyTargetActor : ReceiveActor {
         public MyTargetActor() {
             Become<SpecificMessage>(x => {
