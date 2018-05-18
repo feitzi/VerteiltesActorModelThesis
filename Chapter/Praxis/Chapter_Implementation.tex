@@ -139,8 +139,14 @@ Für jede ankommende Anfrage wird ein eigener Actor gestartet, welcher ausschlie
 % Wortwiederholung "wird"
 % 
 % ^.
-In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des entsprechenden Actor Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen, dass die API Komponente selbst über keinen komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten wie in Kapitel \ref{actor:actorSystem} fungieren. Dadurch wird eine interne Schnittstelle zum eigentlichen Actor System hergestellt. \\
-Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage, ermöglicht es die weitere Behandlung im dahinterliegenden Actor System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Anfragen des gleichen Typs, welche an die selbe API Instanz gesandt wurden,  an unterschiedliche Instanzen der für die abarbeitung der Anfrage zuständige Komponente weitergeleitet werden. 
+In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des entsprechenden Actor Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen, dass die API Komponente selbst über keinen komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten, wie in Kapitel \ref{actor:actorSystem}, fungieren. Dadurch wird eine interne Schnittstelle zum eigentlichen Actor System hergestellt. \\
+Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actor System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Anfragen des gleichen Typs, welche an die selbe API Instanz gesandt wurden,  an unterschiedliche Instanzen, der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:08:23.799Z:
+% 
+% >  Dadurch können Anfragen des gleichen Typs, welche an die selbe API Instanz gesandt wurden,  an unterschiedliche Instanzen, der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
+% Ist hier der Zwischensatz "der für die Abarbeitung der Anfrage zuständige Komponente" notwendig? Falls nicht, löschen --> ist dann leichter zu verstehen
+% 
+% ^.
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{gfx/implementation/apiActorModel}
@@ -149,28 +155,71 @@ Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage, ermöglich
 \end{figure} 
 
 \subsection{Query-Service}
-Die Anwendung separiert wie bereits erwähnt Abfragen und Befehle nach dem \textit{CQRS}-Prinzip auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. Die Abfrage Seite wird in der Implementierung der \textit{TyrolSky} Anwendung in einer eigenen Komponente realisiert. \\
-Um eine Anfrage welche Daten des Systems abfragen möchte  abarbeiten zu können, überwacht die \textit{Query}-Komponente relevante Events welche im Event Sourcing aufgetreten sind, siehe dazu \ref{sec:implementation:eventSouring}. \\
-Für jeden Typ von Abfrage wird dazu ein Ergebnis bereit gehalten, welches immer wieder aktualisiert wird. Wird ein relevantes Event im Event Sourcing gefunden, so wird das Ergebnis mit den neuen Eventdaten aktualisiert. Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. Jedoch sind die Resultate einer Abfrage nicht garantiert aktuell. Wird ein bereits eingetretendes Event zu spät in das vorbereitete Ergebnis miteingerechnet, bekommt der Anfragende das Ergebnis zurückgeliefert, welches vor dem Event gegolten hat. Deshalb wird diese Komponente nur für Anfragen von Benutzern verwendet und keine Entscheidungen innerhalb der Anwendung darauf aufgebaut.
+Die Anwendung separiert Abfragen und Befehle nach dem \textit{CQRS}-Prinzip, auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. Die Abfrage Seite wird in der Implementierung der \textit{TyrolSky} Anwendung in einer eigenen Komponente realisiert. \\
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:15:18.034Z:
+% 
+% > Die Abfrage Seite wird in der Implementierung der \textit{TyrolSky} Anwendung in einer eigenen Komponente realisiert.
+% Was meinst du mit Abfrage Seite?
+% 
+% ^.
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:14:51.167Z:
+% 
+% > Die Anwendung separiert Abfragen und Befehle nach dem \textit{CQRS}-Prinzip, auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. 
+% Von welcher Anwendung sprichst du hier?
+% 
+% ^.
+Um eine Anfrage abarbeiten zu können, überwacht die \textit{Query}-Komponente relevante Events, die im Event Sourcing aufgetreten sind, siehe dazu \ref{sec:implementation:eventSouring}. \\
+Für jeden Typ von Abfrage wird dazu ein Ergebnis bereit gehalten, welches immer wieder aktualisiert wird. Wird ein relevantes Event im Event Sourcing gefunden, so wird das Ergebnis mit den neuen Eventdaten aktualisiert. Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. Es kann nicht garantiert werden, dass die Resultate eine Abfrage stets aktuell sind. Wird ein bereits eingetretenes Event zu spät in das vorbereitete Ergebnis miteingerechnet, bekommt der Anfragende das Ergebnis zurückgeliefert, welches vor dem Event gegolten hat. Deshalb wird diese Komponente nur für Anfragen von Benutzern verwendet und keine Entscheidungen innerhalb der Anwendung darauf aufgebaut.
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:21:02.201Z:
+% 
+% >  Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. 
+% Eintreffende Anfragen können so abgearbeitet werden, ohne dass ein weiterer Datenbankabgleich notwendig ist. 
+% (mögliches Beispiel, den Satz umzuändern) 
+% 
+% ^.
 
 \subsubsection{Aufbereitung von Resultaten}
 \label{subsubsub:implementation:queryActorModel:resultPreparator}
-Tretten neue Events auf, so wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate selbst wieder abgespeichert. Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden, und anschließend auf diesem weitergearbeitet werden. \\
-Die Speicherung von Ergebnis führt jedoch zu Problemen wenn man die Verteilung der Komponente beachtet. Da jede Instanz seine eigenen Ergebnisse vorbereitet, müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben als auch beim Lesen konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen wird entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet. Jedoch erhöht dies den Wartungsaufwand der Komponente da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
-Eine weitere Möglichkeit ist die Persistierung der Ergebnisse pro Komponente in einer globalen Datenbank. Wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es jedoch erforderlich, dass Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen. Dafür wurde ein globaler Namensservice implementiert, welcher im gesamten verteilten System eindeutige Namen vergibt. Meldet sich eine Komponenteninstanz vom System ab, werden alle Namen, welche an diese Instanz vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt diese die wieder zuvor freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten. Für die Umsetzung des globalen Namensservice wurde auf das Pattern \textit{Cluster Singelton}, welches in Abschnitt \ref{subsec:implementation:singeltons} erklärt wird, zurückgegriffen. \\
-Durch die Verwendung einer globalen Datenbank, sowie auf daszurückgreifen eines globalen Namensservice ist während dem Betrieb der Anwendung der Wartungsaufwand auf ein minimum beschränkt. Weiters kann durch diese Variante sichergestellt werden, dass bei bei einem Neustart des Systems die Instanzen mit bereits zuvor erarbeiteten Resultaten weiterarbeiten können. 
+Treten neue Events auf, wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer Vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate abgespeichert. Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden.\\
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:37:17.164Z:
+% 
+% > Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events.
+% sporadisch bedeutet, dass es ganz zufällig passiert. Doch hier passier es genau definiert, und zwar nach einer bestimmten Menge abgearbeiteter Events.
+% 
+% ^.
+Die Speicherung von Ergebnissen führt, in Bezug auf die Verteilung von Komponenten, zu Problemen. Da jede Instanz seine eigenen Ergebnisse vorbereitet, müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben, als auch beim Lesen, Konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen, kann entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet werden. Jedoch erhöht dies den Wartungsaufwand der Komponente, da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
+Eine weitere Möglichkeit ist die Persistierung der Ergebnisse pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es  erforderlich, dass Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen, welche von einem globalen Namensservice vergeben wird. Meldet sich eine Komponenteninstanz vom System ab, werden alle Namen, welche an diese Instanz vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt sie die  zuvor freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten. Für die Umsetzung des globalen Namensservice wurde auf das Pattern \textit{Cluster Singelton}, welches in Abschnitt \ref{subsec:implementation:singeltons} erklärt wird, zurückgegriffen. \\
+Durch die Verwendung einer globalen Datenbank sowie auf das Zurückgreifen eines globalen Namensservice ist der Wartungsaufwand während dem laufenden Betrieb  auf ein Minimum beschränkt. Durch diese Variante kann sichergestellt werden, dass bei bei einem Neustart des Systems die Instanzen mit bereits zuvor erarbeiteten Resultaten weiterarbeiten können. 
 
 \subsubsection{Implementierte Abfrage}
-In der umgesetzten Implementierung werden in der \textit{Query}-Komponente Abfragen zur verfügung gestellt, welche dem Benutzer eine Übersicht über angebotente Flüge sowie den Status von Flugtickets geben. Insgesamt sind drei unterschiedliche Abfragen möglich:
+In der umgesetzten Implementierung werden in der \textit{Query}-Komponente Abfragen zur Verfügung gestellt, welche dem Benutzer eine Übersicht über angebotene Flüge sowie den Status von Flugtickets geben. Insgesamt sind drei unterschiedliche Abfragen möglich:
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:49:29.521Z:
+% 
+% > umgesetzten Implementierung 
+% Welche Umsetzung meinst du?
+% 
+% ^.
 
 \begin{enumerate}
-    \item Status eines Flugtickets Abfragen
-    \item Liste alle zur verfügung stehenden Flüge
+    \item Status eines Flugtickets 
+    \item Liste alle zur Verfügung stehender Flüge
     \item Passagierliste eines bestimmten Fluges
 \end{enumerate}
 
-Für die dritte Abfrage wurde jedoch eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen (siehe dazu Abschnitt \ref{subsec:implementation:domainService}) weitergegeben. Dies führt dazu, dass die Abfrage selbst länger dauert, da keine Ergebnisse vorgehalten werden. Jedoch ist die Abfrage selbst exakter da die Entitäten direkt abgefragt werden, und der Aufwand in der Entwicklung geringer. \\
-Das Beispiel zeigt, dass je nach Anwendungsfall entschieden werden sollte wie die Abfrage von Daten exakt implementiert wird.
+Für die dritte Abfrage wurde eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen, siehe dazu Abschnitt \ref{subsec:implementation:domainService}, weitergegeben. Die Abfrage dauert länger, da keine Ergebnisse vorgehalten werden. Diese Variante ist exakter, da die Entitäten direkt abgefragt werden und der Aufwand in der Entwicklung geringer ist. \\
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:53:10.214Z:
+% 
+% > vorgehalten
+% Was meinst du mit "vorgehalten"?
+% 
+% ^.
+Das Beispiel zeigt, dass je nach Anwendungsfall entschieden wird, wie die Abfrage von Daten exakt implementiert wird.
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:54:33.508Z:
+% 
+% > Das Beispiel zeigt, dass je nach Anwendungsfall entschieden werden sollte wie die Abfrage von Daten exakt implementiert wird.
+% Welches Beispiel? Dein fiktives? 
+% 
+% ^.
 
 \begin{figure}
     \centering
@@ -180,10 +229,17 @@ Das Beispiel zeigt, dass je nach Anwendungsfall entschieden werden sollte wie di
 \end{figure} 
 
 \subsubsection{Strukturierung}
-Für die Abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, auch für die realisierung von Abfragen auf die Hilfe von kurzlebigen Actors gesetzt. Diese führen den eigentlichen Abfrageprozess durch, und verwenden dazu die entsprechenden Query-Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query-Komponente in Form von Actors zu sehen. Darin ist zu erkennen, dass für jeden Typ von Abfrage ein Actor existiert welcher die Abfragen bearbeitet. 
-Dieser Actor wird in der Implementierung als \textit{Supplier} bezeichnet und besitzt selbst wieder ein Child-Actor welcher sich um die Aufbereitung der Abfragedaten wie in Abschnitt \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschrieben, kümmert. \\
-Jede einzelne Abfrage beim \textit{Query-Service} wird einem neuem Worker-Actor zugewissen, welcher nur für den Zeitraum der Abfrage selbst instanziiert ist. Dieser fragt die benötigten Daten direkt vom, für die entsprechende Abfrage zuständigen, \textit{Supplier} ab. 
-
+Für die Abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, die Realisierung von Abfragen mittels der Hilfe von kurzlebigen Actors umgesetzt. Diese führen den eigentlichen Abfrageprozess durch und verwenden dazu die entsprechenden Query-Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query-Komponente in Form von Actors zu sehen. Darin ist zu erkennen, dass für jeden Typ von Abfrage ein Actor existiert, welcher die Abfragen bearbeitet. 
+Der Actor wird in der Implementierung als \textit{Supplier} bezeichnet und besitzt selbst wieder ein Child-Actor, welcher für die Aufbereitung der Abfragedaten, wie in Abschnitt \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschrieben, zuständig ist. \\
+Jede einzelne Abfrage beim \textit{Query-Service} wird einem neuem Worker-Actor zugewiesen, welcher nur für den Zeitraum der Abfrage selbst instanziiert ist. Dieser fragt die benötigten Daten direkt vom \textit{Supplier} ab. 
+% * <feitzinger.magdalena@gmail.com> 2018-05-18T06:01:18.260Z:
+% 
+% > Darin ist zu erkennen, dass für jeden Typ von Abfrage ein Actor existiert, welcher die Abfragen bearbeitet. 
+% > Der Actor wird in der Implementierung als \textit{Supplier} bezeichnet und besitzt selbst wieder ein Child-Actor, welcher für die Aufbereitung der Abfragedaten, wie in Abschnitt \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschrieben, zuständig ist. \\
+% > Jede einzelne Abfrage beim \textit{Query-Service} wird einem neuem Worker-Actor zugewiesen, welcher nur für den Zeitraum der Abfrage selbst instanziiert ist. Dieser fragt die benötigten Daten direkt vom \textit{Supplier} ab. 
+% Hier kommt in jedem Satz das Wort "welche/r" vor.  Bitte umändern. 
+% 
+% ^.
 \input{Chapter/Praxis/Implementation/Implementation_CommandService}
 
 \input{Chapter/Praxis/Implementation/Implementation_DomainService}
