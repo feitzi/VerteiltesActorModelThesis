@@ -137,10 +137,16 @@ Um alle Handlung nachvollziehen bzw. kontrollieren zu können, ist jeder Buchung
 
 
 \section{Actor Frameworks}\label{sec:ActorFrameworks}
-Welche Möglichkeiten gibt es das Actor Model in der Praxis zu verwenden (Scala, Akka, Akka.Net, Orleans usw)
+Um das \textit{Actor-Model} anzuwenden, gibt es unterschiedliche Möglichkeiten. Manche Sprachen wie \textit{Erlang} basieren auf dem \textit{Actor-Model} auf und ermöglichen so die Implementierung von Actoren \citep{actorComparativeAnalysis} durch die Sprachfeatures der Programmiersprache. Andere Sprachen wie \textit{Scala} bieten laut \cite{haller2012actors} die Möglichkeit Actors zu Implementieren, setzten sie jedoch nicht voraus. Ein andere Variante ist es, das \textit{Actor-Model} durch ein Framework in Actor fremde Programmiersprache zu bringen. Dies hat den Vorteil, dass vorhandenes Wissen über eine Programmiersprache verwendet werden kann, und auch andere Eigensschaften dieser Sprache verwendet werden können. Dadurch steigt die Akzeptanz bei Entwicklern gegenüber des \textit{Actor}-Frameworks \citep{lee2006problem}. \\
+Für die Umsetzung des Anwendungsbeispiels, wurde ein Framework gesucht, welches die Möglichkeit bietet mit \textit{Microsoft .net} ein \textit{Actor-Model} zu realisieren. Aufgrund von Vorwissen sowie der Erfahrung mit der \textit{.Net} Technologie, kann sich die Umsetzung auf die Implementierung des \textit{Actor-Models} fokussieren. Bei der Suche nach Frameworks für die \textit{.Net} Umgebung, wurden mehrere Frameworks gefunden. \\
+Die Frameworks \textit{Proto.Actor} \textit{Orleans} und \textit{Akka.Net} bieten alle die Möglichkeit das \textit{Actor-Model} mit den Sprachen des \textit{.Net} Umfeldes zu implementieren. Alle drei Framework besitzen aktuell eine aktive Community, welche die Projekte pflegt und weiterentwickelt.
+\footnote{Alle genannten Projekte können öffentlich eingesehen werden. Dabei konnten bei allen Frameworks in der ersten Jahreshälfte 2018 ein Vielzahl an Quellcodebeiträgen beobachtet werden. Weiters wird auch auf aktuelle Fragen und Probleme von Benutzern eingegangen.}
+
+Das Projekt \textit{Proto.Actor}, siehe \cite{?}, sowie \textit{Microsoft Orliens}, beschrieben in \cite{?}, bieten virtuelle  Actors an und ermöglichen so die einfache Nutzung der Eigenschaften des \textit{Actor-Models} für parallelisierte Programmierung. Noch text über akka
 
 % * <feitzinger.magdalena@gmail.com> 2018-05-16T05:59:33.775Z:
 % 
+% Welche Möglichkeiten gibt es das Actor Model in der Praxis zu verwenden (Scala, Akka, Akka.Net, Orleans usw)
 % Kapitel unvollständig
 % 
 % ^.
