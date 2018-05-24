@@ -2,55 +2,21 @@
 \label{cha:practicalDevelopment}
 
 Während der Umsetzung des Anforderungskataloges aus Abschnitt \ref{sec:Eruierung:technicalRequierements} wurde versucht, dass erarbeitete Wissen aus den theoretischen Kapitel praktisch anzuwenden. Die implementierte Architektur des Flugbuchungssystem legt seinen Schwerpunkt auf die Verteilung der gesamten Anwendung. Mit der nachfolgend vorgestellten Implementierung ist es möglich, die Anzahl an Instanzen der verschiedenen Komponenten während des laufenden Betriebes beliebig anzupassen. \\
-Das folgende Kapitel erklärt den Aufbau der praktischen Anwendung. Nach der Einführung des Frameworks, welches verwendet wird um mit dem Actor Model arbeiten zu können, wird zuerst der komponentenorientierte Aufbau der Implementierung behandelt. Anschließend wird auf die Implementierung der Abfrage und Befehlsverarbeitung eingegangen, welche für die starke Orientierung auf Verteilung angepasst ist. Nachfolgend wird die Implementierung der garantierten Nachrichtenzustellung aus Abschnitt \ref{sec:actor:patterns:guaranteedDelivery} beschrieben. Abschließend wird das Kapitel die Testapplikation vorstellen mit welcher die verteilte Anwendung geprüft wurde sowie auf die, während der Entwicklung verwendete Environment Umgebung, eingehen.
-% * <feitzinger.magdalena@gmail.com> 2018-05-16T06:01:48.176Z:
-% 
-% > Abschließend wird das Kapitel die Testapplikation vorstellen mit welcher die verteilte Anwendung geprüft wurde sowie auf die, während der Entwicklung verwendete Environment Umgebung, eingehen.
-% Satz umändern, ist undeutsch. 
-% 
-% ^.
-% * <feitzinger.magdalena@gmail.com> 2018-05-16T06:01:03.263Z:
-% 
-% Wortwiederholung "Implementierung"
-% 
-% ^.
+Das folgende Kapitel erklärt den Aufbau der praktischen Anwendung. Nach der Einführung des Frameworks, welches verwendet wird um mit dem Actor Model arbeiten zu können, wird zuerst der komponentenorientierte Aufbau der Softwarearchitektur behandelt. Anschließend wird auf die Implementierung der Abfrage und Befehlsverarbeitung eingegangen, welche für die starke Orientierung auf Verteilung angepasst ist. Nachfolgend wird die Umsetzung der garantierten Nachrichtenzustellung aus Abschnitt \ref{sec:actor:patterns:guaranteedDelivery} beschrieben. Abschließend wird das Kapitel die Testapplikation vorstellen mit welcher die verteilte Anwendung getestet wurde.
 
 \section{Einführung in das \textit{Akka.net} Framework}
-Das Framework \textit{Akka} stellt das Actor-Model für \textit{Java} und \textit{Scala} Entwickler zur Verfügung \citep{gupta2012akkaEssentiaol}. Bei Entwickler dieser Sprachen konnte sich das Framework, und somit auch das Actor-Model, einen guten Namen machen und eine große Community hinter sich vereinen \citep{Vernon2015ReactiveAkka}. Für \textit{.Net} Entwickler mit den Sprachen \textit{C\#} und \textit{F\#} wurde das Projekt mit Hilfe der Opensource Community unter dem Name \textit{Akka.Net} für die \textit{.Net} Plattform portiert. Somit ist die Funktionalität und der Aufbau der Frameworks zwischen \textit{Akka} und \textit{Akka.net} identisch, wenngleich auch die Implementierung, aufgrund der Sprach und Laufzeitunterschiede zwischen der \textit{Java Virtual Machine (JVM)} und der \textit{Common Language Runtime (CLR)}, siehe hierzu \cite{JvmVsClrsinger2003jvm}, unterschiedlich ist. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-16T06:03:13.733Z:
-% 
-% > einen guten Namen machen
-% zu bildhaft
-% 
-% ^.
+Das Framework \textit{Akka} stellt das Actor-Model für \textit{Java} und \textit{Scala} Entwickler zur Verfügung \citep{gupta2012akkaEssentiaol}. Für Entwickler dieser Sprachen ist es mithilfe des Frameworks relativ einfach das Actor-Model umzusetzen, dementsprechend steht hinter dem Framework eine große Community  \citep{Vernon2015ReactiveAkka}. Für \textit{.Net} Entwickler mit den Sprachen \textit{C\#} und \textit{F\#} wurde das Projekt mit Hilfe der Opensource Community unter dem Name \textit{Akka.Net} für die \textit{.Net} Plattform portiert. Somit ist die Funktionalität und der Aufbau der Frameworks zwischen \textit{Akka} und \textit{Akka.net} identisch, wenngleich auch die Implementierung, aufgrund der Sprach und Laufzeitunterschiede zwischen der \textit{Java Virtual Machine (JVM)} und der \textit{Common Language Runtime (CLR)}, siehe hierzu \cite{JvmVsClrsinger2003jvm}, unterschiedlich ist. \\
 Die Implementierung der hier beschriebenen Anwendung erfolgt für die \textit{CLR} mit der Programmiersprache \textit{C\#}, und somit mit Hilfe des Frameworks \textit{Akka.Net}. 
 
 \subsection{Ein Actor in \textit{Akka.Net}}
 Wie bereits erwähnt, wird die Anwendung auf Basis von \textit{Akka.Net} mit der Objektorientierten Sprache \textit{C\#} geschrieben. Somit werden auch Actors als Klassen repräsentiert \citep{Akka.netCommunityAkka.NETDocumentation}. In \textit{Akka.Net} gibt es dafür Basisklassen, welche die Funktionalität eines Actors (wie die Nachrichtenübermittlung oder das Verhalten für empfangene Nachrichten) beinhalten. Die Actor Klasse selbst stellt jedoch für andere fremde Klassen  keine Methoden zur Verfügung. Somit ist der Zugriff von Außerhalb des Actors, wie in Abschnitt \ref{actor:requirements:shareNothing} beschrieben, nicht möglich. 
 
 \subsubsection{Nachrichten}\label{subsec:implementation:akkaMessaging}
-Da ein Actor  keine Methoden nach außen anbietet, erfolgt die Interaktion mit der Umwelt ausschließlich über Nachrichten. In \textit{Akka.Net} werden Nachrichten durch Objekte umgesetzt \citep{akkaInAction}. Eine Nachricht  muss in \textit{Akka.Net} keine bestimmte Struktur aufweisen, kann somit von jedem beliebigen Datentyp sein \citep{akika}. Um  die Zustellung von Nachrichten über verschiedene Hosts zu gewährleisten, siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, soll eine Nachricht serialisierbar sein. Die Serialisierung von Objekten ist jedoch für Nachrichten, welche innerhalb einer Laufzeitinstanz übertragen werden, nicht zwingend notwendig. Deshalb werden zur Optimierungszwecken in \textit{TyrolSky} Objekte innerhalb einer Laufzeitumgebung direkt übertragen. Die Serialisierung findet erst statt, wenn sich der Actor auf einer anderen Laufzeitumgebung befindet. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-16T06:12:09.523Z:
-% 
-% > kann somit von jedem beliebigen Datentyp sein \citep{akika}.
-% do muasch no epas ifüga.
-% 
-% ^.
-Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, benötigt, an welche die Nachricht gerichtet ist. Auf diese Referenz, welche eine Instanz vom Typ \textit{ActorRef} ist, können nun für die Übermittlung der Nachricht die Methoden \textit{Tell} oder \textit{Ask} aufgerufen werden und somit Nachrichten zugestellt werden.
-% * <feitzinger.magdalena@gmail.com> 2018-05-16T06:14:39.440Z:
-% 
-% > Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, benötigt, an welche die Nachricht gerichtet ist. Auf diese Referenz, welche eine Instanz vom Typ \textit{ActorRef} ist, können nun für die Übermittlung der Nachricht die Methoden \textit{Tell} oder \textit{Ask} aufgerufen werden und somit Nachrichten zugestellt werden.
-% präzisieren/vereinfachen . . ist schwer zu lesen
-% 
-% ^.
+Da ein Actor  keine Methoden nach außen anbietet, erfolgt die Interaktion mit der Umwelt ausschließlich über Nachrichten. In \textit{Akka.Net} werden Nachrichten durch Objekte umgesetzt \citep{akkaInAction}. Eine Nachricht  muss in \textit{Akka.Net} keine bestimmte Struktur aufweisen und kann somit eine Instanz jedes beliebigen Datentyps sein \citep{akika}. Um  die Zustellung von Nachrichten über verschiedene Hosts zu gewährleisten, siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, soll eine Nachricht serialisierbar sein. Die Serialisierung von Objekten ist jedoch für Nachrichten, welche innerhalb einer Laufzeitinstanz übertragen werden, nicht zwingend notwendig. Deshalb werden zur Optimierungszwecken in \textit{TyrolSky} Objekte innerhalb einer Laufzeitumgebung direkt übertragen. Die Serialisierung findet erst statt, wenn sich der Actor auf einer anderen Laufzeitumgebung befindet. \\
+Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, benötigt, an welche die Nachricht gerichtet ist. Auf diese Referenz, welche eine Instanz vom Typ \textit{ActorRef} ist, können für die Übermittlung der Nachricht die Methoden \textit{Tell} oder \textit{Ask} aufgerufen. Das Framwork stellt anschließend die Nachrichten an die Mailbox des entsprechenden Actors zu.
+
 \begin{description}
-    \item[Tell] Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Die Methode selbst blockiert nicht, und die Nachricht wird an den Actor zugestellt, welcher sie in einem eigenen Thread abarbeitet. 
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:24:36.090Z:
-% 
-% > Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Die Methode selbst blockiert nicht, und die Nachricht wird an den Actor zugestellt, welcher sie in einem eigenen Thread abarbeitet. 
-% Satz zusammenfassen, zu oft "Methode"
-% 
-% ^.
+    \item[Tell] Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Der Aufruf von \textit{Tell} blockiert den aktuellen \textit{Thread} nicht. Die übergebene Nachricht wird an den angegebenen Actor zugestellt, welcher diese in einem anderen Thread abarbeitet. 
     \item[Ask] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt, dass die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die Zustellung von Nachrichten nur im Ausnahmefall zu empfehlen \citep{Akka.netCommunityAkka.NETDocumentation}.  
 \end{description}
 Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen. Der Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}.  
@@ -72,38 +38,17 @@ Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden
 
 \subsubsection{Erstellung von Actors}
 \label{subsec:implementation:actorCreation}
-Die Erstellung einer Instanz eines Actors erfolgt nicht, wie bei der Instanziierung von Objekte in \textit{C\#} üblich, über das Schlüsselwort \textit{new}, sondern wird vom Framework selbst übernommen. Dazu werden dem Framework alle Informationen zur Verfügung gestellt, welche es benötigt, um den Actor zu erstellen. Das beinhaltet beispielsweise den Typ des Actors, dessen Abhängigkeiten zu andere Klassen sowie gegebenenfalls der Ort, an welcher der Actor erstellt werden soll. Anschließend bekommt der Aufrufer, welcher den Actor erstellt, eine Referenz, die sogenannte \textit{ActorRef}, welche dazu dient mit dem erstellten Actor, über die Methoden aus Abschnitt \ref{subsec:implementation:akkaMessaging} zu kommunizieren. Eine direkte Referenz auf den Actor selbst wird nicht zur Verfügung gestellt \citep{Akka.netCommunityAkka.NETDocumentation}. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:30:04.971Z:
-% 
-% Wortwiederholung "welche/r". Zu verschachtelte Sätze.  Versuche, Sätze zusammen zufassen. 
-% 
-% ^.
-Durch die Verwendung einer eigenen Framework basierten Referenz, anstatt einer direkten Referenz, können Actors ortsungebunden instanziiert werden, ohne das der Anwender dies im Code beachten muss. Die Verwendung unterscheidet sich somit nicht davon, ob er sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet und die Verbindung zu diesem Actor über ein Netzwerk hergestellt wird. Informationen, auf welchem Ort die einzelnen Actors wirklich instanziiert werden, sind durch eine Konfigurationsdatei gesteuert. Somit kann das Verhalten des Systems geändert werden und die Verteilung der gesamten Applikation wird  erleichtert .
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:35:07.289Z:
-% 
-% > Die Verwendung unterscheidet sich somit nicht davon, ob er sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet und die Verbindung zu diesem Actor über ein Netzwerk hergestellt wird.
-% Zu verschachtelt
-% 
-% ^.
+Die Erstellung einer Instanz eines Actors erfolgt nicht, wie bei der Instanziierung von Objekte in \textit{C\#} üblich, über das Schlüsselwort \textit{new}, sondern wird vom Framework selbst übernommen. Dazu werden dem Framework alle Informationen zur Verfügung gestellt, welche es benötigt, um den Actor zu erstellen. Das beinhaltet beispielsweise den Typ des Actors, dessen Abhängigkeiten zu andere Klassen sowie gegebenenfalls der Ort, an dem der Actor erstellt werden soll. Anschließend bekommt der Aufrufer, welcher den Actor erstellt, eine Referenz, die sogenannte \textit{ActorRef}. Diese dient dazu, mit dem erstellten Actor, über die Methoden aus Abschnitt \ref{subsec:implementation:akkaMessaging} zu kommunizieren. Eine direkte Referenz auf den Actor selbst wird nicht zur Verfügung gestellt \citep{Akka.netCommunityAkka.NETDocumentation}. \\
+Durch die Verwendung einer eigenen Framework basierten Referenz, anstatt einer direkten Referenz, können Actors ortsungebunden instanziiert werden, ohne das der Anwender dies im Code beachten muss. Die Verwendung unterscheidet sich somit nicht davon, ob der Actor sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet. Informationen, auf welchem Ort die einzelnen Actors wirklich instanziiert werden, sind durch eine Konfigurationsdatei gesteuert. Somit kann das Verhalten des Systems geändert werden und die Verteilung der gesamten Applikation wird  erleichtert.
 
 \section{Service Architektur}
 \label{sec:implementation:serviceAndComponentOrientation}
 Um das Flugbuchungssystem entsprechend des Anforderungskataloges zu realisieren, wurde auf eine komponenten- und serviceorientierte Architektur geachtet. Dazu wurden die Anforderungen in einzelne Kategorien unterteilt und daraus verschiedene Komponenten abgeleitet. \\
-Einerseits besteht die Applikation aus einer Schnittstelle zu den Endbenutzern, welche über \textit{HTTP}-Aufrufe Anfragen an das System durchführen kann. Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos, welche Daten im System verändern können. Alle prozessbezogenen Inhalte werden in der Komponente \textit{Domain Model} behandelt. In dieser befindet sich die Logik des Flugbuchungssystem, welche auch für die Einhaltung der Datenkonsistenz zuständig ist. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:41:56.317Z:
-% 
-% > Die Anfragen selbst können entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos welche Daten im System verändern können. 
-% Beide Sätze sagen dasselbe aus. 
-% 
-% ^.
-Abschließend wird noch eine Komponente benötigt, welche die bereits beschriebenen Komponenten miteinander in Verbindung bringt. Ableitend aus der \textit{Akka.Net} Community wird diese \textit{Lighthouse} genannt. Somit existieren in der \textit{TyrolSky}-Anwendung folgende Komponenten:
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:43:08.115Z:
-% 
-% > Ableitend aus der \textit{Akka.Net} Community wird diese \textit{Lighthouse} genannt. 
-% Die verbindende Komponente hast nicht du Lighthouse genannt. Das ist ein Programm, oder? 
-% besser wäre daher z.B. Ableitend aus der Community wird dafür Lighthouse verwendet. 
-% 
-% ^.
+Einerseits besteht die Applikation aus einer Schnittstelle zu den Endbenutzern, welche über \textit{HTTP}-Aufrufe Anfragen an das System durchführen kann. 
+
+Die Anfragen selbst können, entsprechend dem \textit{CQRS}-Prinzip \cite{cqrsYoung2010}, entweder in Abfragen oder in Kommandos unterteilt werden. Somit ist eine weitere Komponente auf Abfragen (\textit{Queries}) spezialisiert und eine weitere Komponente behandelt Kommandos, welche Daten im System verändern können. Alle prozessbezogenen Inhalte werden in der Komponente \textit{Domain Model} behandelt. In dieser befindet sich die Logik des Flugbuchungssystem, welche auch für die Einhaltung der Datenkonsistenz zuständig ist. \\
+Abschließend wird noch eine Komponente benötigt, welche die bereits beschriebenen Komponenten miteinander in Verbindung bringt. 
+Ableitend aus der Community rundnum \textit{Akka.net}, siehe \cite{lighthouse}, wird dafür die Opensource Implementierung \textit{Lighthouse} verwendet. Somit existieren in der \textit{TyrolSky}-Anwendung folgende Komponenten:
 \begin{itemize}
     \item API
     \item Query-Service
@@ -111,17 +56,7 @@ Abschließend wird noch eine Komponente benötigt, welche die bereits beschriebe
     \item Domain-Service
     \item Lighthouse
 \end{itemize}
-Von jeder dieser fünf Komponenten kann es, zur Laufzeit des Systems, mehrere Instanzen  geben. 
 Jeder dieser Komponenten kann mehrfach Instanziiert werden und somit einen Teil der Last der gesamten Anwendung übernehmen. Für eine korrekt arbeitendes System ist es erforderlich, dass von jeder einzelnen Komponente mindestens eine Instanz im System vorhanden ist. Die einzelne Teile des System funktionieren auch korrekt, wenn nicht alle Komponenten im System verfügbar sind. So ist es beispielsweise möglich, dass Abfragen auf das System durchführbar sind, obwohl keine Instanz von \textit{Domain Service} oder \textit{Command-Service} im System verfügbar sind. Jedoch können dann Befehle, wie Flugtickets kaufen, nicht durchgeführt werden führen zu einem Fehler.\\
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:46:48.077Z:
-% 
-% > Von jeder dieser fünf Komponenten kann es, zur Laufzeit des Systems, mehrere Instanzen  geben. 
-% > Jeder dieser Komponenten kann mehrfach Instanziiert werden und somit einen Teil der Last der gesamten Anwendung übernehmen. 
-% Beide Sätze sagen dasselbe aus. 
-% 
-% ^.
-
-
 Für ein besseres Verständnis werden nachfolgend die einzelnen Komponenten, sowie deren genauen Aufgaben, erklärt.
 
 \subsection{\textit{Lighthouse}}
@@ -132,21 +67,9 @@ Die Komponente fungiert als Orientierungshilfe für neue Instanzen, welche am Ge
 \subsection{\textit{API}-Schnittstelle}
 \label{subsec:implementation:apiComponente}
 Anfragen von Endbenutzern werden über eine \textit{REST} Schnittstelle mittels \textit{HTTP} an das System übertragen. Diese Anfragen werden von der Komponente \textit{API} angenommen, überprüft und anschließend an eine verfügbare \textit{Query} oder \textit{Command} Komponente weitergeleitet. \\
-Für jede ankommende Anfrage wird ein eigener Actor gestartet, welcher ausschließlich für diese konkrete Anfrage zuständig ist. Der Actor wartet auf eine Antwort von der angefragten \textit{CQRS}-Komponente und beendet abschließend die bestehende \textit{HTTP} -Verbindung zum Benutzer mit dem entsprechenden Ergebnis. Wird von der angefragten Komponente innerhalb eines Zeitfensters keine Antwort geliefert, wird die Anfrage zum Benutzer mit einem Fehler abgebrochen. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-17T07:55:19.567Z:
-% 
-% > Wird von der angefragten Komponente innerhalb eines Zeitfensters keine Antwort geliefert, wird die Anfrage zum Benutzer mit einem Fehler abgebrochen. 
-% Wortwiederholung "wird"
-% 
-% ^.
+Für jede ankommende Anfrage wird ein eigener Actor gestartet, welcher ausschließlich für diese konkrete Anfrage zuständig ist. Der Actor wartet auf eine Antwort von der angefragten \textit{CQRS}-Komponente und beendet abschließend die bestehende \textit{HTTP} -Verbindung zum Benutzer mit dem entsprechenden Ergebnis. Wird von der angefragten Komponente innerhalb eines Zeitfensters keine Antwort geliefert, bricht die \textit{API}-Komponente die Anfrage des Benutzers mit einem Fehler ab. \\
 In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des entsprechenden Actor Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen, dass die API Komponente selbst über keinen komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten, wie in Kapitel \ref{actor:actorSystem}, fungieren. Dadurch wird eine interne Schnittstelle zum eigentlichen Actor System hergestellt. \\
-Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actor System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Anfragen des gleichen Typs, welche an die selbe API Instanz gesandt wurden,  an unterschiedliche Instanzen, der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:08:23.799Z:
-% 
-% >  Dadurch können Anfragen des gleichen Typs, welche an die selbe API Instanz gesandt wurden,  an unterschiedliche Instanzen, der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
-% Ist hier der Zwischensatz "der für die Abarbeitung der Anfrage zuständige Komponente" notwendig? Falls nicht, löschen --> ist dann leichter zu verstehen
-% 
-% ^.
+Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actor System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Benutzeranfragen des gleichen Typs und an die gleiche API Komponente, an unterschiedliche Instanzen der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{gfx/implementation/apiActorModel}
@@ -155,50 +78,23 @@ Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht
 \end{figure} 
 
 \subsection{Query-Service}
-Die Anwendung separiert Abfragen und Befehle nach dem \textit{CQRS}-Prinzip, auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. Die Abfrage Seite wird in der Implementierung der \textit{TyrolSky} Anwendung in einer eigenen Komponente realisiert. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:15:18.034Z:
-% 
-% > Die Abfrage Seite wird in der Implementierung der \textit{TyrolSky} Anwendung in einer eigenen Komponente realisiert.
-% Was meinst du mit Abfrage Seite?
-% 
-% ^.
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:14:51.167Z:
-% 
-% > Die Anwendung separiert Abfragen und Befehle nach dem \textit{CQRS}-Prinzip, auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. 
-% Von welcher Anwendung sprichst du hier?
-% 
-% ^.
+Das Praxisbeispiel separiert Abfragen und Befehle nach dem \textit{CQRS}-Prinzip, auf welches in Kapitel \ref{sub:transaction:cqrs} eingegangen wird. Die abfragende Seite des \textit{CQRS}-Prinzip wird in der Implementierung der \textit{TyrolSky}-Anwendung in einer eigenen Komponente realisiert. \\
 Um eine Anfrage abarbeiten zu können, überwacht die \textit{Query}-Komponente relevante Events, die im Event Sourcing aufgetreten sind, siehe dazu \ref{sec:implementation:eventSouring}. \\
-Für jeden Typ von Abfrage wird dazu ein Ergebnis bereit gehalten, welches immer wieder aktualisiert wird. Wird ein relevantes Event im Event Sourcing gefunden, so wird das Ergebnis mit den neuen Eventdaten aktualisiert. Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. Es kann nicht garantiert werden, dass die Resultate eine Abfrage stets aktuell sind. Wird ein bereits eingetretenes Event zu spät in das vorbereitete Ergebnis miteingerechnet, bekommt der Anfragende das Ergebnis zurückgeliefert, welches vor dem Event gegolten hat. Deshalb wird diese Komponente nur für Anfragen von Benutzern verwendet und keine Entscheidungen innerhalb der Anwendung darauf aufgebaut.
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:21:02.201Z:
-% 
-% >  Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. 
-% Eintreffende Anfragen können so abgearbeitet werden, ohne dass ein weiterer Datenbankabgleich notwendig ist. 
-% (mögliches Beispiel, den Satz umzuändern) 
-% 
-% ^.
+Für jeden Typ von Abfrage wird dazu ein Ergebnis bereit gehalten, welches immer wieder aktualisiert wird. Wird ein relevantes Event im Event Sourcing gefunden, so wird das Ergebnis mit den neuen Eventdaten aktualisiert.
+
+Dadurch können bei eintreffenden Anfragen diese, durch das bereits vorbereitete Ergebnis, ohne weitere Abfragen an ein Datenbanksystem oder ähnliches, abgearbeitet werden. 
+
+Es kann nicht garantiert werden, dass die Resultate eine Abfrage stets aktuell sind. Wird ein bereits eingetretenes Event zu spät in das vorbereitete Ergebnis miteingerechnet, bekommt der Anfragende das Ergebnis zurückgeliefert, welches vor dem Event gegolten hat. Deshalb wird diese Komponente nur für Anfragen von Benutzern verwendet und keine Entscheidungen innerhalb der Anwendung darauf aufgebaut.
 
 \subsubsection{Aufbereitung von Resultaten}
 \label{subsubsub:implementation:queryActorModel:resultPreparator}
-Treten neue Events auf, wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer Vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate abgespeichert. Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden.\\
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:37:17.164Z:
-% 
-% > Dies passiert sporadisch nach einer bestimmten Menge an bearbeitenden Events.
-% sporadisch bedeutet, dass es ganz zufällig passiert. Doch hier passier es genau definiert, und zwar nach einer bestimmten Menge abgearbeiteter Events.
-% 
-% ^.
+Treten neue Events auf, wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer Vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate abgespeichert. Dies passiert nach einer bestimmten Menge an bearbeiteten Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden.\\
 Die Speicherung von Ergebnissen führt, in Bezug auf die Verteilung von Komponenten, zu Problemen. Da jede Instanz seine eigenen Ergebnisse vorbereitet, müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben, als auch beim Lesen, Konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen, kann entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet werden. Jedoch erhöht dies den Wartungsaufwand der Komponente, da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
 Eine weitere Möglichkeit ist die Persistierung der Ergebnisse pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es  erforderlich, dass Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen, welche von einem globalen Namensservice vergeben wird. Meldet sich eine Komponenteninstanz vom System ab, werden alle Namen, welche an diese Instanz vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt sie die  zuvor freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten. Für die Umsetzung des globalen Namensservice wurde auf das Pattern \textit{Cluster Singelton}, welches in Abschnitt \ref{subsec:implementation:singeltons} erklärt wird, zurückgegriffen. \\
 Durch die Verwendung einer globalen Datenbank sowie auf das Zurückgreifen eines globalen Namensservice ist der Wartungsaufwand während dem laufenden Betrieb  auf ein Minimum beschränkt. Durch diese Variante kann sichergestellt werden, dass bei bei einem Neustart des Systems die Instanzen mit bereits zuvor erarbeiteten Resultaten weiterarbeiten können. 
 
 \subsubsection{Implementierte Abfrage}
-In der umgesetzten Implementierung werden in der \textit{Query}-Komponente Abfragen zur Verfügung gestellt, welche dem Benutzer eine Übersicht über angebotene Flüge sowie den Status von Flugtickets geben. Insgesamt sind drei unterschiedliche Abfragen möglich:
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:49:29.521Z:
-% 
-% > umgesetzten Implementierung 
-% Welche Umsetzung meinst du?
-% 
-% ^.
+In der umgesetzten Implementierung der \textit{Tyrol-Sky}-Anwendung werden in der \textit{Query}-Komponente Abfragen zur Verfügung gestellt, welche dem Benutzer eine Übersicht über angebotene Flüge sowie den Status von Flugtickets geben. Insgesamt sind drei unterschiedliche Abfragen möglich:
 
 \begin{enumerate}
     \item Status eines Flugtickets 
@@ -206,21 +102,8 @@ In der umgesetzten Implementierung werden in der \textit{Query}-Komponente Abfra
     \item Passagierliste eines bestimmten Fluges
 \end{enumerate}
 
-Für die dritte Abfrage wurde eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen, siehe dazu Abschnitt \ref{subsec:implementation:domainService}, weitergegeben. Die Abfrage dauert länger, da keine Ergebnisse vorgehalten werden. Diese Variante ist exakter, da die Entitäten direkt abgefragt werden und der Aufwand in der Entwicklung geringer ist. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:53:10.214Z:
-% 
-% > vorgehalten
-% Was meinst du mit "vorgehalten"?
-% 
-% ^.
-Das Beispiel zeigt, dass je nach Anwendungsfall entschieden wird, wie die Abfrage von Daten exakt implementiert wird.
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T05:54:33.508Z:
-% 
-% > Das Beispiel zeigt, dass je nach Anwendungsfall entschieden werden sollte wie die Abfrage von Daten exakt implementiert wird.
-% Welches Beispiel? Dein fiktives? 
-% 
-% ^.
-
+Für die dritte Abfrage wurde eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen, siehe dazu Abschnitt \ref{subsec:implementation:domainService}, weitergegeben. Die Abfrage dauert länger, da keine Ergebnisse zwischengespeichert werden. Diese Variante ist jedoch exakter, da die Entitäten direkt abgefragt werden und der Aufwand in der Entwicklung geringer ist. \\
+Das Beispiel der Implementierung der dritten Abfrage zeigt, dass je nach Anwendungsfall entschieden werden soll, wie die Abfrage von Daten exakt umgesetzt wird.
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{gfx/implementation/QueringServiceActorModel}
@@ -229,17 +112,10 @@ Das Beispiel zeigt, dass je nach Anwendungsfall entschieden wird, wie die Abfrag
 \end{figure} 
 
 \subsubsection{Strukturierung}
-Für die Abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, die Realisierung von Abfragen mittels der Hilfe von kurzlebigen Actors umgesetzt. Diese führen den eigentlichen Abfrageprozess durch und verwenden dazu die entsprechenden Query-Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query-Komponente in Form von Actors zu sehen. Darin ist zu erkennen, dass für jeden Typ von Abfrage ein Actor existiert, welcher die Abfragen bearbeitet. 
+Für die Abarbeitung einzelner Abfragen wird, ähnlich wie bei der Komponente \textit{API} aus Abschnitt \ref{subsec:implementation:apiComponente}, die Realisierung von Abfragen mittels der Hilfe von kurzlebigen Actors umgesetzt. Diese führen den eigentlichen Abfrageprozess durch und verwenden dazu die entsprechenden Query-Actoren. In Abbildung \ref{fig:implementation:queryActorModel} ist der Aufbau der Query-Komponente in Form von Actors zu sehen. Darin ist zu erkennen, dass für jeden Typ von Abfrage ein Actor existiert, der die Abfragen bearbeitet. 
 Der Actor wird in der Implementierung als \textit{Supplier} bezeichnet und besitzt selbst wieder ein Child-Actor, welcher für die Aufbereitung der Abfragedaten, wie in Abschnitt \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschrieben, zuständig ist. \\
-Jede einzelne Abfrage beim \textit{Query-Service} wird einem neuem Worker-Actor zugewiesen, welcher nur für den Zeitraum der Abfrage selbst instanziiert ist. Dieser fragt die benötigten Daten direkt vom \textit{Supplier} ab. 
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T06:01:18.260Z:
-% 
-% > Darin ist zu erkennen, dass für jeden Typ von Abfrage ein Actor existiert, welcher die Abfragen bearbeitet. 
-% > Der Actor wird in der Implementierung als \textit{Supplier} bezeichnet und besitzt selbst wieder ein Child-Actor, welcher für die Aufbereitung der Abfragedaten, wie in Abschnitt \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschrieben, zuständig ist. \\
-% > Jede einzelne Abfrage beim \textit{Query-Service} wird einem neuem Worker-Actor zugewiesen, welcher nur für den Zeitraum der Abfrage selbst instanziiert ist. Dieser fragt die benötigten Daten direkt vom \textit{Supplier} ab. 
-% Hier kommt in jedem Satz das Wort "welche/r" vor.  Bitte umändern. 
-% 
-% ^.
+Jede einzelne Abfrage beim \textit{Query-Service} wird einem neuem \textit{Worker}-Actor zugewiesen. Dieser Actor ist nur für den Zeitraum der Abfrage selbst instanziiert ist. Dieser fragt die benötigten Daten direkt vom \textit{Supplier} ab. 
+
 \input{Chapter/Praxis/Implementation/Implementation_CommandService}
 
 \input{Chapter/Praxis/Implementation/Implementation_DomainService}

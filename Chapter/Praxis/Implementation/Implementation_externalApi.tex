@@ -2,37 +2,17 @@
 \label{sec:implementation:externalApi}
 Neben der Interaktion mit Benutzern der \textit{TyrolSky}-Anwendung über die \textit{API}-Komponente, wird auch eine Kommunikation mit einem Fremdsystem benötigt. Um Abbuchungen an einem Konto vorzunehmen, wird, wie im Anforderungskatalog unter Abschnitt \ref{sec:Eruierung:technicalRequierements} gefordert, eine externe Anwendung angebunden. Diese Bankenanwendung operiert als eigenständige Anwendung und simuliert eine Bankenschnittstelle um Kontoabbuchungen von Kunden vorzunehmen. Die Simulationsanwendung selbst ist im nachfolgenden Kapitel \ref{subsec:implementation:bankApi} genauer beschrieben. \\
 Der bereits in Abschnitt \ref{subsub:implementation:ChargingCoordinator}  beschriebene Buchungskoordinator verteilt Abbuchungstransaktionen, mithilfe von \textit{Sharding}, innerhalb des Clusters auf verschiedene Nodes. Jede Transaktion benötigt jedoch eine Kommunikation mit der Bankenschnittstelle, um die Transaktion durchzuführen und sie mit dem Bankensystem abzugleichen.  \\
-Dazu wird auf jedem Node, welcher Buchungen durchführen kann (das sind alle Nodes mit der Rolle \textit{Domain-Service}) ein \textit{BankingActors} Actor gestartet, welcher für die Kommunikation mit dem Bankenanwendung zuständig ist.
-% * <feitzinger.magdalena@gmail.com> 2018-05-19T21:23:54.355Z:
-% 
-% > Dazu wird auf jedem Node, welcher Buchungen durchführen kann (das sind alle Nodes mit der Rolle \textit{Domain-Service}) ein \textit{BankingActors} Actor gestartet, welcher für die Kommunikation mit dem Bankenanwendung zuständig ist.
-% Wortwiederholung "welche/r"
-% 
-% ^.
-Möchte nun eine Transaktion eine Kommunikation mit der Bankenanwendung starten, sendet diese einen Befehl in Form einer Nachricht an den \textit{BankingActor}, welcher sich auf dem gleichen Host befindet wie der Transaktions-Actor. Der Befehl enthält Informationen, welche Kommunikation über die Bankenschnittstelle statt finden soll. Wird während der Kommunikation zur Bank der betroffene Transaktions-Actor durch \textit{Sharding} verschoben, betrifft dies nicht den BankingActor selbst, da dieser fix auf jedem Host als eigene Actor Instanz vorhanden ist. 
-% * <feitzinger.magdalena@gmail.com> 2018-05-19T21:25:09.713Z:
-% 
-% > Möchte nun eine Transaktion eine Kommunikation mit der Bankenanwendung starten, sendet diese einen Befehl in Form einer Nachricht an den \textit{BankingActor}, welcher sich auf dem gleichen Host befindet wie der Transaktions-Actor. Der Befehl enthält Informationen, welche Kommunikation über die Bankenschnittstelle statt finden soll. 
-% Wortwiederholung "welche/r"
-% 
-% ^.
-
+Dazu wird auf jedem Node der Buchungen durchführen kann, das sind alle Nodes mit der Rolle \textit{Domain-Service}, ein \textit{BankingActors} Actor gestartet. Dieser ist anschließend für die Kommunikation mit der Bankenanwendung zuständig. \\
+Möchte nun eine Transaktion eine Kommunikation mit der Bankenanwendung starten, sendet diese einen Befehl in Form einer Nachricht an den \textit{Banking-Actor}. Der \textit{Banking-Actor} befindet sich auf dem gleichen Host wie der Transaktions-Actor. Der Befehl an den \textit{Banking-Actor} enthält Informationen über die gewünschte Kommunikation mit der Bankenschnittstelle. Wird während der Kommunikation zur Bank der betroffene Transaktions-Actor durch \textit{Sharding} verschoben, betrifft dies nicht den BankingActor selbst, da dieser fix auf jedem Host als eigene Actor Instanz vorhanden ist. 
 \subsection{Banken API}
 \label{subsec:implementation:bankApi}
-Für die Anbindung einer externen Bank wurde eine eigene Software geschrieben, welche einen einfache simulierte Bankenschnittstelle zur Verfügung stellt. Die \textit{BankChargingAPI} ist komplett getrennt von der restlichen Implementierung der \textit{TyrolSky} Anwendung und kann über eine eigene \textit{REST}-Schnittstelle angesprochen werden. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-19T21:27:36.470Z:
-% 
-% > Für die Anbindung einer externen Bank wurde eine eigene Software geschrieben, welche einen einfache simulierte Bankenschnittstelle zur Verfügung stellt. Die \textit{BankChargingAPI} ist komplett getrennt von der restlichen Implementierung der \textit{TyrolSky} Anwendung und kann über eine eigene \textit{REST}-Schnittstelle angesprochen werden. \\
-% > Die Kernaufgabe dieser Bankensimulation ist es, Bankkonten zu verwalten. Dazu werden in einer relationalen Datenbank Kontoinformationen abgebildet. Dabei hat jedes Konto einen Namen sowie einen aktuellen Guthabenstatus. Für die Bankentransaktionen, nicht zu verwechseln mit den Transaktion innerhalb der \textit{TyrolSky}-Anwendung, wird eine eigene Datenbanktabelle geführt, welche Informationen über die Transaktion enthält. Jede eintreffende Anfrage für eine Kontobewegung wird in einer Transaktion abgebildet. Diese enthält Informationen über den Status der Transaktion sowie deren Transaktionsbetrag. Über die Schnittstelle kann auch der Status einer Transaktion abgefragt werden. Diese Transaktionsstatus-Abfrage wird auch von der \textit{TyrolSky}-Anwendung verwendet um die eigene Flugbuchung zu kontrollieren, beschrieben unter Abschnitt \ref{subsub:implementation:ChargingCoordinator}. \\
-% Wortwiederholung "welche/r" und bitte kürzer fassen. Etliche Sätze kannst du zu einem zusammenfassen. 
-% 
-% ^.
-Die Kernaufgabe dieser Bankensimulation ist es, Bankkonten zu verwalten. Dazu werden in einer relationalen Datenbank Kontoinformationen abgebildet. Dabei hat jedes Konto einen Namen sowie einen aktuellen Guthabenstatus. Für die Bankentransaktionen, nicht zu verwechseln mit den Transaktion innerhalb der \textit{TyrolSky}-Anwendung, wird eine eigene Datenbanktabelle geführt, welche Informationen über die Transaktion enthält. Jede eintreffende Anfrage für eine Kontobewegung wird in einer Transaktion abgebildet. Diese enthält Informationen über den Status der Transaktion sowie deren Transaktionsbetrag. Über die Schnittstelle kann auch der Status einer Transaktion abgefragt werden. Diese Transaktionsstatus-Abfrage wird auch von der \textit{TyrolSky}-Anwendung verwendet um die eigene Flugbuchung zu kontrollieren, beschrieben unter Abschnitt \ref{subsub:implementation:ChargingCoordinator}. \\
-Für die Implementierung der Simulationsanwendung wurde auf eine \textit{SQL-Datenbank} zurückgegriffen. Jeder Zugriff auf die Datenbank erfolgt in einer Transaktion mit dem strengen Transaktionslevel \textit{Serializable}, wodurch keine Inkonsistenzen der Kontoinformationen entstehen können. Durch die Transaktionstabelle ist eine Nachvollziehbarkeit der Transaktionen möglich. \\
+Für die Anbindung einer externen Bank wurde eine eigene Software geschrieben, die eine simulierte und einfach gehaltene  Bankenschnittstelle zur Verfügung stellt. Die \textit{BankChargingAPI} ist komplett getrennt von der restlichen Implementierung der \textit{TyrolSky} Anwendung und kann über eine eigene \textit{REST}-Schnittstelle angesprochen werden. \\
+Die Kernaufgabe dieser Bankensimulation ist es, Bankkonten zu verwalten. Dazu werden in einer relationalen Datenbank Kontoinformationen abgebildet. Dabei hat jedes Konto einen Namen sowie einen aktuellen Guthabenstatus. Für die Bankentransaktionen, nicht zu verwechseln mit den Transaktion innerhalb der \textit{TyrolSky}-Anwendung, wird eine eigene Tabelle geführt, welche Informationen über jede bearbeitete Transaktion enthält. Die Transaktion enthält Informationen über den eigenen Status sowie den Transaktionsbetrag. Über die Schnittstelle kann auch der Status einer Transaktion abgefragt werden. Diese Transaktionsstatus-Abfrage wird auch von der \textit{TyrolSky}-Anwendung verwendet um die eigene Flugbuchung zu kontrollieren, beschrieben unter Abschnitt \ref{subsub:implementation:ChargingCoordinator}. \\
+Für die Implementierung der Simulationsanwendung wurde auf eine \textit{SQL-Datenbank} zurückgegriffen. Jeder Zugriff auf die Datenbank erfolgt in einer Transaktion mit dem strengen Transaktionslevel \textit{Serializable}, wodurch keine Inkonsistenzen der Kontoinformationen entstehen können \citep{adya2000generalized}. Durch die Transaktionstabelle ist eine Nachvollziehbarkeit der getätigten Transaktionen möglich. \\
 Die Simulationsanwendung \textit{BankChargingAPI} bietet folgende Schnittstellen für die \textit{TyrolSky}-Anwendung an:
 \begin{itemize}
     \litem{ChargeAccount}
-        Mit Angabe des gewünschten Kontos sowie dem abzubuchenden Betrages wird eine Transaktion gestartet. Für den Aufruf wird eine Transaktionsnummer angegeben, mit welcher später der Status der Transaktion abgefragt werden kann.
+        Mit Angabe des gewünschten Kontos sowie dem abzubuchenden Betrages wird eine Transaktion gestartet. Für den Aufruf wird eine Transaktionsnummer angegeben, mit der später der Status der Transaktion abgefragt werden kann.
     \litem{GetTransactionStatus}
         Durch Angabe der Transaktionsnummer wird der aktuelle Status der Transaktion zurückgegeben. 
 \end{itemize}
@@ -40,22 +20,9 @@ Durch die Aufteilung in zwei Methoden ist es möglich im Fehlerfall Transaktions
 
 \section{Testapplikation}
 \label{subsec:implementation:TestApplikation} 
-Die \textit{TyrolSky}-Anwendung bietet eine Schnittstelle für Endbenutzer an, mit welcher die Anwendung bedient werden kann. Um eine größere Menge an Benutzern und somit Anfragen zu simulieren wird eine eigene Testapplikation benötigt. Diese bietet die Möglichkeit eine Vielzahl an Flügen zu reservieren sowie zu buchen. Für jede Anfrage an das \textit{TyrolSky}-System wird die Anfrage protokolliert und der Rückgabewert der Anfrage abgespeichert. Dadurch können nach einem Testdurchlauf die Resultate eingesehen und mit dem Zustand des getesteten Systems verglichen werden. \\
-Die Umsetzung der Testapplikation fordert einen hohen Grad an Parallelisierung, da gleichzeitig eine Vielzahl an Anfragen an das System gestellt werden sollen. Aufgrund der Anforderung an eine bestmögliche Parallelisierung wird die Anwendung mit dem Actor-Model, welches für Parallelisierte Anwendungen konzipiert wurde, siehe dazu \ref{actor:parallelism}, realisiert. Wie die Implementierung der externen Bankenanwendung ist auch die Testapplikation eine vollständig eigenständige Anwendung, welche keinen Zusammenhang mit der Implementierung der \textit{TyrolSky}-Anwendung besitzt. \\
-Jede Anfrage, die zum testenden System durchgeführt wird, wird in einer Datenbanktabelle protokolliert. Dabei werden Informationen zur Anfrage selbst, wie Flugnummer, Flugdatum und Passagierinformation sowie Informationen zur Buchungs selbst abgespeichert. Der genaue Aufbau der Tabelle \textit{StressTest}, welche alle Informationen über eine Anfrage enthält, ist aus Abbildung \ref{fig:implementation:stressTestDbSchema} zu entnehmen.
-% * <feitzinger.magdalena@gmail.com> 2018-05-19T21:34:50.069Z:
-% 
-% > Jede Anfrage, die zum testenden System durchgeführt wird, wird in einer Datenbanktabelle protokolliert. 
-% 2x "wird" nebeneinander!
-% 
-% ^.
-% * <feitzinger.magdalena@gmail.com> 2018-05-19T21:33:45.116Z:
-% 
-% > Die Umsetzung der Testapplikation fordert einen hohen Grad an Parallelisierung, da gleichzeitig eine Vielzahl an Anfragen an das System gestellt werden sollen. Aufgrund der Anforderung an eine bestmögliche Parallelisierung wird die Anwendung mit dem Actor-Model, welches für Parallelisierte Anwendungen konzipiert wurde, siehe dazu \ref{actor:parallelism}, realisiert. Wie die Implementierung der externen Bankenanwendung ist auch die Testapplikation eine vollständig eigenständige Anwendung, welche keinen Zusammenhang mit der Implementierung der \textit{TyrolSky}-Anwendung besitzt. \\
-% > Jede Anfrage, welche zum testenden System durchgeführt wird, wird in einer Datenbanktabelle protokolliert. Dabei werden Informationen zur Anfrage selbst, wie Flugnummer, Flugdatum und Passagierinformation sowie Informationen zur Buchungs selbst abgespeichert. Der genaue Aufbau der Tabelle \textit{StressTest}, welche alle Informationen über eine Anfrage enthält, ist aus Abbildung \ref{fig:implementation:stressTestDbSchema} zu entnehmen.
-% Wortwiederholung "welche/r"
-% 
-% ^.
+Die \textit{TyrolSky}-Anwendung bietet eine Schnittstelle für Endbenutzer an, mit der die Anwendung bedient werden kann. Um eine größere Menge an Benutzern und somit Anfragen zu simulieren wird eine eigene Testapplikation benötigt. Diese bietet die Möglichkeit eine Vielzahl an Flügen zu reservieren sowie zu buchen. Für jede Anfrage an das \textit{TyrolSky}-System wird die Anfrage protokolliert und der Rückgabewert der Anfrage abgespeichert. Dadurch können nach einem Testdurchlauf die Resultate eingesehen und mit dem Zustand des getesteten Systems verglichen werden. \\
+Die Umsetzung der Testapplikation fordert einen hohen Grad an Parallelisierung, da gleichzeitig eine Vielzahl an Anfragen an das System gestellt werden sollen. Aufgrund der Anforderung an eine bestmögliche Parallelisierung wird die Anwendung mit dem Actor-Model, das für Parallelisierte Anwendungen konzipiert wurde, siehe dazu \ref{actor:parallelism}, realisiert. Wie die Implementierung der externen Bankenanwendung ist auch die Testapplikation eine vollständig eigenständige Anwendung, welche keinen Zusammenhang mit der Implementierung der \textit{TyrolSky}-Anwendung besitzt. \\
+Jede Anfrage, die zum testenden System durchgeführt wird, ist in einer Datenbanktabelle protokolliert. Dabei werden Informationen zur Anfrage selbst, wie Flugnummer, Flugdatum und Passagierinformation sowie Informationen zur Buchungs selbst abgespeichert. Der genaue Aufbau der Tabelle \textit{StressTest}, welche alle Informationen über eine Anfrage enthält, ist aus Abbildung \ref{fig:implementation:stressTestDbSchema} zu entnehmen.
 \begin{figure}
     \centering
     \includegraphics[width=0.4\linewidth]{gfx/implementation/stressTestDbSchema}
@@ -66,13 +33,8 @@ Jede Anfrage, die zum testenden System durchgeführt wird, wird in einer Datenba
 Die Testanwendung wird in Form einer Konsolenanwendung ausgeführt. Dabei kann beim Start der Anwendung über Parameter angegeben werden, welche Flüge zu welchem Ausmaß gebucht werden sollen. Die Anwendung startet anschließend die entsprechenden Schritte, um Flüge zu buchen. 
 
 \subsection{Ablauf eines Testes}
-Nach dem Starten der Konsolenanwendung werden die übergebenen Parameter ausgelesen und das Actor-System gestartet. Anschließend wird die vom Tester geforderte Anzahl an Buchungen durchgeführt. Für jede Buchung wird ein eigener Buchungs-Prozess gestartet, welcher in der Tabelle \textit{StressTest} abgebildet wird. Dabei wird zuerst versucht, ein Ticket zu reservieren. Konnte eine Reservierung erfolgreich durchgeführt werden, versucht die Anwendung diese Reservierung abschließend zu buchen. Die Kontoinformation, welche für die Buchung verwendet wird, wird ebenfalls in der Tabelle \textit{StressTest} zur aktuell getesteten Buchung abgespeichert. Die Testanwendung fragt nach der Buchungsaufforderung, das zu testenden System nach dem Buchungsresultat, bis dieses einen endgültigen Buchungsstatus zurückliefert. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-19T21:36:49.758Z:
-% 
-% > Nach dem Starten der Konsolenanwendung werden die übergebenen Parameter ausgelesen und das Actor-System gestartet.
-% 2x "starte" in einem Satz!
-% 
-% ^.
+Nach dem Starten der Konsolenanwendung werden die übergebenen Parameter ausgelesen und das Actor-System für den Testlauf erzeugt. Anschließend wird die vom Tester geforderte Anzahl an Buchungen durchgeführt. Für jede Buchung wird ein eigener Buchungs-Prozess gestartet, welche in der Tabelle \textit{StressTest} abgebildet sind. Dabei wird zuerst versucht, ein Ticket zu reservieren. Konnte eine Reservierung erfolgreich durchgeführt werden, versucht die Anwendung diese Reservierung abschließend zu buchen.
+Die für die Buchung benötigten Kontoinformationen werden  ebenfalls in der Tabelle \textit{StressTest} zur aktuell getesteten Buchung abgespeichert. Die Testanwendung fragt nach der Buchungsaufforderung, das zu testenden System nach dem Buchungsresultat, bis dieses einen endgültigen Buchungsstatus zurückliefert. \\
 Die einzelnen Buchungsjobs werden dabei nicht alle gleichzeitig gestartet. Alle zwei Sekunden beginnen 10 neue Jobs, diese laufen jedoch parallel bis zur Fertigstellung des Jobs weiter. Die Gesamtanzahl an Jobs wird über die Parameter der Anwendung gesteuert. Ist die Testanwendung beendet, kann das Resultat in der Datenbank abgefragt werden. Weiters können durch die Angabe der Kontoinformationen die Resultate mit der \textit{BankChargingAPI}-Anwendung sowie mit den entsprechenden Passagierlisten der \textit{TyrolSky}-Anwendung verglichen werden.
 
 \subsection{Parameter Beschreibung}

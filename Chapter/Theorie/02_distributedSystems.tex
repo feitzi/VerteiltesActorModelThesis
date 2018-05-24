@@ -11,15 +11,7 @@ Der Begriff \textit{Verteilte Systeme} fasst eine große Anzahl an Themenblöcke
 In dieser Definition legen \cite{tanenbaum2007distributed} den Schwerpunkt auf die beteiligten Komponenten welche Computer sowie Benutzer sind. Die beteiligten Rechner arbeiten unabhängig voneinander in einem Verbund. Benutzer des Systems sehen jedoch die vernetzen Rechner nicht und müssen auch nichts darüber wissen. Für den Benutzer erscheint das verteilte System daher als ein einzelnes, zusammenhängendes System. Dadurch spürt der Benutzer zuerst keinen Unterschied, ob er mit einem einzelnen Rechner, einem Mainframe oder eben mit einem verteilten System interagiert. \\
 
 \section{Ziele eines Verteilen Systems}\label{sec:distributedSystems:goales}
-Verteilte Systeme bieten viele Vorteile und sind in einigen Bereichen von bedeutender Wichtigkeit. Jedoch ist der Einsatz eines verteilten Systems mit hohem Aufwand verbunden, weshalb nicht alle Probleme damit gelöst werden können. In \cite{tanenbaum2007distributed} werden die Ziele, welche ein Verteiltes System verfolgt, erläutert. Bei der Entscheidung ob ein Verteiltes System zur Lösung eines bestimmten Problems beiträgt, sollte das zu lösende Problem mit den folgenden Zielen vereinbar sein.
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T17:12:52.176Z:
-% 
-% > Bei der Entscheidung ob ein Verteiltes System zur bewerkstelligen eines bestimmten Problems beiträgt, sollte das zu lösende Problem mit den folgende Zielen vereinbar sein.
-% 
-% Satz neu überdenken
-% 
-% ^.
-
+Verteilte Systeme bieten viele Vorteile und sind in einigen Bereichen von bedeutender Wichtigkeit. Jedoch ist der Einsatz eines verteilten Systems mit hohem Aufwand verbunden, weshalb nicht alle Probleme damit gelöst werden können. In \cite{tanenbaum2007distributed} werden die Ziele, welche ein Verteiltes System verfolgt, erläutert. Um zu entscheiden, ob ein Verteiltes System angewendet werden soll, muss mindestens einer der nachfolgenden Punkte in der Problemmenge enthalten sein.
 \subsection{Zur Verfügungstellung von Ressourcen}\label{sec:distributedSystems:goales:resourceAccess} Das Hauptziel eines jeden Verteilten Systems ist  laut \cite{tanenbaum2007distributed} Ressourcen zu Verfügung zu stellen. Welche Art von Ressource ist unerheblich. Es kann sich um typische Web Ressourcen wie Files oder Texte handeln, oder auch physikalische Ressourcen wie beispielsweise Drucker, Scanner oder Fahrzeuge handeln.\\
 Das zur Verfügungstellen von teuren physischen Ressourcen kann erforderlich sein, um diese einer möglichst breiten Maße an Benutzern anzubieten. Weiters kann der gemeinsame Zugriff auf eine oder mehrere Ressourcen zu einer besseren Zusammenarbeit zwischen verteilten Teams führen. Durch die weltweite Vernetzung durch das Internet bekommt der Zusammenbringung von verteilten Teams eine große Bedeutung zu. 
 \subsection{Transparenz der Verteilung}\label{sec:distributedSystems:goales:Transperency} Wie schon aus der Definition aus Abschnitt \ref{sec:distributedSystems:definition} hervorgeht, ist ein primäres Ziel eines verteilen Systems die Transparenz des internen Aufbaues. Um Transparenz gewährleisten zu können, müssen laut \cite{iec1995open} sowie \cite{tanenbaum2007distributed} folgende Punkte in einem verteilten System erfüllt sein:
@@ -30,26 +22,13 @@ Das zur Verfügungstellen von teuren physischen Ressourcen kann erforderlich sei
     \item [Standortwechsel] Eine Ressource welche von einem Benutzer gerade in Verwendung ist und physikalisch an einen neuen Ort migriert wird, ist ohne Unterbrechung weiterhin für den Benutzer verwendbar.
     \item[Replizierung] Wird eine einzelne Ressource repliziert, bekommt der Verwender von dieser Replizierung nichts mit und kann diese so verwenden wie wenn die Replizierung nicht vorhanden wäre. 
     \item[Gleichzeitiger Zugriff] Eine Ressource kann unter Umständen auch von mehreren Benutzern gleichzeitig verwendet werden. Dieser gleichzeitige Zugriff ist für den einzelnen Benutzer nicht spürbar.
-    \item[Fehlerresistent] Tritt bei einer Ressource ein Fehler auf, wird dieser vom User verborgen behoben oder eine andere Maßnahme ergriffen, welche dem Benutzer, so gut wie möglich, ein ungehindertes Weiterarbeiten ermöglicht.
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T17:39:10.033Z:
-% 
-% > o gut wie möglich
-% ist diese erwähnung nötig? ist nur lückenfüller
-% 
-% ^.
+    \item[Fehlerresistent] Tritt bei einer Ressource ein Fehler auf, wird dieser vom User verborgen behoben oder eine andere Maßnahme ergriffen, welche dem Benutzer ein ungehindertes Weiterarbeiten ermöglicht.
 \end{description}
 Eine weitere Definition von \textit{Leslie Lampert} besagt, dass ein Benutzer erst merkt mit einem Verteilten System zu arbeiten, wenn ein Rechner, von dessen Existenz er bisher nichts wusste, nicht mehr funktioniert und unmittelbar Auswirkung auf seine Arbeit am System hat \citep{Schroeder:1993}. Die Definition von Lampert zeigt nochmals die Bedeutung der Transparenz für ein verteiltes System. \\
 Jedoch ist in praktischen Anwendungen eine volle Transparenz für ein verteiltes System nicht immer optimal. Wie in \cite{tanenbaum2007distributed} beschrieben, sind beispielsweise transparente Zeitunterschiede in verteilten Systemen nicht immer für den Benutzer optimal. Deshalb ist eine sinnvolle Abwägung der Transparenz bestimmter Bestandteile des Systems gegenüber dem konkreten Anwendungsfall vorzunehmen. 
 
 \subsection{Offenheit}\label{sec:distributedSystems:goales:openness} 
 Ein Verteiltes System besteht in der Regel aus verschiedensten Komponenten welche untereinander sowie mit externen Teilnehmer kommunizieren. Um eine solche Kommunikation zu ermöglichen müssen Verteilte Systeme Schnittstelldefinitionen offen und standardisiert anbieten. Weiters ist es notwendig, dass ein Verteiltes System erweiterbar ist, sprich neue Komponenten während des Betriebes hinzugefügt werden können. Auch wenn neue Komponenten gänzlich andere Eigenschaften haben, wie beispielsweise Betriebssystem, Hardware etc., so ist eine Kommunikation untereinander möglich wenn sich alle beteiligten Komponenten an die definierten Schnittstellen halten. Durch diese Vorgehensweise ist ein System offen.  
-% * <feitzinger.magdalena@gmail.com> 2018-03-06T17:52:32.734Z:
-% 
-% > wie beispielsweise Betriebssystem, Hardware etc...,
-% 
-% ist die Anführung eines Beispiels hier notwendig?
-% 
-% ^.
 
 \subsection{Skalierung}\label{sec:distributedSystems:goales:scalability} 
 Das vierte Ziel eines Verteilten Systems ist die Möglichkeit sich auf veränderte Rahmenbedingungen einzustellen. Skalierung in einem Computersystem kann laut \cite{Neuman1993Scale} in drei Dimensionen unterteilt werden. Diese sind wie folgt: 

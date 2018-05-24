@@ -1,18 +1,6 @@
 \subsection{Command-Service}
 \label{subsec:implementation:commandService}
- Ähnlich wie beim \textit{Query-Service}, wird auch beim \textit{Command-Service} für jeden ankommenden Befehl ein eigener Actor gestartet, der für einen speziellen Typ von Anfrage zuständig ist. Es gibt auch hier für jeden möglichen Befehl einen eigenen Actor, welcher die Logik des Kommandos beinhaltet. Jedoch werden in der Implementierung der einzelnen Kommandos meist neue Befehle an einen oder mehrere zuständige Actors aus dem Domain-Service erzeugt und weitergeleitet. \\
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T06:03:36.815Z:
-% 
-% > Jedoch werden in der Implementierung der einzelnen Kommandos meist neue Befehle an einen oder mehrere zuständige Actors aus dem Domain-Service erzeugt und weitergeleitet
-% Präzisieren! 
-% 
-% ^.
-% * <feitzinger.magdalena@gmail.com> 2018-05-18T06:02:47.640Z:
-% 
-% > Ähnlich wie beim \textit{Query-Service}, wird auch beim \textit{Command-Service} für jeden ankommenden Befehl ein eigener Actor gestartet, der für einen speziellen Typ von Anfrage zuständig ist. Es gibt auch hier für jeden möglichen Befehl einen eigenen Actor welcher die Logik des Kommandos beinhaltet.
-% Beide Sätze haben dieselbe Aussage. 
-% 
-% ^.
+ Ähnlich wie beim \textit{Query-Service}, wird auch beim \textit{Command-Service} für jeden ankommenden Befehl ein eigener Actor gestartet, der für einen speziellen Typ von Anfrage zuständig ist. Für jeden Typ von Befehl innerhalb der Anwendung gibt es einen Actor welcher die Logik des Befehls beinhaltet. Jedoch werden in der Implementierung der einzelnen Kommandos meist neue Befehle an einen oder mehrere zuständige Actors aus dem Domain-Service erzeugt und weitergeleitet. \\
  In der vorliegenden Implementierung gibt es folgende unterschiedliche Typen von Kommandos, welche alle durch einen \textit{CommandHandler} repräsentiert werden:
  \begin{enumerate}
      \item Flüge erstellen
