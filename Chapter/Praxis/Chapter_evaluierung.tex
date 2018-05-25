@@ -1,0 +1,41 @@
+\chapter{Evaluierung} \label{cha:evaluation}
+Das Abschließende Evalutionskapitel beleuchtet die Implementierung des praktischen Anwendungskatalogs hinsichtlich der in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderten Kriterien. Dazu wird zuerst ein Testlauf der \textit{TyrolSky} Anwendung besprochen und anschließend auf die Ergebnisse eingegangen. Darauf Aufbauend wird im Anschluss die Forschungsfrage auf basis des in den vorangegangenen Kapitel erworbenen Wissens besprochen. Abschließend folgt eine abschließende Diskussion sowie ein Ausblick auf die weitere Entwicklung des \textit{Actor-Models}. 
+
+\section{TyrolSky-Testlauf}
+Als Basis für die nachfolgende Bewertung, dient der wie folgt aufgebaute Testlauf. Für den Betrieb der \textit{Tyrol-Sky} Anwendung werden die verschiedenen Komponenten in einem mittels \textit{Docker} simulierten Netzwerk zusammengeschlossen. Die Teilnehmenden Komponenten am Test können aus der Tabelle \ref{tab:evaluation:testStage} entnommen werden. \\
+\begin{table}
+    \centering
+    \begin{tabular}{lc}
+        Komponente       &   Anzahl  \\ \hline
+        Lighthouse       &   2       \\
+        API              &   1       \\
+        Query-Service    &   2       \\
+        Command-Service  &   2       \\
+        Domain-Service   &   3       \\
+        Bank APU         &   1       \\
+        Testanwendung    &   1
+    \end{tabular}
+    \caption{Verwendete Komponenten für den Testlauf.}
+    \label{tab:evaluation:testStage}
+\end{table}
+Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten aus Kapitel \ref{sec:eruierung:testdata} in die Anwendung eingespielt. Die einspielung selber erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
+
+\subsection{Beschreibung eines Testlaufes}
+Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-System mit einer vielzahl an gleichzeitigen Buchunngsanfragen unter Last gesetzt. 
+
+
+\subsection{1. Testlauf}
+ohne probleme
+
+\subsection{2. Testlauf}
+hinzuschalten von Komponente
+
+\subsection{3. Testlauf}
+deaktiveren von Komponenten
+
+\section{Bewertung der Umsetzung}\label{cha:rating}
+
+\subsection{title}{Auseinandersetzung mit der Forschungsfrage}
+
+\section{Weiterführende Diskussionen und Forschungsausblick}
+ 
