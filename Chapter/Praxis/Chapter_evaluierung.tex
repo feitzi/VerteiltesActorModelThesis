@@ -10,32 +10,47 @@ Als Basis für die nachfolgende Bewertung, dient der wie folgt aufgebaute Testla
         Lighthouse       &   2       \\
         API              &   1       \\
         Query-Service    &   2       \\
-        Command-Service  &   2       \\
-        Domain-Service   &   3       \\
+        Command-Service \& Domain-Service  &   3       \\
         Bank APU         &   1       \\
         Testanwendung    &   1
     \end{tabular}
-    \caption{Verwendete Komponenten für den Testlauf.}
+    \caption{Verwendete Komponenten und deren Anzah während eines Testlauf.}
     \label{tab:evaluation:testStage}
 \end{table}
 Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten aus Kapitel \ref{sec:eruierung:testdata} in die Anwendung eingespielt. Die einspielung selber erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
 
 \subsection{Beschreibung eines Testlaufes}
-Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-System mit einer vielzahl an gleichzeitigen Buchunngsanfragen unter Last gesetzt. 
-
+Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-System mit einer vielzahl an gleichzeitigen Buchungsanfragen unter Last gesetzt. Dabei werden die verfügbaren Flüge von der Testanwendung gebucht. Als Testparameter werden {2000} Ticketbuchungen auf allen verfügbaren Flügen innerhalb des Zeitraums 1. Juni bis 1. Juli gestartet. \\
 
 \subsection{1. Testlauf}
-ohne probleme
+Der erste Testlauf findet ohne Einflüsse von außen statt. Es werden daher während des Testes keine Komponenten entfernt oder hinzugefügt. Ist der Testlauf beendet, wird der Status der einzelnen Testbuchungen über die Datenbanktabelle überprüft. Anschließend werden die Kontobewegungen der simulierten Bankenanwendung mit den durchgeführten Buchungen verglichen. Dabei sollte für jede erfolgreiche Buchung eine verbuchte Kontobewegung gefunden werden. Abschließend wird stichprobenartig die Passagierliste für die gebuchten Flüge überprüft. Auch diese sollten mit den in der Testanwendung gebuchten Tickets übereinstimmen. \\
 
 \subsection{2. Testlauf}
-hinzuschalten von Komponente
+Im zweiten Testlauf wird der Ausfall einer \textit{Domain-Service} Komponente simuliert. Dazu wird im laufenden Betrieb diese Komponente unkontrolliert beendet. Dies sollte dazu führen, dass Buchungen welche von dieser Komponente bearbeitet werden, nicht in einem Fehlerzustand hängen bleiben sondern vielmehr von einer der verbleibenden \textit{Domain-Services} übernommen werden. 
 
 \subsection{3. Testlauf}
-deaktiveren von Komponenten
+Um die in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderte Skalierung der Anwendung zu repräsentieren, wird in diesem Testlauf während den Buchungsforgängen der Testanwendung eine weitere  \textit{Domain-Services} Komponente zum System hinzugefügt. Diese sollte anschließend teile der bereits vorhandenen Buchunsprozessen übernehmen. Nach beendigung des Testlaufs sollten auch hier wieder alle Buchungen, wie im ersten Testlauf beschrieben, erfolgreich Abgeschlossen sein. 
 
-\section{Bewertung der Umsetzung}\label{cha:rating}
+\subsection{Ergebnisse}
+Nach jedem Testlauf wurden die bereits beschriebenen Überprüfungen der Buchungresultate, Kontobewegungen sowie die Kontrolle der Passagierlisten durchgeführt. Somit kann gezeigt werden, dass die Anwendung die Transaktionallen Daten in einem verteilten Umgebung korrekt verarbeitet und dabei keine inkonsistenzen in den Daten Auftretten. Die Ergebnisse des Datenvergleichs ist der Tabelle \ref{tab:evaluation:resultsTestRuns} zu entnehmen. Demnach konnte für jedes gebuchte Ticket auch eine entsprechende abbuchung auf der Bankenanwendung gefunden werden. Die Abgebrochenen Buchungsanfragen lassen sich damit erklären, das die Bankenanwendung die Buchungen abgelehnt hat. Weiters wurden beim zweiten Testlauf während der simulierten Störung einige Anfragen abgebrochen, jedoch entstand dabei keine Dateninkonsistenz.
+\begin{table}
+    \centering
+    \begin{tabular}{p{2 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm}}
+        Testlauf    & Testbuchungen       &   Abgeschlossene Tickets & Abgebrochene Buchungen & Abgebuchte Flüge  \\ \hline
+            1.      & 2000                &         1827             &      173               &         1827        \\
+            2.      & 2000                &         1820             &      180               &         1820        \\
+            3.      & 2000                &         1852             &      148               &         1852        
+    \end{tabular}
+    \caption{Ergebnisse der drei Testläufe.}
+    \label{tab:evaluation:resultsTestRuns}
+\end{table}
 
-\subsection{title}{Auseinandersetzung mit der Forschungsfrage}
+\section{Bewertung der Umsetzung}
+\label{cha:rating}
+
+\subsection{Vorhanene Probleme der Umsetzung}
+
+\subsection{Auseinandersetzung mit der Forschungsfrage}
 
 \section{Weiterführende Diskussionen und Forschungsausblick}
  
