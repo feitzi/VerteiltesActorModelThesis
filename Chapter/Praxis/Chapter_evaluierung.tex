@@ -1,8 +1,14 @@
 \chapter{Evaluierung} \label{cha:evaluation}
-Das Abschließende Evalutionskapitel beleuchtet die Implementierung des praktischen Anwendungskatalogs hinsichtlich der in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderten Kriterien. Dazu wird zuerst ein Testlauf der \textit{TyrolSky} Anwendung besprochen und anschließend auf die Ergebnisse eingegangen. Darauf Aufbauend wird im Anschluss die Forschungsfrage auf basis des in den vorangegangenen Kapitel erworbenen Wissens besprochen. Abschließend folgt eine abschließende Diskussion sowie ein Ausblick auf die weitere Entwicklung des \textit{Actor-Models}. 
+Das abschließende Evaluationskapitel beleuchtet die Implementierung des praktischen Anwendungskatalogs hinsichtlich der in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderten Kriterien. Dazu wird zuerst ein Testlauf der \textit{TyrolSky} Anwendung besprochen und auf die Ergebnisse eingegangen. Darauf aufbauend wird im Anschluss die Forschungsfrage auf Basis des in den vorangegangenen Kapitel erworbenen Wissens besprochen. Abschließend folgt eine Diskussion sowie ein Ausblick auf die weitere Entwicklung des \textit{Actor-Models}. 
+% * <feitzinger.magdalena@gmail.com> 2018-05-28T11:00:07.724Z:
+% 
+% > Darauf aufbauend wird im Anschluss die Forschungsfrage auf Basis des in den vorangegangenen Kapitel erworbenen Wissens besprochen.
+% Die Forschungsfrage wird nicht besprochen, sie wird versucht zu beantworten. 
+% 
+% ^.
 
 \section{TyrolSky-Testlauf}
-Als Basis für die nachfolgende Bewertung, dient der wie folgt aufgebaute Testlauf. Für den Betrieb der \textit{Tyrol-Sky} Anwendung werden die verschiedenen Komponenten in einem mittels \textit{Docker} simulierten Netzwerk zusammengeschlossen. Die Teilnehmenden Komponenten am Test können aus der Tabelle \ref{tab:evaluation:testStage} entnommen werden. \\
+Als Basis für die nachfolgende Bewertung dient der aufgebaute Testlauf. Für den Betrieb der \textit{Tyrol-Sky} Anwendung werden die verschiedenen Komponenten, in einem mittels \textit{Docker} simulierten Netzwerk, zusammengeschlossen. Die teilnehmenden Komponenten am Test können aus der Tabelle \ref{tab:evaluation:testStage} entnommen werden. \\
 \begin{table}
     \centering
     \begin{tabular}{lc}
@@ -14,25 +20,25 @@ Als Basis für die nachfolgende Bewertung, dient der wie folgt aufgebaute Testla
         Bank APU         &   1       \\
         Testanwendung    &   1
     \end{tabular}
-    \caption{Verwendete Komponenten und deren Anzah während eines Testlauf.}
+    \caption{Verwendete Komponenten und deren Anzahl während eines Testlauf.}
     \label{tab:evaluation:testStage}
 \end{table}
-Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten aus Kapitel \ref{sec:eruierung:testdata} in die Anwendung eingespielt. Die einspielung selber erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
+Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten, aus Kapitel \ref{sec:eruierung:testdata}, in die Anwendung eingespielt. Die Einspielung erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
 
 \subsection{Beschreibung eines Testlaufes}
-Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-System mit einer vielzahl an gleichzeitigen Buchungsanfragen unter Last gesetzt. Dabei werden die verfügbaren Flüge von der Testanwendung gebucht. Als Testparameter werden {2000} Ticketbuchungen auf allen verfügbaren Flügen innerhalb des Zeitraums 1. Juni bis 1. Juli gestartet. \\
+Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-System mit einer Vielzahl an gleichzeitigen Buchungsanfragen unter Last gesetzt. Dabei werden die verfügbaren Flüge von der Testanwendung gebucht. Als Testparameter werden {2000} Ticketbuchungen auf allen verfügbaren Flügen innerhalb des Zeitraums 1. Juni bis 1. Juli gestartet. \\
 
 \subsection{1. Testlauf}
 Der erste Testlauf findet ohne Einflüsse von außen statt. Es werden daher während des Testes keine Komponenten entfernt oder hinzugefügt. Ist der Testlauf beendet, wird der Status der einzelnen Testbuchungen über die Datenbanktabelle überprüft. Anschließend werden die Kontobewegungen der simulierten Bankenanwendung mit den durchgeführten Buchungen verglichen. Dabei sollte für jede erfolgreiche Buchung eine verbuchte Kontobewegung gefunden werden. Abschließend wird stichprobenartig die Passagierliste für die gebuchten Flüge überprüft. Auch diese sollten mit den in der Testanwendung gebuchten Tickets übereinstimmen. \\
 
 \subsection{2. Testlauf}
-Im zweiten Testlauf wird der Ausfall einer \textit{Domain-Service} Komponente simuliert. Dazu wird im laufenden Betrieb diese Komponente unkontrolliert beendet. Dies sollte dazu führen, dass Buchungen welche von dieser Komponente bearbeitet werden, nicht in einem Fehlerzustand hängen bleiben sondern vielmehr von einer der verbleibenden \textit{Domain-Services} übernommen werden. 
+Im zweiten Testlauf wird der Ausfall einer \textit{Domain-Service} Komponente simuliert.  Im laufenden Betrieb wird diese Komponente unkontrolliert beendet. Das sollte dazu führen, dass Buchungen, welche von dieser Komponente bearbeitet werden, nicht in einem Fehlerzustand hängen bleiben, sondern vielmehr von einer der verbleibenden \textit{Domain-Services} übernommen werden. 
 
 \subsection{3. Testlauf}
-Um die in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderte Skalierung der Anwendung zu repräsentieren, wird in diesem Testlauf während den Buchungsforgängen der Testanwendung eine weitere  \textit{Domain-Services} Komponente zum System hinzugefügt. Diese sollte anschließend teile der bereits vorhandenen Buchunsprozessen übernehmen. Nach beendigung des Testlaufs sollten auch hier wieder alle Buchungen, wie im ersten Testlauf beschrieben, erfolgreich Abgeschlossen sein. 
+Um die in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderte Skalierung der Anwendung zu repräsentieren, wird in diesem Testlauf während den Buchungsvorgängen eine weitere  \textit{Domain-Services} Komponente zum System hinzugefügt. Die neue Komponente soll Teile der bereits vorhandenen Buchungsprozesse übernehmen. Nach Beendigung des Testlaufs soll auch hier wieder alle Buchungen, wie im ersten Testlauf beschrieben, erfolgreich abgeschlossen sein. 
 
 \subsection{Ergebnisse}
-Nach jedem Testlauf wurden die bereits beschriebenen Überprüfungen der Buchungresultate, Kontobewegungen sowie die Kontrolle der Passagierlisten durchgeführt. Somit kann gezeigt werden, dass die Anwendung die Transaktionallen Daten in einem verteilten Umgebung korrekt verarbeitet und dabei keine inkonsistenzen in den Daten Auftretten. Die Ergebnisse des Datenvergleichs ist der Tabelle \ref{tab:evaluation:resultsTestRuns} zu entnehmen. Demnach konnte für jedes gebuchte Ticket auch eine entsprechende abbuchung auf der Bankenanwendung gefunden werden. Die Abgebrochenen Buchungsanfragen lassen sich damit erklären, das die Bankenanwendung die Buchungen abgelehnt hat. Weiters wurden beim zweiten Testlauf während der simulierten Störung einige Anfragen abgebrochen, jedoch entstand dabei keine Dateninkonsistenz.
+Nach jedem Testlauf wurden eine Überprüfungen der Buchungsresultate, Kontobewegungen sowie die Kontrolle der Passagierlisten durchgeführt. Somit kann gezeigt werden, dass die Anwendung die Transaktionalen Daten in einem verteilten Umgebung korrekt verarbeitet und dabei keine Inkonsistenzen in den Daten auftreten. Die Ergebnisse des Datenvergleichs ist der Tabelle \ref{tab:evaluation:resultsTestRuns} zu entnehmen. Demnach konnte für jedes gebuchte Ticket auch eine entsprechende Abbuchung auf der Bankenanwendung gefunden werden. Die abgebrochenen Buchungsanfragen lassen sich damit erklären, dass die Bankenanwendung die Buchungen abgelehnt hat. Es wurden beim zweiten Testlauf während der simulierten Störung einige Anfragen abgebrochen, jedoch entstand dabei keine Dateninkonsistenz.
 \begin{table}
     \centering
     \begin{tabular}{p{2 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm}}
