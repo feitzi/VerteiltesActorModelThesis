@@ -56,6 +56,24 @@ Nach jedem Testlauf wurden eine Überprüfungen der Buchungsresultate, Kontobewe
 Die Bewertung des praktischen Umsetzungsbeispiels, erfolgt zuerst durch ein Vergleich der technischen- sowie der Prozessanforderungen aus Kapitel \ref{sec:Eruierung:technicalRequierements} mit der umgesetzten Implementierung. Anschließend wird die Bewertung mit einer Diskussion, welche die im ersten Abschnitt besprochenen theoretischen Inhalte mit der praktischen Umsetzung bespricht, weitergeführt. Bekannte Probleme der vorliegenden Implementierung sowie Probleme während der realisierung der Anwendung komplementieren die Bewertung.
 
 \subsection{Anforderungsvergleich}
+Der Anforderungskatalog aus Kapitel \ref{sec:Eruierung:technicalRequierements} fordert sechs unterschiedliche Anforderungen an die Implementierung der Anwendung. Davon konnten insgesamt fünf erfüllt werden und eine Anforderung wurde zum teil erfüllt. \\
+Nachfolgend eine Übersicht über die Erfüllung der einzelnen Anforderungen.
+\begin{enumerate}
+    \litem{Verteilbare Komponenten} 
+    Die Verteilbarkeit der einzelnen Komponenten ist durch den einsatz des \textit{Gossip}-Protokolls möglich. Weiters ermöglicht der Einsatz von Routern, wie in Kapitel \ref{subsec:implementation:akkaRouting} beschrieben, eine einfache Kommunikation  zwischen den verteilen Komponenten. Die fünf unterschiedlichen Komponententypen sind voneinander nicht Abhängig, bilden zusammengeschlossen aber eine homogene Anwendung.
+
+    \litem{Automatische Skalierung}
+    Die Skalierung der Anwendung ist durch das hinzufügen sowie entfernen von Komponenten möglich. Dabei organisieren sich die im System gehaltenen Daten durch \textit{Sharding} bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine anpassung an der Anzahl an Komponenten vorzunehmen, ist jedoch in der vorliegenden Implementierung ein manueller Schritt möglich. Komponenten hinzufügen oder ändern ist nur möglich in dem die Entsprechende Instanz manuel gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte notwendig damit die Komponente mit dem vorhandenen System interagiert. 
+
+    \litem{Verteilte sowie Transaktionale Daten}
+    Der Umgang mit verteilten Daten war bei den Designentscheidungen für die \text{TyrolSky}-Anwendung einer der Hauptmerkmale. Die in Abschnitt \ref{subsec:implementation:domainService} beschriebenen Daten für Fluginformationen oder Ticketbuchungen werden durch \textit{Sharding} verteilt. Durch die Implementierung von \textit{EventSourcing} ist auch die Persistierung der verteilten Daten sichergestellt. Das zusammenspiel der synchronen Nachrichtenabarbeitung des \textit{Actor-Models} sowie des \textit{Shardingalgorithmus} ermöglicht die sicherstellung der Datenkonsistenz über die gesamte verteilte Anwendung.
+   
+    \litem{Fehler sowie Netzwerk-Partition beständig}
+    Bei einem Ausfall der Komponente wird dieser Zustand durch das \textit{Gossip}-Protokoll an alle teilnehmenden Komponenten propagiert. Dadurch ist eine Isolierung von fehlerhaften Clusterteilnehmer möglich. Durch die Möglichkeiten der \textit{Supervision} des \textit{Actor-Models}, ist auch die Lösung von Fehlern innerhalb einer Komponente einfach möglich. \\
+    Der Umgang mit einer möglichen Separierung des Netzwerkes wird erfolgt mit dem in Abschnitt \ref{subsec:implementation:splitBrain} beschriebenen \textit{Split Brain Resolver}. Fehler in der Anwendung führen somit nicht zum totalausfall des gesamten Clusters, im schlimmsten Fall ist ein Ausfall einer Komponentengruppe möglich.
+\end{enumerate}
+
+Die im Anforderungskatalog gestellten Bedingungen konnten somit erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das hinzufügen und entfernen von Komponenten einfach möglich ist ohne dabei die laufende Applikation negativ zu beinflusen. 
 
 \subsection{Implementierungs Diskussion}
 
