@@ -38,10 +38,11 @@ Im zweiten Testlauf wird der Ausfall einer \textit{Domain-Service} Komponente si
 Um die in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderte Skalierung der Anwendung zu repräsentieren, wird in diesem Testlauf während den Buchungsvorgängen eine weitere  \textit{Domain-Services} Komponente zum System hinzugefügt. Die neue Komponente soll Teile der bereits vorhandenen Buchungsprozesse übernehmen. Nach Beendigung des Testlaufs soll auch hier wieder alle Buchungen, wie im ersten Testlauf beschrieben, erfolgreich abgeschlossen sein. 
 
 \subsection{Ergebnisse}
+\label{subsec:evaluation:resultsTestRuns}
 Nach jedem Testlauf wurden eine Überprüfungen der Buchungsresultate, Kontobewegungen sowie die Kontrolle der Passagierlisten durchgeführt. Somit kann gezeigt werden, dass die Anwendung die Transaktionalen Daten in einem verteilten Umgebung korrekt verarbeitet und dabei keine Inkonsistenzen in den Daten auftreten. Die Ergebnisse des Datenvergleichs ist der Tabelle \ref{tab:evaluation:resultsTestRuns} zu entnehmen. Demnach konnte für jedes gebuchte Ticket auch eine entsprechende Abbuchung auf der Bankenanwendung gefunden werden. Die abgebrochenen Buchungsanfragen lassen sich damit erklären, dass die Bankenanwendung die Buchungen abgelehnt hat. Es wurden beim zweiten Testlauf während der simulierten Störung einige Anfragen abgebrochen, jedoch entstand dabei keine Dateninkonsistenz.
 \begin{table}
     \centering
-    \begin{tabular}{p{2 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm}}
+    \begin{tabular}{p{1.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm}}
         Testlauf    & Testbuchungen       &   Abgeschlossene Tickets & Abgebrochene Buchungen & Abgebuchte Flüge  \\ \hline
             1.      & 2000                &         1827             &      173               &         1827        \\
             2.      & 2000                &         1820             &      180               &         1820        \\
@@ -72,10 +73,17 @@ Nachfolgend eine Übersicht über die Erfüllung der einzelnen Anforderungen.
     Bei einem Ausfall der Komponente wird dieser Zustand durch das \textit{Gossip}-Protokoll an alle teilnehmenden Komponenten propagiert. Dadurch ist eine Isolierung von fehlerhaften Clusterteilnehmer möglich. Durch die Möglichkeiten der \textit{Supervision} des \textit{Actor-Models}, ist auch die Lösung von Fehlern innerhalb einer Komponente einfach möglich. \\
     Der Umgang mit einer möglichen Separierung des Netzwerkes wird erfolgt mit dem in Abschnitt \ref{subsec:implementation:splitBrain} beschriebenen \textit{Split Brain Resolver}. Fehler in der Anwendung führen somit nicht zum totalausfall des gesamten Clusters, im schlimmsten Fall ist ein Ausfall einer Komponentengruppe möglich.
 \end{enumerate}
-
 Die im Anforderungskatalog gestellten Bedingungen konnten somit erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das hinzufügen und entfernen von Komponenten einfach möglich ist ohne dabei die laufende Applikation negativ zu beinflusen. 
 
 \subsection{Implementierungs Diskussion}
+Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, das die Anwendung von Grund auf in die verschiedene Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt Beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Diese Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die abhandlung von \textit{HTTP} Anfragen, die restliche Arbeit wird an eine andere Komponente abgegeben. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
+Ein anderer wesentliches Detail der Implementierung ist die Verwendung von \textit{Event-Sourcing} für die Datenhaltung. Dadurch kann die Auslastung der verwendeten Datenbank, vorallem was den Lesezugriff betrifft, im Vergleich zur gebräuchlichen \textit{CRUD}-Operationen reduziert werden. 
+\graffito{\textit{CRUD} steht für \textit{Create, Read, Update, Delete} und beschreibt den Zugriff auf die Datenbank für jede Operation an ein Datenhaltendes System. \citep{martin1981managing}}
+Eine Datenbank ist zwar für eine dauerhafte Speicherung der Daten notwendig, durch die Fehlende Struktur der in der Datenbank gespeicherten Daten, ist aber auch die Verteilung dieser einfach möglich. Die vorliegende Umsetzung verwendet zwar eine Relationale Datenbank, jedoch ist der Umstieg auf eine \textit{NoSQL} Datenbank ohne Aufwand möglich. \\
+Die Prinzipien des \textit{Reactive Manifesto} aus Kapitel \ref{reactiveManifesto} wurden so weit wie möglich eingehalten. Einerseits ist die Nachrichtenorientiert durch die strikte Verwendung von Actors sowie Events implizit gegeben. Weiters ist die Elastizität sowie die Antwortbereitschaft durch die bereits beschriebene Komponenteorientierung gegeben. Für eine korrekte Erfüllung des \textit{Manifesto} ist jedoch noch eine vollautomatische Skalierung der Anwendung erforderlich. \\
+Die in Kapitel \ref{sec:distributedSystems:capTheorem} behandelte Problematik des \text{CAP}-Theorem wurde durch den Verzicht auf vollständige Partitions Toleranz gelöst. Die Anwendung versucht mittels der in Abschnitt 
+\ref{subsec:implementation:splitBrain} beschriebenen Methoden Netzwerkpatitionen zu erkennen und diese Anschließend aus dem Cluster zu entfernen. Dadurch ist die Anwendung in dem partitionierten Netzwerk nicht mehr erreichbar. Der Umgang mit transaktionalen Daten durch den \textit{Sharding}-Mechanismus ermöglicht der Anwendung eine einfache und Fehlerresistente Verteilung von Datensätzen, wobei die Hürden des \textit{CAP}-Theorems beachtet werden.
+
 
 \subsection{Vorhandene Probleme der Umsetzung}
 
