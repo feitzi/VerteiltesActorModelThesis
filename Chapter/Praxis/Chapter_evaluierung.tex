@@ -86,6 +86,8 @@ Die in Kapitel \ref{sec:distributedSystems:capTheorem} behandelte Problematik de
 
 
 \subsection{Vorhandene Probleme der Umsetzung}
+Neben der Erfüllung der Anforderungen sind auch einige Probleme mit der verwendeten Architektur, sowie der Implementierung bekannt. Dies betrifft in erster Linie die Implementierung des \textit{Query}-Services. Durch die Überwachung der aufgetretenen Events über die \textit{Event-Sourcing} Datenbank, ist jeder einzelne Abfragetyp aufwändig zu Implementieren und die Aufbereitung der Abfragen kann bei einer vielzahl an parallel Aufgetretenen Events einige Zeit in anspruch nehmen. Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet. \\
+Eine weitere bekannte Schwäche der Implementierung betrifft die Testanwendung. Durch die Verwendung einer relationalen Datenbank für die Protokollierung der Testanwendung ist ein \textit{SQL} basierter Zugriff notwendig. Dabei kommt es mit der gewählten Implementierungsart zu Problemen wenn viele Zugriffe auf die Datenbank parallel ausgeführt werden. Dieses Problem wurde zwar bereits durch den einsatz eines lokalen Routers, welche die gleichzeitigen Datenbankzugriffe limitiert, minimiert. Jedoch kommt es weiterhin bei einer hohen Anzahl an Tests zu Problemen beim Datenbankzugriff. 
 
 \chapter{Fazit}
 \section{Auseinandersetzung mit der Forschungsfrage}
