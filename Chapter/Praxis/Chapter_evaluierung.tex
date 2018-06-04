@@ -1,11 +1,5 @@
 \chapter{Evaluierung} \label{cha:evaluation}
-Das abschließende Evaluationskapitel beleuchtet die Implementierung des praktischen Anwendungskatalogs hinsichtlich der in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderten Kriterien. Dazu wird zuerst ein Testlauf der \textit{TyrolSky} Anwendung besprochen und auf die Ergebnisse eingegangen. Darauf aufbauend wird im Anschluss die Forschungsfrage auf Basis des in den vorangegangenen Kapitel erworbenen Wissens besprochen. Abschließend folgt eine Diskussion sowie ein Ausblick auf die weitere Entwicklung des \textit{Actor-Models}. 
-% * <feitzinger.magdalena@gmail.com> 2018-05-28T11:00:07.724Z:
-% 
-% > Darauf aufbauend wird im Anschluss die Forschungsfrage auf Basis des in den vorangegangenen Kapitel erworbenen Wissens besprochen.
-% Die Forschungsfrage wird nicht besprochen, sie wird versucht zu beantworten. 
-% 
-% ^.
+Das abschließende Evaluationskapitel beleuchtet die Implementierung des praktischen Anwendungskatalogs hinsichtlich der in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderten Kriterien. Dazu wird zuerst ein Testlauf der \textit{TyrolSky} Anwendung besprochen und auf die Ergebnisse eingegangen. Darauf aufbauend wird im Anschluss die Forschungsfrage auf Basis des in den vorangegangenen Kapitel erworbenen Wissens versucht zu beantworten. Abschließend folgt eine Diskussion sowie ein Ausblick auf die weitere Entwicklung des \textit{Actor-Models}. 
 
 \section{TyrolSky-Testlauf}
 Als Basis für die nachfolgende Bewertung dient der aufgebaute Testlauf. Für den Betrieb der \textit{Tyrol-Sky} Anwendung werden die verschiedenen Komponenten, in einem mittels \textit{Docker} simulierten Netzwerk, zusammengeschlossen. Die teilnehmenden Komponenten am Test können aus der Tabelle \ref{tab:evaluation:testStage} entnommen werden. \\
@@ -64,13 +58,7 @@ Nachfolgend eine Übersicht über die Erfüllung der einzelnen Anforderungen.
     Die Verteilbarkeit der einzelnen Komponenten ist durch den Einsatz des \textit{Gossip}-Protokolls möglich. Der Einsatz von Routern, wie in Kapitel \ref{subsec:implementation:akkaRouting} beschrieben, ermöglicht eine einfache Kommunikation  zwischen den verteilen Komponenten. Die fünf unterschiedlichen Komponententypen sind voneinander nicht abhängig, bilden zusammengeschlossen aber eine homogene Anwendung.
 
     \litem{Automatische Skalierung}
-    Die Skalierung der Anwendung ist möglich durch Hinzufügen bzw. Entfernen von Komponenten. Dabei organisieren sich die im System gehaltenen Daten, durch den \textit{Sharding}-Mechanismus, bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist  in der vorliegenden Implementierung ein manueller Schritt notwendig. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte notwendig damit die Komponente mit dem vorhandenen System interagiert. 
-% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:39:53.423Z:
-% 
-% > Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist jedoch in der vorliegenden Implementierung ein manueller Schritt möglich. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte notwendig damit die Komponente mit dem vorhandenen System interagiert. 
-% Wortwiederholung "jedoch" und "möglich"
-% 
-% ^.
+    Die Skalierung der Anwendung ist möglich durch Hinzufügen bzw. Entfernen von Komponenten. Dabei organisieren sich die im System gehaltenen Daten, durch den \textit{Sharding}-Mechanismus, bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist  in der vorliegenden Implementierung ein manueller Schritt notwendig. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte forderlich, damit die Komponente mit dem vorhandenen System interagiert. 
 
     \litem{Verteilte sowie Transaktionale Daten}
     Der Umgang mit verteilten Daten war bei den Designentscheidungen für die \text{TyrolSky}-Anwendung einer der Hauptmerkmale. Die in Abschnitt \ref{subsec:implementation:domainService} beschriebenen Daten für Fluginformationen oder Ticketbuchungen werden durch \textit{Sharding} verteilt. Durch die Implementierung von \textit{EventSourcing} ist auch die Persistierung der verteilten Daten sichergestellt. Das Zusammenspiel der synchronen Nachrichtenabarbeitung des \textit{Actor-Models} und des \textit{Shardingalgorithmus} ermöglicht die Sicherstellung der Datenkonsistenz über die gesamte verteilte Anwendung.
@@ -82,14 +70,7 @@ Nachfolgend eine Übersicht über die Erfüllung der einzelnen Anforderungen.
 Die im Anforderungskatalog gestellten Bedingungen konnten  erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das Hinzufügen und Entfernen von Komponenten einfach möglich ist, ohne dabei die laufende Applikation negativ zu beeinflussen. 
 
 \subsection{Implementierungsdiskussion}
-Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen, kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen ausreichend umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung  in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Diese Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die Abhandlung von \textit{HTTP} Anfragen, die restliche Arbeit wird an eine andere Komponente abgegeben. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
-% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:44:46.306Z:
-% 
-% > Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung  in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Diese Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die abhandlung von \textit{HTTP} Anfragen, die restliche Arbeit wird an eine andere Komponente abgegeben.
-% Präzisieren! 
-% Du redest von aufteilen und im nächsten Satz beginnst du mit "diese Aufteilung. Du redest von Komponenten und den nächsten Satz beginnst du mit "diese Komponenten"... 
-% 
-% ^.
+Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen, kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen ausreichend umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die gegebenen unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Die \textit{API}-Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die Abhandlung von \textit{HTTP} Anfragen. Das Beispiel zeigt, wie die unterschiedlichen Applikationsservices die Arbeit untereinander Aufteilen. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
 Ein anderes wesentliches Detail der Implementierung ist die Verwendung von \textit{Event-Sourcing} für die Datenhaltung. Dadurch kann die Auslastung der verwendeten Datenbank, vor allem was den Lesezugriff betrifft, im Vergleich zur gebräuchlichen \textit{CRUD}-Operationen reduziert werden. 
 \graffito{\textit{CRUD} steht für \textit{Create, Read, Update, Delete} und beschreibt den Zugriff auf die Datenbank für jede Operation an ein datenhaltendes System. \citep{martin1981managing}}
 Eine Datenbank ist zwar für eine dauerhafte Speicherung der Daten notwendig, durch die fehlende Struktur der in der Datenbank gespeicherten Daten, ist auch die Verteilung einfach möglich. Die vorliegende Umsetzung verwendet zwar eine Relationale Datenbank, jedoch ist der Umstieg auf eine \textit{NoSQL} Datenbank ohne Aufwand möglich. \\
@@ -99,26 +80,8 @@ Die in Kapitel \ref{sec:distributedSystems:capTheorem} behandelte Problematik de
 
 
 \subsection{Vorhandene Probleme der Umsetzung}
-Neben der Erfüllung der Anforderungen sind auch einige Probleme mit der verwendeten Architektur und der Implementierung bekannt. Dies betrifft in erster Linie die Implementierung des \textit{Query}-Services. Durch die Überwachung der aufgetretenen Events über die \textit{Event-Sourcing} Datenbank ist jeder einzelne Abfragetyp aufwendig zu implementieren und die Aufbereitung der Abfragen kann bei einer Vielzahl an parallel aufgetretenen Events einige Zeit in Anspruch nehmen. Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten Umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet. \\
-% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:53:48.352Z:
-% 
-% > Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten Umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet. 
-% Überarbeiten! Wortwiederholung, und zusammenfassen. 
-% 
-% ^.
-% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:52:29.098Z:
-% 
-% > Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice.
-% kein deutscher Satz. 
-% 
-% ^.
+Neben der Erfüllung der Anforderungen sind auch einige Probleme mit der verwendeten Architektur und der Implementierung bekannt. Dies betrifft in erster Linie die Implementierung des \textit{Query}-Services. Durch die Überwachung der aufgetretenen Events über die \textit{Event-Sourcing} Datenbank ist jeder einzelne Abfragetyp aufwendig zu implementieren und die Aufbereitung der Abfragen kann bei einer Vielzahl an parallel aufgetretenen Events einige Zeit in Anspruch nehmen. Weiters ist ein bekannter Fehler der Implementierung der in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globale Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten Umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet wodurch durch den Programmierfehler Inkonsistenzen bei Datenabfragen auftreten können. Dieser Fehler ist jedoch nicht auf die Architektur zurückzuführen sondern einer fehleraften Implementierung geschuldet. \\
 Eine Schwäche der Implementierung betrifft die Testanwendung. Durch die Verwendung einer relationalen Datenbank für die Protokollierung der Testanwendung ist ein \textit{SQL} basierter Zugriff notwendig. Dabei kommt es mit der gewählten Implementierungsart zu Problemen, wenn viele Zugriffe auf die Datenbank parallel ausgeführt werden. Dieses Problem wurde zwar bereits durch den Einsatz eines lokalen Routers, welche die gleichzeitigen Datenbankzugriffe limitiert, minimiert. Jedoch kommt es weiterhin bei einer hohen Anzahl an Tests zu Problemen beim Datenbankzugriff. 
-% * <feitzinger.magdalena@gmail.com> 2018-06-04T14:00:16.749Z:
-% 
-% > Eine Schwäche der Implementierung betrifft die Testanwendung.
-% genauer beschreiben. 
-% 
-% ^.
 
 \chapter{Fazit}
 \section{Auseinandersetzung mit der Forschungsfrage}
