@@ -54,40 +54,89 @@ Nach jedem Testlauf wurden eine Überprüfungen der Buchungsresultate, Kontobewe
 
 \section{Bewertung der Umsetzung}
 \label{cha:rating}
-Die Bewertung des praktischen Umsetzungsbeispiels, erfolgt zuerst durch ein Vergleich der technischen- sowie der Prozessanforderungen aus Kapitel \ref{sec:Eruierung:technicalRequierements} mit der umgesetzten Implementierung. Anschließend wird die Bewertung mit einer Diskussion, welche die im ersten Abschnitt besprochenen theoretischen Inhalte mit der praktischen Umsetzung bespricht, weitergeführt. Bekannte Probleme der vorliegenden Implementierung sowie Probleme während der realisierung der Anwendung komplementieren die Bewertung.
+Die Bewertung des praktischen Umsetzungsbeispiels erfolgt zuerst durch ein Vergleich der technischen sowie der Prozessanforderungen aus Kapitel \ref{sec:Eruierung:technicalRequierements}. Anschließend wird die Bewertung mit einer Diskussion, welche die im ersten Abschnitt besprochenen theoretischen Inhalte mit der praktischen Umsetzung bespricht, weitergeführt. Bekannte Probleme der vorliegenden Implementierung sowie Probleme während der Realisierung der Anwendung komplementieren die Bewertung.
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:34:04.209Z:
+% 
+% > Die Bewertung des praktischen Umsetzungsbeispiels erfolgt zuerst durch ein Vergleich der technischen sowie der Prozessanforderungen aus Kapitel \ref{sec:Eruierung:technicalRequierements}. Anschließend wird die Bewertung mit einer Diskussion, welche die im ersten Abschnitt besprochenen theoretischen Inhalte mit der praktischen Umsetzung bespricht, weitergeführt. Bekannte Probleme der vorliegenden Implementierung sowie Probleme während der realisierung der Anwendung komplementieren die Bewertung.
+% Ist dieser Absatz notwendig? Du beschreibst hier nur, wie du in Folge die Bewertung vornimmst. Ist eher unnötig. 
+% 
+% ^.
 
 \subsection{Anforderungsvergleich}
-Der Anforderungskatalog aus Kapitel \ref{sec:Eruierung:technicalRequierements} fordert sechs unterschiedliche Anforderungen an die Implementierung der Anwendung. Davon konnten insgesamt fünf erfüllt werden und eine Anforderung wurde zum teil erfüllt. \\
+Der Anforderungskatalog aus Kapitel \ref{sec:Eruierung:technicalRequierements} fordert sechs unterschiedliche Voraussetzungen an die Implementierung. Davon konnte eine nur zum Teil erfüllt werden, die restlichen fünf wurden ganz erfüllt. \\
 Nachfolgend eine Übersicht über die Erfüllung der einzelnen Anforderungen.
 \begin{enumerate}
     \litem{Verteilbare Komponenten} 
-    Die Verteilbarkeit der einzelnen Komponenten ist durch den einsatz des \textit{Gossip}-Protokolls möglich. Weiters ermöglicht der Einsatz von Routern, wie in Kapitel \ref{subsec:implementation:akkaRouting} beschrieben, eine einfache Kommunikation  zwischen den verteilen Komponenten. Die fünf unterschiedlichen Komponententypen sind voneinander nicht Abhängig, bilden zusammengeschlossen aber eine homogene Anwendung.
+    Die Verteilbarkeit der einzelnen Komponenten ist durch den Einsatz des \textit{Gossip}-Protokolls möglich. Der Einsatz von Routern, wie in Kapitel \ref{subsec:implementation:akkaRouting} beschrieben, ermöglicht eine einfache Kommunikation  zwischen den verteilen Komponenten. Die fünf unterschiedlichen Komponententypen sind voneinander nicht abhängig, bilden zusammengeschlossen aber eine homogene Anwendung.
 
     \litem{Automatische Skalierung}
-    Die Skalierung der Anwendung ist durch das hinzufügen sowie entfernen von Komponenten möglich. Dabei organisieren sich die im System gehaltenen Daten durch \textit{Sharding} bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine anpassung an der Anzahl an Komponenten vorzunehmen, ist jedoch in der vorliegenden Implementierung ein manueller Schritt möglich. Komponenten hinzufügen oder ändern ist nur möglich in dem die Entsprechende Instanz manuel gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte notwendig damit die Komponente mit dem vorhandenen System interagiert. 
+    Die Skalierung der Anwendung ist möglich durch Hinzufügen bzw. Entfernen von Komponenten. Dabei organisieren sich die im System gehaltenen Daten durch \textit{Sharding} bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist jedoch in der vorliegenden Implementierung ein manueller Schritt möglich. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte notwendig damit die Komponente mit dem vorhandenen System interagiert. 
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:39:53.423Z:
+% 
+% > Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist jedoch in der vorliegenden Implementierung ein manueller Schritt möglich. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte notwendig damit die Komponente mit dem vorhandenen System interagiert. 
+% Wortwiederholung "jedoch" und "möglich"
+% 
+% ^.
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:38:34.332Z:
+% 
+% > Dabei organisieren sich die im System gehaltenen Daten durch \textit{Sharding} bei einer Änderung der Clusterstruktur selbständig neu.
+% verquerer Satzbau. 
+% 
+% ^.
 
     \litem{Verteilte sowie Transaktionale Daten}
-    Der Umgang mit verteilten Daten war bei den Designentscheidungen für die \text{TyrolSky}-Anwendung einer der Hauptmerkmale. Die in Abschnitt \ref{subsec:implementation:domainService} beschriebenen Daten für Fluginformationen oder Ticketbuchungen werden durch \textit{Sharding} verteilt. Durch die Implementierung von \textit{EventSourcing} ist auch die Persistierung der verteilten Daten sichergestellt. Das zusammenspiel der synchronen Nachrichtenabarbeitung des \textit{Actor-Models} sowie des \textit{Shardingalgorithmus} ermöglicht die sicherstellung der Datenkonsistenz über die gesamte verteilte Anwendung.
+    Der Umgang mit verteilten Daten war bei den Designentscheidungen für die \text{TyrolSky}-Anwendung einer der Hauptmerkmale. Die in Abschnitt \ref{subsec:implementation:domainService} beschriebenen Daten für Fluginformationen oder Ticketbuchungen werden durch \textit{Sharding} verteilt. Durch die Implementierung von \textit{EventSourcing} ist auch die Persistierung der verteilten Daten sichergestellt. Das Zusammenspiel der synchronen Nachrichtenabarbeitung des \textit{Actor-Models} und des \textit{Shardingalgorithmus} ermöglicht die Sicherstellung der Datenkonsistenz über die gesamte verteilte Anwendung.
    
     \litem{Fehler sowie Netzwerk-Partition beständig}
-    Bei einem Ausfall der Komponente wird dieser Zustand durch das \textit{Gossip}-Protokoll an alle teilnehmenden Komponenten propagiert. Dadurch ist eine Isolierung von fehlerhaften Clusterteilnehmer möglich. Durch die Möglichkeiten der \textit{Supervision} des \textit{Actor-Models}, ist auch die Lösung von Fehlern innerhalb einer Komponente einfach möglich. \\
-    Der Umgang mit einer möglichen Separierung des Netzwerkes wird erfolgt mit dem in Abschnitt \ref{subsec:implementation:splitBrain} beschriebenen \textit{Split Brain Resolver}. Fehler in der Anwendung führen somit nicht zum totalausfall des gesamten Clusters, im schlimmsten Fall ist ein Ausfall einer Komponentengruppe möglich.
+    Bei einem Ausfall der Komponente wird dieser Zustand durch das \textit{Gossip}-Protokoll an alle teilnehmenden Komponenten propagiert. Dadurch ist eine Isolierung von fehlerhaften Clusterteilnehmern möglich. Durch die Möglichkeiten der \textit{Supervision} des \textit{Actor-Models} ist auch das Aufheben von Fehlern innerhalb einer Komponente einfach möglich. \\
+    Der Umgang mit einer möglichen Separierung des Netzwerkes erfolgt mit dem in Abschnitt \ref{subsec:implementation:splitBrain} beschriebenen \textit{Split Brain Resolver}. Fehler in der Anwendung führen somit nicht zum Totalausfall des gesamten Clusters, im schlimmsten Fall ist ein Ausfall einer Komponentengruppe möglich.
 \end{enumerate}
-Die im Anforderungskatalog gestellten Bedingungen konnten somit erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das hinzufügen und entfernen von Komponenten einfach möglich ist ohne dabei die laufende Applikation negativ zu beinflusen. 
+Die im Anforderungskatalog gestellten Bedingungen konnten  erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das Hinzufügen und Entfernen von Komponenten einfach möglich ist, ohne dabei die laufende Applikation negativ zu beeinflussen. 
 
 \subsection{Implementierungs Diskussion}
-Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen ausreichend umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, das die Anwendung von Grund auf in die verschiedene Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt Beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Diese Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die abhandlung von \textit{HTTP} Anfragen, die restliche Arbeit wird an eine andere Komponente abgegeben. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
-Ein anderer wesentliches Detail der Implementierung ist die Verwendung von \textit{Event-Sourcing} für die Datenhaltung. Dadurch kann die Auslastung der verwendeten Datenbank, vor allem was den Lesezugriff betrifft, im Vergleich zur gebräuchlichen \textit{CRUD}-Operationen reduziert werden. 
-\graffito{\textit{CRUD} steht für \textit{Create, Read, Update, Delete} und beschreibt den Zugriff auf die Datenbank für jede Operation an ein Datenhaltendes System. \citep{martin1981managing}}
-Eine Datenbank ist zwar für eine dauerhafte Speicherung der Daten notwendig, durch die Fehlende Struktur der in der Datenbank gespeicherten Daten, ist aber auch die Verteilung dieser einfach möglich. Die vorliegende Umsetzung verwendet zwar eine Relationale Datenbank, jedoch ist der Umstieg auf eine \textit{NoSQL} Datenbank ohne Aufwand möglich. \\
-Die Prinzipien des \textit{Reactive Manifesto} aus Kapitel \ref{reactiveManifesto} wurden so weit wie möglich eingehalten. Einerseits ist die Nachrichtenorientiert durch die strikte Verwendung von Actors sowie Events implizit gegeben. Weiters ist die Elastizität sowie die Antwortbereitschaft durch die bereits beschriebene Komponenteorientierung gegeben. Für eine korrekte Erfüllung des \textit{Manifesto} ist jedoch noch eine vollautomatische Skalierung der Anwendung erforderlich. \\
-Die in Kapitel \ref{sec:distributedSystems:capTheorem} behandelte Problematik des \text{CAP}-Theorem wurde durch den Verzicht auf vollständige Partitions Toleranz gelöst. Die Anwendung versucht mittels der in Abschnitt 
-\ref{subsec:implementation:splitBrain} beschriebenen Methoden Netzwerkpatitionen zu erkennen und diese Anschließend aus dem Cluster zu entfernen. Dadurch ist die Anwendung in dem partitionierten Netzwerk nicht mehr erreichbar. Der Umgang mit transaktionalen Daten durch den \textit{Sharding}-Mechanismus ermöglicht der Anwendung eine einfache und Fehlerresistente Verteilung von Datensätzen, wobei die Hürden des \textit{CAP}-Theorems beachtet werden.
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:42:49.275Z:
+% 
+% > Implementierungs Diskussion
+% Entweder "Implementierungsdiskussion" oder "Diskussion über Implementierung"  oder ähnliches. 
+% 
+% ^.
+Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen, kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen ausreichend umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung  in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Diese Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die Abhandlung von \textit{HTTP} Anfragen, die restliche Arbeit wird an eine andere Komponente abgegeben. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:44:46.306Z:
+% 
+% > Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung  in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Diese Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die abhandlung von \textit{HTTP} Anfragen, die restliche Arbeit wird an eine andere Komponente abgegeben.
+% Präzisieren! 
+% Du redest von aufteilen und im nächsten Satz beginnst du mit "diese Aufteilung. Du redest von Komponenten und den nächsten Satz beginnst du mit "diese Komponenten"... 
+% 
+% ^.
+Ein anderes wesentliches Detail der Implementierung ist die Verwendung von \textit{Event-Sourcing} für die Datenhaltung. Dadurch kann die Auslastung der verwendeten Datenbank, vor allem was den Lesezugriff betrifft, im Vergleich zur gebräuchlichen \textit{CRUD}-Operationen reduziert werden. 
+\graffito{\textit{CRUD} steht für \textit{Create, Read, Update, Delete} und beschreibt den Zugriff auf die Datenbank für jede Operation an ein datenhaltendes System. \citep{martin1981managing}}
+Eine Datenbank ist zwar für eine dauerhafte Speicherung der Daten notwendig, durch die fehlende Struktur der in der Datenbank gespeicherten Daten, ist auch die Verteilung einfach möglich. Die vorliegende Umsetzung verwendet zwar eine Relationale Datenbank, jedoch ist der Umstieg auf eine \textit{NoSQL} Datenbank ohne Aufwand möglich. \\
+Die Prinzipien des \textit{Reactive Manifesto}, aus Kapitel \ref{reactiveManifesto}, wurden so weit wie möglich eingehalten. Einerseits ist die Nachrichtenorientierung durch die strikte Verwendung von Actors sowie Events implizit gegeben. Die Elastizität sowie die Antwortbereitschaft ist durch die Komponentenorientierung gegeben. Für eine korrekte Erfüllung des \textit{Manifesto} ist jedoch eine vollautomatische Skalierung der Anwendung erforderlich. \\
+Die in Kapitel \ref{sec:distributedSystems:capTheorem} behandelte Problematik des \text{CAP}-Theorem wurde durch den Verzicht auf vollständige Toleranz der Partition gelöst. Die Anwendung versucht mittels, der in Abschnitt 
+\ref{subsec:implementation:splitBrain} beschriebenen Methoden, Netzwerkpartitionen zu erkennen und diese Anschließend aus dem Cluster zu entfernen. Dadurch ist die Anwendung in dem partitionierten Netzwerk nicht mehr erreichbar. Der Umgang mit transaktionalen Daten durch den \textit{Sharding}-Mechanismus ermöglicht der Anwendung eine einfache und fehlerresistente Verteilung von Datensätzen, wobei die Hürden des \textit{CAP}-Theorems beachtet werden.
 
 
 \subsection{Vorhandene Probleme der Umsetzung}
-Neben der Erfüllung der Anforderungen sind auch einige Probleme mit der verwendeten Architektur, sowie der Implementierung bekannt. Dies betrifft in erster Linie die Implementierung des \textit{Query}-Services. Durch die Überwachung der aufgetretenen Events über die \textit{Event-Sourcing} Datenbank, ist jeder einzelne Abfragetyp aufwändig zu Implementieren und die Aufbereitung der Abfragen kann bei einer vielzahl an parallel Aufgetretenen Events einige Zeit in anspruch nehmen. Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet. \\
-Eine weitere bekannte Schwäche der Implementierung betrifft die Testanwendung. Durch die Verwendung einer relationalen Datenbank für die Protokollierung der Testanwendung ist ein \textit{SQL} basierter Zugriff notwendig. Dabei kommt es mit der gewählten Implementierungsart zu Problemen wenn viele Zugriffe auf die Datenbank parallel ausgeführt werden. Dieses Problem wurde zwar bereits durch den einsatz eines lokalen Routers, welche die gleichzeitigen Datenbankzugriffe limitiert, minimiert. Jedoch kommt es weiterhin bei einer hohen Anzahl an Tests zu Problemen beim Datenbankzugriff. 
+Neben der Erfüllung der Anforderungen sind auch einige Probleme mit der verwendeten Architektur und der Implementierung bekannt. Dies betrifft in erster Linie die Implementierung des \textit{Query}-Services. Durch die Überwachung der aufgetretenen Events über die \textit{Event-Sourcing} Datenbank ist jeder einzelne Abfragetyp aufwendig zu implementieren und die Aufbereitung der Abfragen kann bei einer Vielzahl an parallel aufgetretenen Events einige Zeit in Anspruch nehmen. Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten Umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet. \\
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:53:48.352Z:
+% 
+% > Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice. Dieser vergibt bereits vergebene Identifikationen unter bestimmten Umständen nochmals. Dies passiert vorallem wenn sich eine Komponente nicht korrekt vom System abmeldet. 
+% Überarbeiten! Wortwiederholung, und zusammenfassen. 
+% 
+% ^.
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:52:29.098Z:
+% 
+% > Weiters ist ein Fehler bei der Implementierung des in Kapitel \ref{subsubsub:implementation:queryActorModel:resultPreparator} beschriebenen Globalen Namensservice.
+% kein deutscher Satz. 
+% 
+% ^.
+Eine Schwäche der Implementierung betrifft die Testanwendung. Durch die Verwendung einer relationalen Datenbank für die Protokollierung der Testanwendung ist ein \textit{SQL} basierter Zugriff notwendig. Dabei kommt es mit der gewählten Implementierungsart zu Problemen, wenn viele Zugriffe auf die Datenbank parallel ausgeführt werden. Dieses Problem wurde zwar bereits durch den Einsatz eines lokalen Routers, welche die gleichzeitigen Datenbankzugriffe limitiert, minimiert. Jedoch kommt es weiterhin bei einer hohen Anzahl an Tests zu Problemen beim Datenbankzugriff. 
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T14:00:16.749Z:
+% 
+% > Eine Schwäche der Implementierung betrifft die Testanwendung.
+% genauer beschreiben. 
+% 
+% ^.
 
 \chapter{Fazit}
 \section{Auseinandersetzung mit der Forschungsfrage}
@@ -95,10 +144,29 @@ Eine weitere bekannte Schwäche der Implementierung betrifft die Testanwendung. 
 Mit der in Kapitel \ref{cha:practicalDevelopment} umgesetzten Anwendung konnte ein wesentlicher Teil der Forschungsfrage \ref{theorem:forschungsfrage} bereits behandelt werden. Mit den in \cite{Vernon2015ReactiveAkka} und \cite{akkaInAction} diskutierten Architekturmustern lässt sich ein auf dem Actor Model beruhendes verteiltes System erstellen welches mit Transaktionalen Daten umgehen kann. Eine Serviceorientierte Architektur hilft dabei die gesamte Anwendung verteilbar zu gestalten. 
 Das einbeziehen des in \cite{gilbertPerspectiveCAPTheorem2012} besprochene \textit{CAP-Theorem} hilft bei der Entwerfung der Softwarearchitektur und vermeidet von vornherein Probleme mit der Verteilung der Anwendung. \\
 Die Verwendung von Frameworks für die Anwendung des Actor-Models, siehe dazu Abschnitt \ref{sec:ActorFrameworks}, unterstützt die Entwicklung einer Anwendung in vielen Punkten. Unter anderem sind viele Architekturmuster bereits in den unterschiedlichen Frameworks vorgegeben. Weiters ist die die Unterstützung der entsprechenden Communities rundum die Frameworks hilfreich beim Lösen von Problemen. \\
-Ein Hauptproblem welches bei der Bearbeitung der Forschungsfrage aufgetreten ist, betrifft die Verteilung von Daten über mehrere Rechner. Im Zuge der aufbereitung der theoretischen Grundlagen im ersten Teil dieser Arbeit, konnte dafür das Konzept von \textit{Shards} sowie \textit{Event-Sourcing} für die Lösung dieses Problems gefunden werden. Die praktische Umsetzung der Beispielanwendung konnte zeigen, das diese Konzepte für die Implementierung eines verteilten Transaktionssystems Zielführend sind. \\
-Die Implementierung einer Softwarearchitektur mit dem \textit{Actor-Model} ist zu beginn Aufwendig, da das Programmiermodel im Gegensatz zum weit verbreiteten Objektorierten-Model abweicht. Deshalb müsste in einem Team welches die vorgeschlagene Architektur umsetzt zuerst entsprechendes Grundwissen über das \textit{Actor-Model} erarbeitet werden. \\
-
+Ein Hauptproblem welches bei der Bearbeitung der Forschungsfrage aufgetreten ist, betrifft die Verteilung von Daten über mehrere Rechner. Im Zuge der Aufbereitung der theoretischen Grundlagen im ersten Teil dieser Arbeit, konnte dafür das Konzept von \textit{Shards} sowie \textit{Event-Sourcing} für die Lösung dieses Problems gefunden werden. Die praktische Umsetzung der Beispielanwendung konnte zeigen, das diese Konzepte für die Implementierung eines verteilten Transaktionssystems Zielführend sind. \\
+Die Implementierung einer Softwarearchitektur mit dem \textit{Actor-Model} ist zu Beginn aufwendig, da das Programmiermodel im Gegensatz zum weit verbreiteten Objektorierten-Model abweicht. Deshalb müsste in einem Team, welches die vorgeschlagene Architektur umsetzt, zuerst entsprechendes Grundwissen über das \textit{Actor-Model} erarbeitet werden. \\
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T14:08:45.711Z:
+% 
+% > Die Implementierung einer Softwarearchitektur mit dem \textit{Actor-Model} ist zu Beginn aufwendig, da das Programmiermodel im Gegensatz zum weit verbreiteten Objektorierten-Model abweicht. Deshalb müsste in einem Team, welches die vorgeschlagene Architektur umsetzt, zuerst entsprechendes Grundwissen über das \textit{Actor-Model} erarbeitet werden.
+% gehört in die weiterführende Diskussion
+% 
+% ^.
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T14:09:07.202Z:
+% 
+% Also bi dem Kapitel müama mitnand telefoniera, und denn muasch du genau des befolga, was i da sag. o wenn koa luscht meh hosch. 
+% Du schribch dine Forschungsfrog ane, und denn gosch dine arbeit durch, und wiederholsch nomol alles was wichtig isch. 
+% 
+% ^.
 
 \section{Weiterführende Diskussionen und Forschungsausblick}
 Die Bedürfnisse von Unternehmen für verteilte Systeme steigt ständig an. So ist unter anderem laut \cite{theSkillsCompaniesNeedMost} die meist Nachgefragte Qualifikation von Unternehmen das Verständnis über verteilte Cloud-Systeme. Mit der in dieser Arbeit umgesetzten Lösung lässt sich ein solch gefordertes verteiltes System umsetzen. \\
 keine ahnung was noch
+% * <feitzinger.magdalena@gmail.com> 2018-06-04T14:11:13.857Z:
+% 
+% Was hat bei deiner Arbeit nicht so gut funktioniert? Warum war manches fehlerhaft in der Anwendung? Was hast du für die PRaxis gelernt? 
+% Gibt es eventuell neue Studien bzw. könntest du neue Studienfragen formulieren, die helfen, dieses Thema besser zu erforschen. .. 
+% do kash so viel aneschriba. 
+% Wie siehst du die Zukunft von Actor-Modellen? Hättest du statt Actors auch etwas anderes benutzen können? 
+% 
+% ^.
