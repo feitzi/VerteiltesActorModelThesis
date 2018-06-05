@@ -6,18 +6,19 @@ Weiters ist die Parallelisierung von Anwendungen immer wichtiger. Denn das lange
 Das von Carl Hewitt entwickelte \textit{Actor-Model}, siehe \cite{Hewitt1973AIntelligence}, löst das Problem mit der Parallelisierung auf eine äußert effiziente Art ohne dabei die Komplexität des Quellcodes wesentlich zu erhöhen. Auch für die Verteilung von Systemen über mehrere Standorte hinweg lässt sich das Model gut verwenden. \\
 Nachdem das \textit{Actor-Model} ihm Jahr 1973 seiner Zeit voraus war, gab es lange keine praktischen Anwendungen welche mit dem \textit{Actor-Model} umgesetzt wurden und es konnte sich, bis vor kurzem, kaum verbreiten \citep{mackay1997has}. Durch die Bedürfnisse an parallelisierten und verteilten Systemen konnte sich das \textit{Actor-Model} in den letzten Jahren durch verschiedene Projekte wie \textit{Akka}, \textit{Scala} oder andere, siehe dazu Kapitel \ref{sec:ActorFrameworks}, wieder etabliert.
 
-\section{Ziel der Arbeit}\label{sec:introduction:workGoal}
+\section{Ziel der Arbeit}
+\label{sec:introduction:workGoal}
+\label{sec:introduction:forschungsfrage}
 Um eine Software auf Basis des \textit{Actor-Models} zu entwickeln, braucht es zuerst eine tieferes Verständnis für das \textit{Actor-Model}  selbst.  Neben der Zusammenfassung sowie Diskusionvon gängiger Fachliteratur über das \textit{Actor-Model}, soll sich die Arbeit auch mit der praktischen Implementierung des Softwaremodels beschäftigen. Der Schwerpunkt dieser Recherche wird sich auf die Schwierigkeiten und die dazugehörigen Lösungsvorschläge des verteilten \textit{Actor-Models}  konzentrieren. \\
 Eine transaktionsbasierte Applikation benötigt Möglichkeiten, Daten zu speichern. Wie beispielsweise in \cite{Vernon2015ReactiveAkka} beschrieben, bietet sich für die Persistierung eines Actors das \textit{Event-Sourcing} sowie die {Command Query Responsibility Segregation (CQRS)} an. Diese alternative Herangehensweise für die langfristige Speicherung von Daten gegenüber dem geläufigen Normalisieren und Persistieren in relationalen Datenbanksystemen ist aus der Domain-Driven-Design Software Philosophie (\cite{Evans2004Domain-drivenSoftware}) heraus  entstanden. Da das \textit{Actor-Model} laut \cite{Vernon2015ReactiveAkka} für die Entwicklung komplexer sowie moderner Softwaresystem gut geignet ist, wird sich der Schwerpunkt dieser Arbeit um das \textit{Actor-Model} drehen, um damit ein verteiltes und transaktionales Softwaresystem zu entwerfen.
 Um die theoretische Erkenntnisse über das \textit{Actor-Model}  und deren Lösungsmodelle für die Verteilung im praktischen Umfeld zu erproben, ist es weiters Teil dieser Arbeit eine Software zu entwerfen und zu implementieren welche auf dem \textit{Actor-Model} aufbaut. Diese zu entwickelnde Applikation soll die im dem theoretischen Teil erarbeiteten Problemfelder in einem praktischen Beispiel aufzeigen. \\
-Um eine solche Software zu schreiben, ist es notwendig, auf Basis des theoretischen Teils Anforderungen an die Software zu erstellen und anhand dieser die Softwarearchitektur aufzubauen sowie umzusetzen. 
-
-\subsection{Forschungsfrage}\label{sec:introduction:forschungsfrage}
+Um eine solche Software zu schreiben, ist es notwendig, auf Basis des theoretischen Teils Anforderungen an die Software zu erstellen und anhand dieser die Softwarearchitektur aufzubauen sowie umzusetzen. \\
 Die Entwicklung moderner Anwendungen ist, wie bereits in der Motivation unter Abschnitt \ref{sec:introduction:motivation}, beschrieben, nicht trivial und erfordert Wissen in unterschiedlichsten Bereichen. Im Rahmen der vorliegenden Arbeit soll die Fragestellung \ref{theorem:forschungsfrage} ausgearbeitet werden. 
 \begin{Theorem}
 \label{theorem:forschungsfrage}
 Wie lässt sich eine Softwarearchitektur für ein verteiltes Transaktionssystem mit der Hilfe des \textit{Actor-Models} realisieren? Welche Probleme entstehen dabei und wie sehen Lösungsansätze dafür aus?
 \end{Theorem}
+
 \section{Methodik}
 Die Auseinandersetzung mit der Forschungsfrage \ref{theorem:forschungsfrage} erfolgt durch eine qualitative Literaturrecherche und eine darauf aufbauende theoretische Auseinandersetzung mit den drei Aspekten der Forschungsfrage \textit{Actor-Model}, \textit{Verteile Systeme} und \textit{Transaktionssysteme}. Aus den Erkenntnissen der qualitativen Recherche wird ein repräsentativer Anforderungskatalog für ein verteiltes, transaktionales System abgeleitet. Dieser Anforderungskatalog wird anschließend mit dem \textit{Actor-Model} in einem praktischen Beispiel umgesetzt. Die daraus resultierenden praktischen Lösungsansätze werden abschließend beschrieben und im weiteren diskutiert.
  

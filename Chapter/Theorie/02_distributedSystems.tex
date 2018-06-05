@@ -39,7 +39,6 @@ Das vierte Ziel eines Verteilten Systems ist die Möglichkeit sich auf veränder
 \end{description}
 Ein System ist demnach laut \cite{Neuman1993Scale} skalierbar, wenn der Anstieg an Benutzern und Ressourcen bewältigt werden kann ohne dass der Administrationsaufwand sowie die Performance des Systems darunter benachteiligt wird. \\
 
-\subsubsection{Probleme der Skalierung}
 Das Skalieren eines Systems stellt Entwickler vor immense Hürden. Häufige Problem sind laut \cite{tanenbaum2007distributed} einzelne Komponenten, welche selbst nicht skalierbar sein. Steigt nun die Anzahl an Zugriffen auf diese Komponente, kann dies zu einem Flaschenhals für das gesamte System werden. Jedoch sind unter bestimmten Umständen solche zentralisierte Komponenten nicht verhinderbar. Deshalb sollten laut \cite{tanenbaum2007distributed} diese zentralisierten Teile so gut wie möglich vom Rest des Systems entkoppelt werden. Generell sind in \cite{tanenbaum2007distributed} folgende vier Regeln angegeben, welcher ein Ablauf innerhalb eines skalierbaren, verteilen Systems erfüllen muss:
 \begin{enumerate}
     \item Keine Komponente hat einen kompletten Überblick über das gesamte System
@@ -76,7 +75,7 @@ Durch die Komplexität eines verteilten Systems kommt es, auch durch erfahrene E
 \end{description}
 Diese acht Annahmen sind trotz ihres Alters auch heute noch wichtig und sollten von Architekten für verteilte Systeme immer wieder beachtet werden. Auch wenn die Regeln logisch und klar erscheinen, werden sie in der Praxis immer wieder gebrochen. \cite{rotem2006fallacies} 
 
-\section{CAP-Theorem}\label{sec:distributedSystems:capTheorem}
+\subsection{CAP-Theorem}\label{sec:distributedSystems:capTheorem}
 Eine weitere bedeutende Limitierung innerhalb eines verteilten System stellt das \textit{CAP-Theorem}  dar. Das von Eric Brewer in \cite{Brewer2000TowardsSystems}  erstmals beschriebene Theorem definiert die Limitierung von drei gewünschten Eigenschaften in einem verteilen System. Diese drei Eigenschaften sind Konsistenz, Verfügbarkeit sowie Partition Toleranz. Nach dem \textit{CAP-Theorem} können in jedem System nur zwei der drei Eigenschaften garantiert werden. Auf eine der drei Eigenschaften muss auf jeden Fall verzichtet werden. In \cite{gilbertPerspectiveCAPTheorem2012} wird das \textit{CAP-Theorem} mit dem aktuellen Stand der Dinge wie folgt beschrieben.
 \begin{description}
     %todo gilbert ist zu oft da

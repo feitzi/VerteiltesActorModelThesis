@@ -91,9 +91,8 @@ Um mit der Vielzahl an möglichen Plätzen eine Last für das System zu erzeugen
     \end{tabular}
     \caption{Täglich angebotenen Flüge von \textit{TyrolSky}.}
     \label{tab:TyrolSky:destinations}
-\end{table}
+\end{table} 
 
-\subsubsection{Benutzer Simulation}
 Die Simulationsanwendung erzeugt zufällige Benutzer, welche sich für einen oder mehrere Flüge interessieren und deshalb versuchen, ein Ticket zu kaufen. Die Simulationsanwendung tätigt automatisch Anfragen an die Buchungsanwendung, um eine reale Last an das System zu simulieren. Die Anwendung ist über die Parameter Zeitraum, Anzahl der Benutzer sowie einer Liste an zu buchenden Flügen steuerbar.  
 Um alle Handlung nachvollziehen bzw. kontrollieren zu können, ist jeder Buchungsschritt in einer Datenbank abgelegt.
 
@@ -106,10 +105,4 @@ Die Frameworks \textit{Proto.Actor} \textit{Orleans} und \textit{Akka.Net} biete
 
 Das Projekt \textit{Proto.Actor}, siehe \cite{Proto.Actor}, sowie \textit{Microsoft Orliens}, beschrieben in \cite{bykov2011orleans}, bieten virtuelle  Actors an und ermöglichen so die einfache Nutzung der Eigenschaften des \textit{Actor-Models} für parallelisierte Programmierung. Das für \textit{Java} geschriebene Framework \textit{Akka} bietet ebenfalls umfangreiche Möglichkeiten bezüglich des \textit{Actor-Models} an. Die Umsetzung von Cluster, sowie EventSourcing Technologien, die sich für die Implementierung des Anforderungskatalog anbieten, sind in \textit{Akka} weit fortgeschritten. Durch die Portierung des Frameworks auf die \textit{.Net}-Umgebung in Form von \textit{Akka.net} stehen die Vorteil von \textit{Akka} auch für \textit{.Net} Entwickler zur Verfügung.
 Aufgrund der umfangreichen Unterstützung für \textit{.Net} und auch der  mehrfachen positiven Erwähnungen in Werken wie \cite{Vernon2015ReactiveAkka} und \cite{bernhardt2016reactive} wird die Praktische Umsetzung mit \textit{Akka.net} durchgeführt.
-% * <feitzinger.magdalena@gmail.com> 2018-06-04T13:31:27.013Z:
-% 
-% > Deshalb und auch aufgrund 
-% Kann so nicht geschrieben werden. 
-% 
-% ^.
   Das Framework selbst wird in Kapitel \ref{sec:implementation:akka} näher beschrieben. 
