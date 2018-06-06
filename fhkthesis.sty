@@ -1,16 +1,16 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{fhkthesis}[2015/01/22 v0.2 Typographic Style for an FH-Kufstein thesis]
 \RequirePackage{ifthen}
-    \newboolean{@exam} % exam-version includes exam-questions - default is "false"
-    \newboolean{@big} % short version does not include paper-appendix - default ist "true"
-    \newboolean{@abbrev} % automaticaly generate acronyms
-    \newboolean{@index} % automaticaly generate index
-    \newboolean{@english} % use englich version
-    \newboolean{@wiwi} % use special version for Wirtschaftsingenieure
-    \newboolean{@doublespacing} % use 1.5 times line spacing
-    \newboolean{@lockflag} % thesis has a lock flag
-    \newboolean{@master} % a master thesis
-    \newboolean{@bacholor} % a bachelor thesis - not used!
+  \newboolean{@exam} % exam-version includes exam-questions - default is "false"
+  \newboolean{@big} % short version does not include paper-appendix - default ist "true"
+  \newboolean{@abbrev} % automaticaly generate acronyms
+  \newboolean{@index} % automaticaly generate index
+  \newboolean{@english} % use englich version
+  \newboolean{@wiwi} % use special version for Wirtschaftsingenieure
+  \newboolean{@doublespacing} % use 1.5 times line spacing
+  \newboolean{@lockflag} % thesis has a lock flag
+  \newboolean{@master} % a master thesis
+  \newboolean{@bacholor} % a bachelor thesis - not used!
 
 %*******************************************************************************
 % Options 
@@ -62,41 +62,41 @@
 % Double spacing between lines 
 %*******************************************************************************
 \ifthenelse{\boolean{@doublespacing}}{%
-    \RequirePackage[]{setspace}
-    }
-  {\relax}
+  \RequirePackage[]{setspace}
+  }
+ {\relax}
 
 %*******************************************************************************
 % Acronyms - TODO: english version 
 %*******************************************************************************
 \ifthenelse{\boolean{@abbrev}}%
 {%
-    \RequirePackage[intoc]{nomencl}
-    \let\abbrev\nomenclature
-    \renewcommand{\nomname}{Abkürzungsverzeichnis}
-    \setlength{\nomlabelwidth}{.25\hsize}
-    \renewcommand{\nomlabel}[1]{#1 \dotfill}
-    \setlength{\nomitemsep}{-\parsep}
+  \RequirePackage[intoc]{nomencl}
+  \let\abbrev\nomenclature
+  \renewcommand{\nomname}{Abkürzungsverzeichnis}
+  \setlength{\nomlabelwidth}{.25\hsize}
+  \renewcommand{\nomlabel}[1]{#1 \dotfill}
+  \setlength{\nomitemsep}{-\parsep}
 }%
 {%
-    \relax
+  \relax
 }%
 
 %*******************************************************************************
 % Tabularx - Spalten 
 %*******************************************************************************
 \RequirePackage{tabularx}
-\newcolumntype{Y}{>{\centering\arraybackslash}X}         % zentrierte Spalten mit optimaler Breite
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}  % zentrierte Spalten mit Breitenangabe 
+\newcolumntype{Y}{>{\centering\arraybackslash}X}     % zentrierte Spalten mit optimaler Breite
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} % zentrierte Spalten mit Breitenangabe 
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}} % rechtsbündig mit Breitenangabe 
 
 %*******************************************************************************
 % Indices
 %*******************************************************************************
 \ifthenelse{\boolean{@index}}{%
-    \RequirePackage{makeidx}%
-    \newcommand{\Index}[1]{#1\index{#1}}}
-  {\relax}
+  \RequirePackage{makeidx}%
+  \newcommand{\Index}[1]{#1\index{#1}}}
+ {\relax}
 
 %*******************************************************************************
 % Colors 
@@ -113,24 +113,24 @@
 
 % general colored frame environment
 \newenvironment{fshaded}{%
-    \def\FrameCommand{\fcolorbox{framecolor}{shadecolor}}%
-    \MakeFramed {\advance\hsize-\width \FrameRestore}}%
-  {\endMakeFramed}
+  \def\FrameCommand{\fcolorbox{framecolor}{shadecolor}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
 
 % new colored itemize environment
 \newenvironment{fitemize}{%
-    \definecolor{shadecolor}{rgb}{1,1,.8}%
-    \definecolor{framecolor}{rgb}{.1,.1,.1}%
-    \begin{fshaded}\vspace{2mm}\begin{minipage}{0.9\textwidth}\begin{itemize}}%
-  {\end{itemize}\end{minipage}\vspace{2mm}\end{fshaded}}
+  \definecolor{shadecolor}{rgb}{1,1,.8}%
+  \definecolor{framecolor}{rgb}{.1,.1,.1}%
+  \begin{fshaded}\vspace{2mm}\begin{minipage}{0.9\textwidth}\begin{itemize}}%
+ {\end{itemize}\end{minipage}\vspace{2mm}\end{fshaded}}
 
 % new colored assignment environment
 \newenvironment{fassignment}{%
-    \definecolor{shadecolor}{rgb}{1,1,.8}%
-    \definecolor{framecolor}{rgb}{.1,.1,.1}%
-    \graffito{\vspace{4.0mm}\newline\includegraphics[width=15mm]{gfx/baustelle}}%
-    \begin{fshaded}\vspace{2mm}\begin{minipage}{0.9\textwidth}}%
-  {\end{minipage}\vspace{2mm}\end{fshaded}}
+  \definecolor{shadecolor}{rgb}{1,1,.8}%
+  \definecolor{framecolor}{rgb}{.1,.1,.1}%
+  \graffito{\vspace{4.0mm}\newline\includegraphics[width=15mm]{gfx/baustelle}}%
+  \begin{fshaded}\vspace{2mm}\begin{minipage}{0.9\textwidth}}%
+ {\end{minipage}\vspace{2mm}\end{fshaded}}
 
 %*******************************************************
 % Add additional packages

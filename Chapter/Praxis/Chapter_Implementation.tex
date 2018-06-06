@@ -6,41 +6,41 @@ Das folgende Kapitel erklärt den Aufbau der praktischen Anwendung. Nach der Ein
 
 \section{Einführung in das \textit{Akka.net} Framework}
 \label{sec:implementation:akka}
-Das Framework \textit{Akka} stellt das Actor-Model für \textit{Java} und \textit{Scala} Entwickler zur Verfügung \citep{gupta2012akkaEssentiaol}. Für Entwickler dieser Sprachen ist es mithilfe des Frameworks relativ einfach das Actor-Model umzusetzen, dementsprechend steht hinter dem Framework eine große Community  \citep{Vernon2015ReactiveAkka}. Für \textit{.Net} Entwickler mit den Sprachen \textit{C\#} und \textit{F\#} wurde das Projekt mit Hilfe der Opensource Community unter dem Name \textit{Akka.Net} für die \textit{.Net} Plattform portiert. Somit ist die Funktionalität und der Aufbau der Frameworks zwischen \textit{Akka} und \textit{Akka.net} identisch, wenngleich auch die Implementierung, aufgrund der Sprach und Laufzeitunterschiede zwischen der \textit{Java Virtual Machine (JVM)} und der \textit{Common Language Runtime (CLR)}, siehe hierzu \cite{JvmVsClrsinger2003jvm}, unterschiedlich ist. \\
+Das Framework \textit{Akka} stellt das Actor-Model für \textit{Java} und \textit{Scala} Entwickler zur Verfügung \citep{gupta2012akkaEssentiaol}. Für Entwickler dieser Sprachen ist es mithilfe des Frameworks relativ einfach das Actor-Model umzusetzen, dementsprechend steht hinter dem Framework eine große Community \citep{Vernon2015ReactiveAkka}. Für \textit{.Net} Entwickler mit den Sprachen \textit{C\#} und \textit{F\#} wurde das Projekt mit Hilfe der Opensource Community unter dem Name \textit{Akka.Net} für die \textit{.Net} Plattform portiert. Somit ist die Funktionalität und der Aufbau der Frameworks zwischen \textit{Akka} und \textit{Akka.net} identisch, wenngleich auch die Implementierung, aufgrund der Sprach und Laufzeitunterschiede zwischen der \textit{Java Virtual Machine (JVM)} und der \textit{Common Language Runtime (CLR)}, siehe hierzu \cite{JvmVsClrsinger2003jvm}, unterschiedlich ist. \\
 Die Implementierung der hier beschriebenen Anwendung erfolgt für die \textit{CLR} mit der Programmiersprache \textit{C\#}, und somit mit Hilfe des Frameworks \textit{Akka.Net}. 
 
 \subsection{Ein Actor in \textit{Akka.Net}}
-Wie bereits erwähnt, wird die Anwendung auf Basis von \textit{Akka.Net} mit der Objektorientierten Sprache \textit{C\#} geschrieben. Somit werden auch Actors als Klassen repräsentiert \citep{Akka.netCommunityAkka.NETDocumentation}. In \textit{Akka.Net} gibt es dafür Basisklassen, welche die Funktionalität eines Actors (wie die Nachrichtenübermittlung oder das Verhalten für empfangene Nachrichten) beinhalten. Die Actor Klasse selbst stellt jedoch für andere fremde Klassen  keine Methoden zur Verfügung. Somit ist der Zugriff von Außerhalb des Actors, wie in Abschnitt \ref{actor:requirements:shareNothing} beschrieben, nicht möglich. 
+Wie bereits erwähnt, wird die Anwendung auf Basis von \textit{Akka.Net} mit der Objektorientierten Sprache \textit{C\#} geschrieben. Somit werden auch Actors als Klassen repräsentiert \citep{Akka.netCommunityAkka.NETDocumentation}. In \textit{Akka.Net} gibt es dafür Basisklassen, welche die Funktionalität eines Actors (wie die Nachrichtenübermittlung oder das Verhalten für empfangene Nachrichten) beinhalten. Die Actor Klasse selbst stellt jedoch für andere fremde Klassen keine Methoden zur Verfügung. Somit ist der Zugriff von Außerhalb des Actors, wie in Abschnitt \ref{actor:requirements:shareNothing} beschrieben, nicht möglich. 
 
 \subsubsection{Nachrichten}\label{subsec:implementation:akkaMessaging}
-Da ein Actor  keine Methoden nach außen anbietet, erfolgt die Interaktion mit der Umwelt ausschließlich über Nachrichten. In \textit{Akka.Net} werden Nachrichten durch Objekte umgesetzt \citep{akkaInAction}. Eine Nachricht  muss in \textit{Akka.Net} keine bestimmte Struktur aufweisen und kann somit eine Instanz jedes beliebigen Datentyps sein \citep{akkaInAction}. Um  die Zustellung von Nachrichten über verschiedene Hosts zu gewährleisten, siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, soll eine Nachricht serialisierbar sein. Die Serialisierung von Objekten ist jedoch für Nachrichten, welche innerhalb einer Laufzeitinstanz übertragen werden, nicht zwingend notwendig. Deshalb werden zur Optimierungszwecken in \textit{TyrolSky} Objekte innerhalb einer Laufzeitumgebung direkt übertragen. Die Serialisierung findet erst statt, wenn sich der Actor auf einer anderen Laufzeitumgebung befindet. \\
+Da ein Actor keine Methoden nach außen anbietet, erfolgt die Interaktion mit der Umwelt ausschließlich über Nachrichten. In \textit{Akka.Net} werden Nachrichten durch Objekte umgesetzt \citep{akkaInAction}. Eine Nachricht muss in \textit{Akka.Net} keine bestimmte Struktur aufweisen und kann somit eine Instanz jedes beliebigen Datentyps sein \citep{akkaInAction}. Um die Zustellung von Nachrichten über verschiedene Hosts zu gewährleisten, siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, soll eine Nachricht serialisierbar sein. Die Serialisierung von Objekten ist jedoch für Nachrichten, welche innerhalb einer Laufzeitinstanz übertragen werden, nicht zwingend notwendig. Deshalb werden zur Optimierungszwecken in \textit{TyrolSky} Objekte innerhalb einer Laufzeitumgebung direkt übertragen. Die Serialisierung findet erst statt, wenn sich der Actor auf einer anderen Laufzeitumgebung befindet. \\
 Um nun eine Nachricht an einen Actor zu senden, wird die Referenz des Actors , siehe dazu Abschnitt \ref{subsec:implementation:ApplicationDistribution}, benötigt, an welche die Nachricht gerichtet ist. Auf diese Referenz, welche eine Instanz vom Typ \textit{ActorRef} ist, können für die Übermittlung der Nachricht die Methoden \textit{Tell} oder \textit{Ask} aufgerufen. Das Framwork stellt anschließend die Nachrichten an die Mailbox des entsprechenden Actors zu.
 
 \begin{description}
-    \item[Tell] Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Der Aufruf von \textit{Tell} blockiert den aktuellen \textit{Thread} nicht. Die übergebene Nachricht wird an den angegebenen Actor zugestellt, welcher diese in einem anderen Thread abarbeitet. 
-    \item[Ask] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt, dass die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die Zustellung von Nachrichten nur im Ausnahmefall zu empfehlen \citep{Akka.netCommunityAkka.NETDocumentation}.  
+  \item[Tell] Möchte man eine Nachricht an einen Actor senden, ohne auf dessen Antwort zu warten (so wie es das theoretische \textit{Actor Model} vorsieht), sollte die Methode \textit{Tell} verwendet werden. Der Aufruf von \textit{Tell} blockiert den aktuellen \textit{Thread} nicht. Die übergebene Nachricht wird an den angegebenen Actor zugestellt, welcher diese in einem anderen Thread abarbeitet. 
+  \item[Ask] Die Methode \textit{Ask} blockiert den aktuellen Thread, bis eine Antwort auf die gesendet Nachricht zugestellt wird. Somit gleicht \textit{Ask} einem gewöhnlichen Methodenaufruf. Diese Variante verletzt jedoch die zweite Bedingung eines Actors aus Abschnitt \ref{actor:requirements:AsynchronCommunication}, welche besagt, dass die Kommunikation zwischen Actoren frei von Wartemechanismen sein sollte. Deshalb ist diese Variante für die Zustellung von Nachrichten nur im Ausnahmefall zu empfehlen \citep{Akka.netCommunityAkka.NETDocumentation}. 
 \end{description}
-Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen. Der Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}.  
+Nachrichten, welche über die Actor Referenz mit den eben beschriebenen Methoden zugestellt worden sind, werden in die Mailbox des Empfängers eingereiht. Besitzt der Empfänger ein Verhalten für diesen Typ der Nachricht, so wird, sobald die Nachricht vom Actor selbst aus der Mailbox genommen wird, diese entsprechend abgearbeitet. Enthält der Actor für diese Nachricht jedoch kein de­zi­diertes Verhalten, so wird die Nachricht verworfen. Der Sender der Nachricht bekommt dies jedoch nicht mit \citep{akkaInAction}. 
 
 \begin{lstlisting}[caption=Versenden einer Nachricht an einen anderen Actor, label=code:actor:TellMethod]
-    targetActorRef.Tell(new SpecificMessage());
+  targetActorRef.Tell(new SpecificMessage());
 \end{lstlisting}
 
 \begin{lstlisting}[caption=Hier wird für den Actor \textit{MyTargetActor} das Verhalten für eine einkommende Nachricht vom Typ \textit{SpecificMessage} festgelegt., label=lst:test]
-    public sealed class MyTargetActor : ReceiveActor {
-        public MyTargetActor() {
-            Become<SpecificMessage>(x => {
-                Console.Log("Nachricht von Typ SpecificMessage empfangen");
-                //implement logic for handling SpecificMessage
-            })
-        }
-    }    
+  public sealed class MyTargetActor : ReceiveActor {
+    public MyTargetActor() {
+      Become<SpecificMessage>(x => {
+        Console.Log("Nachricht von Typ SpecificMessage empfangen");
+        //implement logic for handling SpecificMessage
+      })
+    }
+  }  
 \end{lstlisting}
 
 \subsubsection{Erstellung von Actors}
 \label{subsec:implementation:actorCreation}
 Die Erstellung einer Instanz eines Actors erfolgt nicht, wie bei der Instanziierung von Objekte in \textit{C\#} üblich, über das Schlüsselwort \textit{new}, sondern wird vom Framework selbst übernommen. Dazu werden dem Framework alle Informationen zur Verfügung gestellt, welche es benötigt, um den Actor zu erstellen. Das beinhaltet beispielsweise den Typ des Actors, dessen Abhängigkeiten zu andere Klassen sowie gegebenenfalls der Ort, an dem der Actor erstellt werden soll. Anschließend bekommt der Aufrufer, welcher den Actor erstellt, eine Referenz, die sogenannte \textit{ActorRef}. Diese dient dazu, mit dem erstellten Actor, über die Methoden aus Abschnitt \ref{subsec:implementation:akkaMessaging} zu kommunizieren. Eine direkte Referenz auf den Actor selbst wird nicht zur Verfügung gestellt \citep{Akka.netCommunityAkka.NETDocumentation}. \\
-Durch die Verwendung einer eigenen Framework basierten Referenz, anstatt einer direkten Referenz, können Actors ortsungebunden instanziiert werden, ohne das der Anwender dies im Code beachten muss. Die Verwendung unterscheidet sich somit nicht davon, ob der Actor sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet. Informationen, auf welchem Ort die einzelnen Actors wirklich instanziiert werden, sind durch eine Konfigurationsdatei gesteuert. Somit kann das Verhalten des Systems geändert werden und die Verteilung der gesamten Applikation wird  erleichtert.
+Durch die Verwendung einer eigenen Framework basierten Referenz, anstatt einer direkten Referenz, können Actors ortsungebunden instanziiert werden, ohne das der Anwender dies im Code beachten muss. Die Verwendung unterscheidet sich somit nicht davon, ob der Actor sich in der gleichen Laufzeitumgebung befindet oder ob er sich auf einem örtlich getrennten System befindet. Informationen, auf welchem Ort die einzelnen Actors wirklich instanziiert werden, sind durch eine Konfigurationsdatei gesteuert. Somit kann das Verhalten des Systems geändert werden und die Verteilung der gesamten Applikation wird erleichtert.
 
 \section{Service Architektur}
 \label{sec:implementation:serviceAndComponentOrientation}
@@ -51,11 +51,11 @@ Die Anfragen selbst können, entsprechend dem \textit{CQRS}-Prinzip \cite{cqrsYo
 Abschließend wird noch eine Komponente benötigt, welche die bereits beschriebenen Komponenten miteinander in Verbindung bringt. 
 Ableitend aus der Community rundnum \textit{Akka.net}, siehe \cite{lighthouse}, wird dafür die Opensource Implementierung \textit{Lighthouse} verwendet. Somit existieren in der \textit{TyrolSky}-Anwendung folgende Komponenten:
 \begin{itemize}
-    \item API
-    \item Query-Service
-    \item Command-Service
-    \item Domain-Service
-    \item Lighthouse
+  \item API
+  \item Query-Service
+  \item Command-Service
+  \item Domain-Service
+  \item Lighthouse
 \end{itemize}
 Jeder dieser Komponenten kann mehrfach Instanziiert werden und somit einen Teil der Last der gesamten Anwendung übernehmen. Für eine korrekt arbeitendes System ist es erforderlich, dass von jeder einzelnen Komponente mindestens eine Instanz im System vorhanden ist. Die einzelne Teile des System funktionieren auch korrekt, wenn nicht alle Komponenten im System verfügbar sind. So ist es beispielsweise möglich, dass Abfragen auf das System durchführbar sind, obwohl keine Instanz von \textit{Domain Service} oder \textit{Command-Service} im System verfügbar sind. Jedoch können dann Befehle, wie Flugtickets kaufen, nicht durchgeführt werden führen zu einem Fehler.\\
 Für ein besseres Verständnis werden nachfolgend die einzelnen Komponenten, sowie deren genauen Aufgaben, erklärt.
@@ -72,10 +72,10 @@ Für jede ankommende Anfrage wird ein eigener Actor gestartet, welcher ausschlie
 In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des entsprechenden Actor Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen, dass die API Komponente selbst über keinen komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten, wie in Kapitel \ref{actor:actorSystem}, fungieren. Dadurch wird eine interne Schnittstelle zum eigentlichen Actor System hergestellt. \\
 Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actor System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Benutzeranfragen des gleichen Typs und an die gleiche API Komponente, an unterschiedliche Instanzen der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
 \begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{gfx/implementation/apiActorModel}
-    \caption{Actor Ansicht der API Komponente}
-    \label{fig:implementation:apiActorModel}
+  \centering
+  \includegraphics[width=0.5\linewidth]{gfx/implementation/apiActorModel}
+  \caption{Actor Ansicht der API Komponente}
+  \label{fig:implementation:apiActorModel}
 \end{figure} 
 
 \subsection{Query-Service}
@@ -91,25 +91,25 @@ Es kann nicht garantiert werden, dass die Resultate eine Abfrage stets aktuell s
 \label{subsubsub:implementation:queryActorModel:resultPreparator}
 Treten neue Events auf, wird die Resultatsliste aktualisiert. Wird eine neue Instanz der \textit{Query} Komponente gestartet, so muss diese zuerst alle im System befindlichen Events abarbeiten um ein aktuelles Ergebnis ausliefern zu können. Da dies bei einer Vielzahl von Events Zeit und Ressourcen benötigt, werden aufbereitete Resultate abgespeichert. Dies passiert nach einer bestimmten Menge an bearbeiteten Events. Wird das System neugestartet, kann auf das letzte abgespeicherte Resultat zurückgegriffen werden.\\
 Die Speicherung von Ergebnissen führt, in Bezug auf die Verteilung von Komponenten, zu Problemen. Da jede Instanz seine eigenen Ergebnisse vorbereitet, müssen diese auch eigenständig gespeichert werden. Ansonsten ergeben sich beim Schreiben, als auch beim Lesen, Konflikte zwischen den einzelnen Instanzen. Um dies zu umgehen, kann entweder pro Instanz eine eigene permanente Persistierung, wie beispielsweise eine Datenbank, eingerichtet werden. Jedoch erhöht dies den Wartungsaufwand der Komponente, da für jede Instanz eine eigene Datenbank gehalten werden muss. \\
-Eine weitere Möglichkeit ist die Persistierung der Ergebnisse pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es  erforderlich, dass Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen, welche von einem globalen Namensservice vergeben wird. Meldet sich eine Komponenteninstanz vom System ab, werden alle Namen, welche an diese Instanz vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt sie die  zuvor freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht  mehr im System befindet, weiterarbeiten. Für die Umsetzung des globalen Namensservice wurde auf das Pattern \textit{Cluster Singelton}, welches in Abschnitt \ref{subsec:implementation:singeltons} erklärt wird, zurückgegriffen. \\
-Durch die Verwendung einer globalen Datenbank sowie auf das Zurückgreifen eines globalen Namensservice ist der Wartungsaufwand während dem laufenden Betrieb  auf ein Minimum beschränkt. Durch diese Variante kann sichergestellt werden, dass bei bei einem Neustart des Systems die Instanzen mit bereits zuvor erarbeiteten Resultaten weiterarbeiten können. 
+Eine weitere Möglichkeit ist die Persistierung der Ergebnisse pro Komponente in einer globalen Datenbank, wobei jeder Erzeuger von Ergebnissen seine Resultate mit einer Identifikation abspeichert. Dafür ist es erforderlich, dass Erzeuger von Ergebnissen eine eindeutige Identifikation besitzen, welche von einem globalen Namensservice vergeben wird. Meldet sich eine Komponenteninstanz vom System ab, werden alle Namen, welche an diese Instanz vergeben wurden, wieder freigegeben. Meldet sich eine Komponente wieder beim System an, so bekommt sie die zuvor freigegebenen Identifikationen. Diese kann somit mit den Ergebnissen der vorherigen Komponente, welche sich nicht mehr im System befindet, weiterarbeiten. Für die Umsetzung des globalen Namensservice wurde auf das Pattern \textit{Cluster Singelton}, welches in Abschnitt \ref{subsec:implementation:singeltons} erklärt wird, zurückgegriffen. \\
+Durch die Verwendung einer globalen Datenbank sowie auf das Zurückgreifen eines globalen Namensservice ist der Wartungsaufwand während dem laufenden Betrieb auf ein Minimum beschränkt. Durch diese Variante kann sichergestellt werden, dass bei bei einem Neustart des Systems die Instanzen mit bereits zuvor erarbeiteten Resultaten weiterarbeiten können. 
 
 \subsubsection{Implementierte Abfrage}
 In der umgesetzten Implementierung der \textit{Tyrol-Sky}-Anwendung werden in der \textit{Query}-Komponente Abfragen zur Verfügung gestellt, welche dem Benutzer eine Übersicht über angebotene Flüge sowie den Status von Flugtickets geben. Insgesamt sind drei unterschiedliche Abfragen möglich:
 
 \begin{enumerate}
-    \item Status eines Flugtickets 
-    \item Liste alle zur Verfügung stehender Flüge
-    \item Passagierliste eines bestimmten Fluges
+  \item Status eines Flugtickets 
+  \item Liste alle zur Verfügung stehender Flüge
+  \item Passagierliste eines bestimmten Fluges
 \end{enumerate}
 
 Für die dritte Abfrage wurde eine andere Abfragevariante gewählt. Anstatt auf Events zu horchen, wird die Abfrage direkt an die entsprechenden Domaineninstanzen, siehe dazu Abschnitt \ref{subsec:implementation:domainService}, weitergegeben. Die Abfrage dauert länger, da keine Ergebnisse zwischengespeichert werden. Diese Variante ist jedoch exakter, da die Entitäten direkt abgefragt werden und der Aufwand in der Entwicklung geringer ist. \\
 Das Beispiel der Implementierung der dritten Abfrage zeigt, dass je nach Anwendungsfall entschieden werden soll, wie die Abfrage von Daten exakt umgesetzt wird.
 \begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{gfx/implementation/QueringServiceActorModel}
-    \caption{Der Aufbau des Actor Systems der Query Komponente von \textit{TyrolSky}.}
-    \label{fig:implementation:queryActorModel}
+  \centering
+  \includegraphics[width=\linewidth]{gfx/implementation/QueringServiceActorModel}
+  \caption{Der Aufbau des Actor Systems der Query Komponente von \textit{TyrolSky}.}
+  \label{fig:implementation:queryActorModel}
 \end{figure} 
 
 \subsubsection{Strukturierung}

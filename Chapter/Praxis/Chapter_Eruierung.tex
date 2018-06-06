@@ -1,42 +1,42 @@
 \chapter{Eruierung für ein verteiltes Transaktionales Actor System} 
 \label{cha:Eruierung}
-Die vorhergegangenen Kapiteln haben eine theoretische Einführung in die Thematik von verteilten Systemen sowie dem \textit{Actor-Model}  gegeben. Auf diesem theoretischen Wissen aufbauend, wird ein praktisches Beispiel erarbeitet, welches in den nächsten Kapiteln umgesetzt wird. 
+Die vorhergegangenen Kapiteln haben eine theoretische Einführung in die Thematik von verteilten Systemen sowie dem \textit{Actor-Model} gegeben. Auf diesem theoretischen Wissen aufbauend, wird ein praktisches Beispiel erarbeitet, welches in den nächsten Kapiteln umgesetzt wird. 
 
 \section{Anforderungskatalog} \label{sec:Eruierung:technicalRequierements}
-Der folgende Anforderungskatalog soll ein verteiltes, transaktionales System definieren, um anschließend Lösungen dafür zu zeigen. Dabei werden aus den hervorgegangenen Kapitel die  wesentlichen Eckpunkte als Anforderung konzipiert. Aus diesen technischen Anforderungen wird anschließend ein fiktives Beispiel gesucht, welches die Problemstellung  repräsentiert.
+Der folgende Anforderungskatalog soll ein verteiltes, transaktionales System definieren, um anschließend Lösungen dafür zu zeigen. Dabei werden aus den hervorgegangenen Kapitel die wesentlichen Eckpunkte als Anforderung konzipiert. Aus diesen technischen Anforderungen wird anschließend ein fiktives Beispiel gesucht, welches die Problemstellung repräsentiert.
 
 \begin{enumerate}
-    \litem{Verteilbare Komponenten} 
-    Die Anwendung benötigt mehrere unterschiedliche Komponenten, welche  mehrfach im System vorkommen können. Die Komponenten müssen untereinander Informationen austauschen, ohne dabei strikt voneinander abhängig zu sein.
-    \litem{Automatische Skalierung}
-    Bei geringer Auslastung des Systems sollen keine unnötigen Ressourcen verbraucht werden. Steigt jedoch die Last auf die Anwendung, so ist es von Vorteil, wenn die Anwendung selbst neue Ressourcen allokieren und benötigte Komponenten darauf ausrollen kann. Diese sollen ohne Menschliches zutun mit dem bereits laufenden System interagieren und für den Benutzer der Anwendung keine spürbaren Auswirkungen haben.
+  \litem{Verteilbare Komponenten} 
+  Die Anwendung benötigt mehrere unterschiedliche Komponenten, welche mehrfach im System vorkommen können. Die Komponenten müssen untereinander Informationen austauschen, ohne dabei strikt voneinander abhängig zu sein.
+  \litem{Automatische Skalierung}
+  Bei geringer Auslastung des Systems sollen keine unnötigen Ressourcen verbraucht werden. Steigt jedoch die Last auf die Anwendung, so ist es von Vorteil, wenn die Anwendung selbst neue Ressourcen allokieren und benötigte Komponenten darauf ausrollen kann. Diese sollen ohne Menschliches zutun mit dem bereits laufenden System interagieren und für den Benutzer der Anwendung keine spürbaren Auswirkungen haben.
 
-    \litem{Verteilte Daten}
-    Um die Probleme aus Kapitel \ref{cha:distributedSystems} aufzuzeigen, sollen die Daten der Anwendung über Komponenten hinweg verteilt sein. Weiters ist es für Benutzer des Systems nicht relevant, wo im System sich die Daten befinden. 
-    \litem{Transaktionale Daten}
-    Eine Bedingung der Anwendung ist das Abbilden von transaktionalen Prozessen. Daher sollen verschiedene, nicht als Aggregat zusammengefasste, Daten innerhalb einer Transaktion verändert werden. Bei Fehlern eine Prozesses, wird die Transaktion nicht abgeschlossen und auch der Datenbestand bleibt weiterhin konsistent.
-    \litem{Fehlerbeständig}
-    Bei Fehlern in einer Komponente soll es zu keinem Totalausfall des Systems kommen. Der Fehler soll vom System erkennt werden und vom Rest des Systems abgeschottet werden. Hierzu sollen die Anforderungen vom \textit{Reactive-Manifest} aus Kapitel \ref{reactiveManifesto} angewandt werden.
-    \litem{Netzwerk-Partition beständig}
-    Bei Partitionierung des Netzwerkes, welche die beteiligten Komponenten untereinander verbindet, soll es zu keinem Stillstand der Anwendung kommen. Nach dem \textit{CAP-Theorem} aus Abschnitt \ref{sec:distributedSystems:capTheorem} soll demnach der Schwerpunkt auf Verfügbarkeit und Netzwerkpartitionierung gelegt werden. 
+  \litem{Verteilte Daten}
+  Um die Probleme aus Kapitel \ref{cha:distributedSystems} aufzuzeigen, sollen die Daten der Anwendung über Komponenten hinweg verteilt sein. Weiters ist es für Benutzer des Systems nicht relevant, wo im System sich die Daten befinden. 
+  \litem{Transaktionale Daten}
+  Eine Bedingung der Anwendung ist das Abbilden von transaktionalen Prozessen. Daher sollen verschiedene, nicht als Aggregat zusammengefasste, Daten innerhalb einer Transaktion verändert werden. Bei Fehlern eine Prozesses, wird die Transaktion nicht abgeschlossen und auch der Datenbestand bleibt weiterhin konsistent.
+  \litem{Fehlerbeständig}
+  Bei Fehlern in einer Komponente soll es zu keinem Totalausfall des Systems kommen. Der Fehler soll vom System erkennt werden und vom Rest des Systems abgeschottet werden. Hierzu sollen die Anforderungen vom \textit{Reactive-Manifest} aus Kapitel \ref{reactiveManifesto} angewandt werden.
+  \litem{Netzwerk-Partition beständig}
+  Bei Partitionierung des Netzwerkes, welche die beteiligten Komponenten untereinander verbindet, soll es zu keinem Stillstand der Anwendung kommen. Nach dem \textit{CAP-Theorem} aus Abschnitt \ref{sec:distributedSystems:capTheorem} soll demnach der Schwerpunkt auf Verfügbarkeit und Netzwerkpartitionierung gelegt werden. 
 \end{enumerate}
 Die aufgelisteten technischen Anforderungen werden in Kapitel \ref{cha:rating}, anhand der Umsetzung des Praxisbeispiels, bewertet und diskutiert. 
 
 \section{Anwendungsbeschreibung \textit{TyrolSky}}
 Für die Umsetzung eines praktischen Beispiels wird eine Anwendung, in Form eines Flugbuchungssystems für eine fiktive Airline namens \textit{TyrolSky}, erstellt. Dabei sollen Prozesse entstehen, welche die Punkte aus dem technischen Anforderungskatalog \ref{sec:Eruierung:technicalRequierements} wiederspiegeln und anschaulich repräsentieren. \\
-Für Flugbuchungen der fiktiven weltweit agierenden Airline \textit{TyrolSky} soll ein System entwickelt werden, um Flüge der Airline weltweit anbieten zu können und um die aktuelle Auslastung der Flüge einsehen zu können. Für jeden Flug gibt es eine bestimmte Anzahl an Sitzplätzen, welche von Kunden gebucht werden können. Eine Überbelegung eines Fluges ist nicht vorgesehen. Kunden können mit Angabe von Abflugort, Zielort und Flugdatum aus einer Liste an angebotenen Flügen wählen. Wird ein Flug ausgewählt, kann der Kunde den Flug für 10 Minuten reservieren. Innerhalb dieser Zeit muss der Flug bezahlt werden, ansonsten werden die Plätze wieder freigegeben. Bereits bezahlte Tickets können nicht zurückgelegt werden.  \\
+Für Flugbuchungen der fiktiven weltweit agierenden Airline \textit{TyrolSky} soll ein System entwickelt werden, um Flüge der Airline weltweit anbieten zu können und um die aktuelle Auslastung der Flüge einsehen zu können. Für jeden Flug gibt es eine bestimmte Anzahl an Sitzplätzen, welche von Kunden gebucht werden können. Eine Überbelegung eines Fluges ist nicht vorgesehen. Kunden können mit Angabe von Abflugort, Zielort und Flugdatum aus einer Liste an angebotenen Flügen wählen. Wird ein Flug ausgewählt, kann der Kunde den Flug für 10 Minuten reservieren. Innerhalb dieser Zeit muss der Flug bezahlt werden, ansonsten werden die Plätze wieder freigegeben. Bereits bezahlte Tickets können nicht zurückgelegt werden. \\
 Die Airline kann für jeden Flug eine aktuelle Passagierliste ausdrucken und so die aktuelle Auslastung einsehen. Das Hinzufügen von neuen Flügen ist für die Airline über das System auch möglich. Bereits im System befindliche Flüge können storniert werden, was zur Folge hat, dass der Flug selbst nicht mehr buchbar ist. \\
 
 \subsection{Prozessbeschreibungen}
 \begin{enumerate}
-    \litem{Flüge anlegen} Die Airline kann neue Flüge anlegen. Über den Flugzeugtyp, welcher bei der Anlegung anzugeben ist, ergibt sich die maximale Anzahl an möglichen Passagieren. Nach einer erfolgreichen Anlegung im System kann der Flug von Kunden gebucht werden.
-    \litem{Flüge stornieren} Bereits im System befindliche Flüge können storniert werden. Die Stornierung führt dazu, dass der Flug nicht mehr gebucht werden kann. Bereits gebuchte Tickets werden  ersetzt, indem der Kunde den Betrag gutgeschrieben bekommt.
-    \litem{Flüge suchen}
-    Kunden können Flüge über eine vereinfachte Suche finden. Dabei ist die Angabe von Abflugort, Zielort sowie Flugdatum möglich. Es ist jedoch nur  eine Richtung buchbar. Ein möglicher Rückflug muss daher separat gesucht und gebucht werden. 
-    \litem{Flug buchen}
-    Ein Flug kann gebucht werden, indem zuerst eine Reservierung für eine bestimmte Anzahl an Sitzplätzen vorgenommen wird. Sind die Plätze reserviert, muss der Kunde innerhalb von 10 Minuten die Plätze bezahlen. Nach der erfolgreichen Bezahlung hat der Kunde die Plätze gebucht und wird auf die Passagierliste gesetzt. 
-    \litem{Passagierliste einsehen}
-    \textit{TyrolSky} kann für jeden im System befindlichen Flug eine aktuelle Passagierliste einsehen. Durch Angabe der Flugnummer sowie des Flugdatums wird eine aktuelle Passagierliste ausgeliefert.
+  \litem{Flüge anlegen} Die Airline kann neue Flüge anlegen. Über den Flugzeugtyp, welcher bei der Anlegung anzugeben ist, ergibt sich die maximale Anzahl an möglichen Passagieren. Nach einer erfolgreichen Anlegung im System kann der Flug von Kunden gebucht werden.
+  \litem{Flüge stornieren} Bereits im System befindliche Flüge können storniert werden. Die Stornierung führt dazu, dass der Flug nicht mehr gebucht werden kann. Bereits gebuchte Tickets werden ersetzt, indem der Kunde den Betrag gutgeschrieben bekommt.
+  \litem{Flüge suchen}
+  Kunden können Flüge über eine vereinfachte Suche finden. Dabei ist die Angabe von Abflugort, Zielort sowie Flugdatum möglich. Es ist jedoch nur eine Richtung buchbar. Ein möglicher Rückflug muss daher separat gesucht und gebucht werden. 
+  \litem{Flug buchen}
+  Ein Flug kann gebucht werden, indem zuerst eine Reservierung für eine bestimmte Anzahl an Sitzplätzen vorgenommen wird. Sind die Plätze reserviert, muss der Kunde innerhalb von 10 Minuten die Plätze bezahlen. Nach der erfolgreichen Bezahlung hat der Kunde die Plätze gebucht und wird auf die Passagierliste gesetzt. 
+  \litem{Passagierliste einsehen}
+  \textit{TyrolSky} kann für jeden im System befindlichen Flug eine aktuelle Passagierliste einsehen. Durch Angabe der Flugnummer sowie des Flugdatums wird eine aktuelle Passagierliste ausgeliefert.
 \end{enumerate}
 Die beschriebenen Prozesse sind rein fiktiv und dienen dazu, eine anschauliche Anwendung zu entwickeln, um Lösungsansätze praktisch umzusetzen. 
 
@@ -48,52 +48,52 @@ Für den Bezahlvorgang soll eine fiktive Bankenanbindung erstellt und angebunden
 \label{sec:eruierung:testdata}
 Die Airline \textit{TyrolSky} führt die Flüge mit den in Tabelle \ref{tab:TyrolSky:airplanes} enthaltenden Flugzeugtypen mit den darin angegebenen Kapazitäten, durch. Dementsprechen sind auch die Ticketkapazitäten auf den entsprechenden Flügen ausgelegt.
 \begin{table}[]
-    \centering
-    \begin{tabular}{ll}
-    Typ & Passagiere \\ \hline
-    Boing 747    &    366       \\
-    Boing 737    &    149       \\
-    Boing 767    &    224       \\
-    Boing 787    &    210       \\
-    Airbus A330    &    222       \\
-    Airbus A320    &    195       \\
-    Airbus A340    &    232       \\
-    Airbus A380    &    853       \\    
+  \centering
+  \begin{tabular}{ll}
+  Typ & Passagiere \\ \hline
+  Boing 747  &  366    \\
+  Boing 737  &  149    \\
+  Boing 767  &  224    \\
+  Boing 787  &  210    \\
+  Airbus A330  &  222    \\
+  Airbus A320  &  195    \\
+  Airbus A340  &  232    \\
+  Airbus A380  &  853    \\  
 \end{tabular}
 \caption{Mögliche Flugzeugtypen welche in den Testflügen angeboten werden können.}
 \label{tab:TyrolSky:airplanes}
 \end{table}
 Die Airline bietet zwischen Juni 2018 bis Juni 2019 täglich die in Tabelle \ref{tab:TyrolSky:destinations} angeführten Verbindungen an. Zusätzliche Verbindungen können jederzeit in das System eingebracht werden. \\
-Aus den Beispiel Daten lässt sich ableiten, dass sich  pro Tag aus den $18$ unterschiedlichen Flügen insgesamt \numprint{5323} buchbare Plätze im System befinden. Im gesamten Zeitraum sind daher \numprint{1942895} Plätze vorhanden. \\
+Aus den Beispiel Daten lässt sich ableiten, dass sich pro Tag aus den $18$ unterschiedlichen Flügen insgesamt \numprint{5323} buchbare Plätze im System befinden. Im gesamten Zeitraum sind daher \numprint{1942895} Plätze vorhanden. \\
 Um mit der Vielzahl an möglichen Plätzen eine Last für das System zu erzeugen, ist eine entsprechend große Menge an potenziellen Fluggästen nötig. Um eine Vielzahl an Benutzernafragen an das Flugbuchungssystem zu simulieren, ist auch ein eigenes Testsystem notwendig, welches Benutzer simuliert und auch versucht Flüge zu überbuchen um dementsprechend zu zeigen, dass sich das System korrekt verhält. 
 \begin{table}
-    \centering
-    \begin{tabular}{lllll}
-    Flugnummer & Startzeit  & Abflugort         & Zielort       & Flugzeug        \\ \hline   % Passagiere
-        TS100   & 09:00     & Innsbruck         & Wien          &  Boing 787      \\           % 210       
-        TS110   & 09:10     & Wien              & Innsbruck     &  Airbus A330    \\           % 222       
-        TS200   & 10:15     & Rom               & Wien          &  Boing 737      \\           % 149       
-        TS210   & 10:30     & Wien          	& Rom           &  Airbus 320     \\           % 195       
-        TS300   & 11:05     & Linz              & Wien          &  Boing 787      \\           % 210       
-        TS410   & 11:25     & Wien              & Innsbruck     &  Boing 737      \\           % 149       
-        TS500   & 12:02     & Innsbruck         & Brünn         &  Boing 787      \\           % 210       
-        TS510   & 12:40     & Brünn             & Innsbruck     &  Airbus 320     \\           % 222       
-        TS600   & 13:35     & Wien              & Berlin        &  Boing 767      \\           % 224       
-        TS710   & 13:50     & Zürich            & Wien          &  Boing 787      \\           % 210       
-        TS700   & 14:00     & Wien              & Zürich        &  Airbus 340     \\           % 232       
-        TS730   & 14:10     & Wien              & Amsterdam     &  Boing 747      \\           % 366       
-        TS800   & 14:30     & Amsterdam         & Wien          &  Boing 787      \\           % 210       
-        TS810   & 15:05     & Wien              & Innsbruck     &  Boing 747      \\           % 366       
-        TS900   & 15:10     & Innsbruck         & Wien          &  Airbus 340     \\           % 232       
-        TS910   & 16:30     & Wien              & Innsbruck     &  Boing 767      \\           % 210       
-        TS010   & 16:40     & Los Angeles       & Innsbruck     &  Airbus 380     \\           % 853      
-        TS020   & 16:55     & Innsbruck         & Los Angeles   &  Airbus 380     \\          %  853            
-    \end{tabular}
-    \caption{Täglich angebotenen Flüge von \textit{TyrolSky}.}
-    \label{tab:TyrolSky:destinations}
+  \centering
+  \begin{tabular}{lllll}
+  Flugnummer & Startzeit & Abflugort     & Zielort    & Flugzeug    \\ \hline  % Passagiere
+    TS100  & 09:00   & Innsbruck     & Wien     & Boing 787   \\      % 210    
+    TS110  & 09:10   & Wien       & Innsbruck   & Airbus A330  \\      % 222    
+    TS200  & 10:15   & Rom        & Wien     & Boing 737   \\      % 149    
+    TS210  & 10:30   & Wien     	& Rom      & Airbus 320   \\      % 195    
+    TS300  & 11:05   & Linz       & Wien     & Boing 787   \\      % 210    
+    TS410  & 11:25   & Wien       & Innsbruck   & Boing 737   \\      % 149    
+    TS500  & 12:02   & Innsbruck     & Brünn     & Boing 787   \\      % 210    
+    TS510  & 12:40   & Brünn       & Innsbruck   & Airbus 320   \\      % 222    
+    TS600  & 13:35   & Wien       & Berlin    & Boing 767   \\      % 224    
+    TS710  & 13:50   & Zürich      & Wien     & Boing 787   \\      % 210    
+    TS700  & 14:00   & Wien       & Zürich    & Airbus 340   \\      % 232    
+    TS730  & 14:10   & Wien       & Amsterdam   & Boing 747   \\      % 366    
+    TS800  & 14:30   & Amsterdam     & Wien     & Boing 787   \\      % 210    
+    TS810  & 15:05   & Wien       & Innsbruck   & Boing 747   \\      % 366    
+    TS900  & 15:10   & Innsbruck     & Wien     & Airbus 340   \\      % 232    
+    TS910  & 16:30   & Wien       & Innsbruck   & Boing 767   \\      % 210    
+    TS010  & 16:40   & Los Angeles    & Innsbruck   & Airbus 380   \\      % 853   
+    TS020  & 16:55   & Innsbruck     & Los Angeles  & Airbus 380   \\     % 853      
+  \end{tabular}
+  \caption{Täglich angebotenen Flüge von \textit{TyrolSky}.}
+  \label{tab:TyrolSky:destinations}
 \end{table} 
 
-Die Simulationsanwendung erzeugt zufällige Benutzer, welche sich für einen oder mehrere Flüge interessieren und deshalb versuchen, ein Ticket zu kaufen. Die Simulationsanwendung tätigt automatisch Anfragen an die Buchungsanwendung, um eine reale Last an das System zu simulieren. Die Anwendung ist über die Parameter Zeitraum, Anzahl der Benutzer sowie einer Liste an zu buchenden Flügen steuerbar.  
+Die Simulationsanwendung erzeugt zufällige Benutzer, welche sich für einen oder mehrere Flüge interessieren und deshalb versuchen, ein Ticket zu kaufen. Die Simulationsanwendung tätigt automatisch Anfragen an die Buchungsanwendung, um eine reale Last an das System zu simulieren. Die Anwendung ist über die Parameter Zeitraum, Anzahl der Benutzer sowie einer Liste an zu buchenden Flügen steuerbar. 
 Um alle Handlung nachvollziehen bzw. kontrollieren zu können, ist jeder Buchungsschritt in einer Datenbank abgelegt.
 
 
@@ -103,6 +103,6 @@ Für die Umsetzung des Anwendungsbeispiels wurde ein Framework gesucht, welches 
 Die Frameworks \textit{Proto.Actor} \textit{Orleans} und \textit{Akka.Net} bieten alle die Möglichkeit das \textit{Actor-Model} mit den Sprachen des \textit{.Net} Umfeldes zu implementieren. Alle drei Framework besitzen aktuell eine aktive Community, die Projekte pflegt und weiterentwickelt.
 \footnote{Alle genannten Projekte können öffentlich eingesehen werden. Dabei konnten bei allen Frameworks in der ersten Jahreshälfte 2018 ein Vielzahl an Quellcodebeiträgen beobachtet werden. Es wird auch auf aktuelle Fragen und Probleme von Benutzern eingegangen.}
 
-Das Projekt \textit{Proto.Actor}, siehe \cite{Proto.Actor}, sowie \textit{Microsoft Orliens}, beschrieben in \cite{bykov2011orleans}, bieten virtuelle  Actors an und ermöglichen so die einfache Nutzung der Eigenschaften des \textit{Actor-Models} für parallelisierte Programmierung. Das für \textit{Java} geschriebene Framework \textit{Akka} bietet ebenfalls umfangreiche Möglichkeiten bezüglich des \textit{Actor-Models} an. Die Umsetzung von Cluster, sowie EventSourcing Technologien, die sich für die Implementierung des Anforderungskatalog anbieten, sind in \textit{Akka} weit fortgeschritten. Durch die Portierung des Frameworks auf die \textit{.Net}-Umgebung in Form von \textit{Akka.net} stehen die Vorteil von \textit{Akka} auch für \textit{.Net} Entwickler zur Verfügung.
-Aufgrund der umfangreichen Unterstützung für \textit{.Net} und auch der  mehrfachen positiven Erwähnungen in Werken wie \cite{Vernon2015ReactiveAkka} und \cite{bernhardt2016reactive} wird die Praktische Umsetzung mit \textit{Akka.net} durchgeführt.
-  Das Framework selbst wird in Kapitel \ref{sec:implementation:akka} näher beschrieben. 
+Das Projekt \textit{Proto.Actor}, siehe \cite{Proto.Actor}, sowie \textit{Microsoft Orliens}, beschrieben in \cite{bykov2011orleans}, bieten virtuelle Actors an und ermöglichen so die einfache Nutzung der Eigenschaften des \textit{Actor-Models} für parallelisierte Programmierung. Das für \textit{Java} geschriebene Framework \textit{Akka} bietet ebenfalls umfangreiche Möglichkeiten bezüglich des \textit{Actor-Models} an. Die Umsetzung von Cluster, sowie EventSourcing Technologien, die sich für die Implementierung des Anforderungskatalog anbieten, sind in \textit{Akka} weit fortgeschritten. Durch die Portierung des Frameworks auf die \textit{.Net}-Umgebung in Form von \textit{Akka.net} stehen die Vorteil von \textit{Akka} auch für \textit{.Net} Entwickler zur Verfügung.
+Aufgrund der umfangreichen Unterstützung für \textit{.Net} und auch der mehrfachen positiven Erwähnungen in Werken wie \cite{Vernon2015ReactiveAkka} und \cite{bernhardt2016reactive} wird die Praktische Umsetzung mit \textit{Akka.net} durchgeführt.
+ Das Framework selbst wird in Kapitel \ref{sec:implementation:akka} näher beschrieben. 

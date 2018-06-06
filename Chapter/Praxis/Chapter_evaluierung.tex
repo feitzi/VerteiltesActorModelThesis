@@ -5,18 +5,18 @@ Das abschließende Evaluationskapitel beleuchtet die Implementierung des praktis
 \section{TyrolSky-Testlauf}
 Als Basis für die nachfolgende Bewertung dient der aufgebaute Testlauf. Für den Betrieb der \textit{Tyrol-Sky} Anwendung werden die verschiedenen Komponenten, in einem mittels \textit{Docker} simulierten Netzwerk, zusammengeschlossen. Die teilnehmenden Komponenten am Test können aus der Tabelle \ref{tab:evaluation:testStage} entnommen werden. \\
 \begin{table}
-    \centering
-    \begin{tabular}{lc}
-        Komponente       &   Anzahl  \\ \hline
-        Lighthouse       &   2       \\
-        API              &   1       \\
-        Query-Service    &   2       \\
-        Command-Service \& Domain-Service  &   3       \\
-        Bank APU         &   1       \\
-        Testanwendung    &   1
-    \end{tabular}
-    \caption{Verwendete Komponenten und deren Anzahl während eines Testlauf.}
-    \label{tab:evaluation:testStage}
+  \centering
+  \begin{tabular}{lc}
+    Komponente    &  Anzahl \\ \hline
+    Lighthouse    &  2    \\
+    API       &  1    \\
+    Query-Service  &  2    \\
+    Command-Service \& Domain-Service &  3    \\
+    Bank APU     &  1    \\
+    Testanwendung  &  1
+  \end{tabular}
+  \caption{Verwendete Komponenten und deren Anzahl während eines Testlauf.}
+  \label{tab:evaluation:testStage}
 \end{table}
 Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten, aus Kapitel \ref{sec:eruierung:testdata}, in die Anwendung eingespielt. Die Einspielung erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
 
@@ -27,24 +27,24 @@ Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-S
 Der erste Testlauf findet ohne Einflüsse von außen statt. Es werden daher während des Testes keine Komponenten entfernt oder hinzugefügt. Ist der Testlauf beendet, wird der Status der einzelnen Testbuchungen über die Datenbanktabelle überprüft. Anschließend werden die Kontobewegungen der simulierten Bankenanwendung mit den durchgeführten Buchungen verglichen. Dabei sollte für jede erfolgreiche Buchung eine verbuchte Kontobewegung gefunden werden. Abschließend wird stichprobenartig die Passagierliste für die gebuchten Flüge überprüft. Auch diese sollten mit den in der Testanwendung gebuchten Tickets übereinstimmen. \\
 
 \subsection{2. Testlauf}
-Im zweiten Testlauf wird der Ausfall einer \textit{Domain-Service} Komponente simuliert.  Im laufenden Betrieb wird diese Komponente unkontrolliert beendet. Das sollte dazu führen, dass Buchungen, welche von dieser Komponente bearbeitet werden, nicht in einem Fehlerzustand hängen bleiben, sondern vielmehr von einer der verbleibenden \textit{Domain-Services} übernommen werden. 
+Im zweiten Testlauf wird der Ausfall einer \textit{Domain-Service} Komponente simuliert. Im laufenden Betrieb wird diese Komponente unkontrolliert beendet. Das sollte dazu führen, dass Buchungen, welche von dieser Komponente bearbeitet werden, nicht in einem Fehlerzustand hängen bleiben, sondern vielmehr von einer der verbleibenden \textit{Domain-Services} übernommen werden. 
 
 \subsection{3. Testlauf}
-Um die in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderte Skalierung der Anwendung zu repräsentieren, wird in diesem Testlauf während den Buchungsvorgängen eine weitere  \textit{Domain-Services} Komponente zum System hinzugefügt. Die neue Komponente soll Teile der bereits vorhandenen Buchungsprozesse übernehmen. Nach Beendigung des Testlaufs soll auch hier wieder alle Buchungen, wie im ersten Testlauf beschrieben, erfolgreich abgeschlossen sein. 
+Um die in Kapitel \ref{sec:Eruierung:technicalRequierements} geforderte Skalierung der Anwendung zu repräsentieren, wird in diesem Testlauf während den Buchungsvorgängen eine weitere \textit{Domain-Services} Komponente zum System hinzugefügt. Die neue Komponente soll Teile der bereits vorhandenen Buchungsprozesse übernehmen. Nach Beendigung des Testlaufs soll auch hier wieder alle Buchungen, wie im ersten Testlauf beschrieben, erfolgreich abgeschlossen sein. 
 
 \subsection{Ergebnisse}
 \label{subsec:evaluation:resultsTestRuns}
 Nach jedem Testlauf wurden eine Überprüfungen der Buchungsresultate, Kontobewegungen sowie die Kontrolle der Passagierlisten durchgeführt. Somit kann gezeigt werden, dass die Anwendung die Transaktionalen Daten in einem verteilten Umgebung korrekt verarbeitet und dabei keine Inkonsistenzen in den Daten auftreten. Die Ergebnisse des Datenvergleichs ist der Tabelle \ref{tab:evaluation:resultsTestRuns} zu entnehmen. Demnach konnte für jedes gebuchte Ticket auch eine entsprechende Abbuchung auf der Bankenanwendung gefunden werden. Die abgebrochenen Buchungsanfragen lassen sich damit erklären, dass die Bankenanwendung die Buchungen abgelehnt hat. Es wurden beim zweiten Testlauf während der simulierten Störung einige Anfragen abgebrochen, jedoch entstand dabei keine Dateninkonsistenz.
 \begin{table}
-    \centering
-    \begin{tabular}{p{1.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm}}
-        Testlauf    & Testbuchungen       &   Abgeschlossene Tickets & Abgebrochene Buchungen & Abgebuchte Flüge  \\ \hline
-            1.      & 2000                &         1827             &      173               &         1827        \\
-            2.      & 2000                &         1820             &      180               &         1820        \\
-            3.      & 2000                &         1852             &      148               &         1852        
-    \end{tabular}
-    \caption{Ergebnisse der drei Testläufe.}
-    \label{tab:evaluation:resultsTestRuns}
+  \centering
+  \begin{tabular}{p{1.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm} p{2.5 cm}}
+    Testlauf  & Testbuchungen    &  Abgeschlossene Tickets & Abgebrochene Buchungen & Abgebuchte Flüge \\ \hline
+      1.   & 2000        &     1827       &   173        &     1827    \\
+      2.   & 2000        &     1820       &   180        &     1820    \\
+      3.   & 2000        &     1852       &   148        &     1852    
+  \end{tabular}
+  \caption{Ergebnisse der drei Testläufe.}
+  \label{tab:evaluation:resultsTestRuns}
 \end{table}
 
 \section{Bewertung der Umsetzung}
@@ -55,20 +55,20 @@ Die Bewertung des praktischen Umsetzungsbeispiels erfolgt zuerst durch ein Vergl
 Der Anforderungskatalog aus Kapitel \ref{sec:Eruierung:technicalRequierements} fordert sechs unterschiedliche Voraussetzungen an die Implementierung. Davon konnte eine nur zum Teil erfüllt werden, die restlichen fünf wurden ganz erfüllt. \\
 Nachfolgend eine Übersicht über die Erfüllung der einzelnen Anforderungen.
 \begin{enumerate}
-    \litem{Verteilbare Komponenten} 
-    Die Verteilbarkeit der einzelnen Komponenten ist durch den Einsatz des \textit{Gossip}-Protokolls möglich. Der Einsatz von Routern, wie in Kapitel \ref{subsec:implementation:akkaRouting} beschrieben, ermöglicht eine einfache Kommunikation  zwischen den verteilen Komponenten. Die fünf unterschiedlichen Komponententypen sind voneinander nicht abhängig, bilden zusammengeschlossen aber eine homogene Anwendung.
+  \litem{Verteilbare Komponenten} 
+  Die Verteilbarkeit der einzelnen Komponenten ist durch den Einsatz des \textit{Gossip}-Protokolls möglich. Der Einsatz von Routern, wie in Kapitel \ref{subsec:implementation:akkaRouting} beschrieben, ermöglicht eine einfache Kommunikation zwischen den verteilen Komponenten. Die fünf unterschiedlichen Komponententypen sind voneinander nicht abhängig, bilden zusammengeschlossen aber eine homogene Anwendung.
 
-    \litem{Automatische Skalierung}
-    Die Skalierung der Anwendung ist möglich durch Hinzufügen bzw. Entfernen von Komponenten. Dabei organisieren sich die im System gehaltenen Daten, durch den \textit{Sharding}-Mechanismus, bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist  in der vorliegenden Implementierung ein manueller Schritt notwendig. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte forderlich, damit die Komponente mit dem vorhandenen System interagiert. 
+  \litem{Automatische Skalierung}
+  Die Skalierung der Anwendung ist möglich durch Hinzufügen bzw. Entfernen von Komponenten. Dabei organisieren sich die im System gehaltenen Daten, durch den \textit{Sharding}-Mechanismus, bei einer Änderung der Clusterstruktur selbständig neu. Benutzeranfragen werden durch die Verwendung von Routern automatisch an die verfügbaren Komponenten verteilt und eine horizontale Skalierung ist somit möglich. Um eine Anpassung an der Komponentenanzahl vorzunehmen, ist in der vorliegenden Implementierung ein manueller Schritt notwendig. Komponenten hinzufügen oder ändern ist nur möglich in dem die entsprechende Instanz manuell gestartet bzw. beendet wird. Jedoch sind keine weiteren manuellen Schritte forderlich, damit die Komponente mit dem vorhandenen System interagiert. 
 
-    \litem{Verteilte sowie Transaktionale Daten}
-    Der Umgang mit verteilten Daten war bei den Designentscheidungen für die \text{TyrolSky}-Anwendung einer der Hauptmerkmale. Die in Abschnitt \ref{subsec:implementation:domainService} beschriebenen Daten für Fluginformationen oder Ticketbuchungen werden durch \textit{Sharding} verteilt. Durch die Implementierung von \textit{EventSourcing} ist auch die Persistierung der verteilten Daten sichergestellt. Das Zusammenspiel der synchronen Nachrichtenabarbeitung des \textit{Actor-Models} und des \textit{Shardingalgorithmus} ermöglicht die Sicherstellung der Datenkonsistenz über die gesamte verteilte Anwendung.
-   
-    \litem{Fehler sowie Netzwerk-Partition beständig}
-    Bei einem Ausfall der Komponente wird dieser Zustand durch das \textit{Gossip}-Protokoll an alle teilnehmenden Komponenten propagiert. Dadurch ist eine Isolierung von fehlerhaften Clusterteilnehmern möglich. Durch die Möglichkeiten der \textit{Supervision} des \textit{Actor-Models} ist auch das Aufheben von Fehlern innerhalb einer Komponente einfach möglich. \\
-    Der Umgang mit einer möglichen Separierung des Netzwerkes erfolgt mit dem in Abschnitt \ref{subsec:implementation:splitBrain} beschriebenen \textit{Split Brain Resolver}. Fehler in der Anwendung führen somit nicht zum Totalausfall des gesamten Clusters, im schlimmsten Fall ist ein Ausfall einer Komponentengruppe möglich.
+  \litem{Verteilte sowie Transaktionale Daten}
+  Der Umgang mit verteilten Daten war bei den Designentscheidungen für die \text{TyrolSky}-Anwendung einer der Hauptmerkmale. Die in Abschnitt \ref{subsec:implementation:domainService} beschriebenen Daten für Fluginformationen oder Ticketbuchungen werden durch \textit{Sharding} verteilt. Durch die Implementierung von \textit{EventSourcing} ist auch die Persistierung der verteilten Daten sichergestellt. Das Zusammenspiel der synchronen Nachrichtenabarbeitung des \textit{Actor-Models} und des \textit{Shardingalgorithmus} ermöglicht die Sicherstellung der Datenkonsistenz über die gesamte verteilte Anwendung.
+  
+  \litem{Fehler sowie Netzwerk-Partition beständig}
+  Bei einem Ausfall der Komponente wird dieser Zustand durch das \textit{Gossip}-Protokoll an alle teilnehmenden Komponenten propagiert. Dadurch ist eine Isolierung von fehlerhaften Clusterteilnehmern möglich. Durch die Möglichkeiten der \textit{Supervision} des \textit{Actor-Models} ist auch das Aufheben von Fehlern innerhalb einer Komponente einfach möglich. \\
+  Der Umgang mit einer möglichen Separierung des Netzwerkes erfolgt mit dem in Abschnitt \ref{subsec:implementation:splitBrain} beschriebenen \textit{Split Brain Resolver}. Fehler in der Anwendung führen somit nicht zum Totalausfall des gesamten Clusters, im schlimmsten Fall ist ein Ausfall einer Komponentengruppe möglich.
 \end{enumerate}
-Die im Anforderungskatalog gestellten Bedingungen konnten  erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das Hinzufügen und Entfernen von Komponenten einfach möglich ist, ohne dabei die laufende Applikation negativ zu beeinflussen. 
+Die im Anforderungskatalog gestellten Bedingungen konnten erfüllt werden. Die Möglichkeit der vollautomatischen Skalierung der Anwendung ist zwar nicht gegeben, jedoch war dieser Punkt für die Beantwortung der Forschungsfrage nicht erforderlich. Vielmehr konnte bei der implementierten Skalierung gezeigt werden, dass das Hinzufügen und Entfernen von Komponenten einfach möglich ist, ohne dabei die laufende Applikation negativ zu beeinflussen. 
 
 \subsection{Implementierungsdiskussion}
 Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen, kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen ausreichend umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die gegebenen unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Die \textit{API}-Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die Abhandlung von \textit{HTTP} Anfragen. Das Beispiel zeigt, wie die unterschiedlichen Applikationsservices die Arbeit untereinander Aufteilen. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
@@ -86,20 +86,20 @@ Eine Schwäche der Implementierung betrifft die Testanwendung. Durch die Verwend
 
 \chapter{Fazit}
 \section{Auseinandersetzung mit der Forschungsfrage}
-Mit der in  umgesetzten Anwendung konnte ein wesentlicher Teil der in Kapitel \ref{cha:introduction} gestellten Forschungsfrage \ref{theorem:forschungsfrage} bereits behandelt werden. Mit den in \cite{Vernon2015ReactiveAkka} und \cite{akkaInAction} diskutierten Architekturmustern lässt sich ein auf dem Actor Model beruhendes verteiltes System erstellen, welches mit Transaktionalen Daten umgehen kann. Eine serviceorientierte Architektur hilft dabei die gesamte Anwendung verteilbar zu gestalten. 
-Das  Einbeziehen des in \cite{gilbertPerspectiveCAPTheorem2012} besprochene \textit{CAP-Theorem} unterstützt bei der Entwerfung der Softwarearchitektur und vermeidet von vornherein Probleme mit der Verteilung der Anwendung. \\ 
+Mit der in umgesetzten Anwendung konnte ein wesentlicher Teil der in Kapitel \ref{cha:introduction} gestellten Forschungsfrage \ref{theorem:forschungsfrage} bereits behandelt werden. Mit den in \cite{Vernon2015ReactiveAkka} und \cite{akkaInAction} diskutierten Architekturmustern lässt sich ein auf dem Actor Model beruhendes verteiltes System erstellen, welches mit Transaktionalen Daten umgehen kann. Eine serviceorientierte Architektur hilft dabei die gesamte Anwendung verteilbar zu gestalten. 
+Das Einbeziehen des in \cite{gilbertPerspectiveCAPTheorem2012} besprochene \textit{CAP-Theorem} unterstützt bei der Entwerfung der Softwarearchitektur und vermeidet von vornherein Probleme mit der Verteilung der Anwendung. \\ 
 Die Verwendung von Frameworks für die Anwendung des Actor-Models, siehe dazu Abschnitt \ref{sec:ActorFrameworks}, vereinfacht die Entwicklung einer Anwendung in vielen Punkten. Unter anderem sind viele in der Arbeit besprochenen Architekturmuster bereits in den unterschiedlichen Frameworks vorgegeben. Die Unterstützung der entsprechenden Communities rundum Frameworks ist zudem hilfreich beim Lösen von Problemen. \\
 Ein Hauptproblem welches bei der Bearbeitung der Forschungsfrage aufgetreten ist, betrifft die Verteilung von Daten über mehrere Rechner. Im Zuge der Aufbereitung der theoretischen Grundlagen im ersten Teil dieser Arbeit, konnte dafür das Konzept von \textit{Shards} sowie \textit{Event-Sourcing} für die Lösung dieses Problems gefunden werden. Die praktische Umsetzung der Beispielanwendung konnte zeigen, das diese Konzepte für die Implementierung eines verteilten Transaktionssystems zielführend sind. \\
 Abschließend lässt sich aus der Arbeit ableiten, dass das \textit{Actor-Model} geeignet ist, um verteilte Transaktionssysteme zu realisieren. Dabei müssen zwar etliche Komplikationen beachtet werden, was jedoch generell für Verteile Systeme gilt.
 
 \section{Weiterführende Diskussionen und Forschungsausblick}
-Während der Ausarbeitung des Themengebietes konnten etliche wichtige Aspekte bezüglich der Verteilung von Softwaresystemen gefunden werden. Die typischen fehlerhaften Annahmen von Verteilten System, siehe dazu Kapitel \ref{sec:distributedSystems:wrongAssumptions}, wurden vom Verfasser dieser Arbeit in der Vergangenheit in der Praxis schon selbst beobachtet. Für eine erfolgreiche Umsetzung einer verteilten Anwendung ist  die bewusste 
-Verhinderung dieser falschen Annahmen wie auch die Einbindung des \textit{CAP-Theorem}  bedeutsam.  
+Während der Ausarbeitung des Themengebietes konnten etliche wichtige Aspekte bezüglich der Verteilung von Softwaresystemen gefunden werden. Die typischen fehlerhaften Annahmen von Verteilten System, siehe dazu Kapitel \ref{sec:distributedSystems:wrongAssumptions}, wurden vom Verfasser dieser Arbeit in der Vergangenheit in der Praxis schon selbst beobachtet. Für eine erfolgreiche Umsetzung einer verteilten Anwendung ist die bewusste 
+Verhinderung dieser falschen Annahmen wie auch die Einbindung des \textit{CAP-Theorem} bedeutsam. 
 Das Bedürfnis von Unternehmen nach verteilten Systemen steigt ständig an.Laut \cite{theSkillsCompaniesNeedMost} ist die meist gefragte Qualifikation von Unternehmen das Verständnis über verteilte \textit{Cloud-Systeme}. Mit der in dieser Arbeit umgesetzten Lösung wurden die Grundlagen und einige tiefergehenden Ansätze angewandt und miteinander verknüpft, um den Anforderungen an zukünftige Softwaresysteme zu entsprechen. Die Vorteile des \textit{Actor-Models}, wie der Schwerpunk auf Nebenläufigkeit, die Nachrichtenorientiertheit sowie die Widerstandsfähigkeit durch Supervision bieten sich optimal an, um die Verteilung einer Anwendung von Grund auf zu damit zu planen. \\
 Die Polarisierung von Frameworks wie \textit{Akka.net} oder Microsoft \textit{Orleans} in entsprechenden Fachzeitschriften lässt vermuten, dass auch das Interesse an Actorbasierten und verteilbaren Softwareframeworks unter Entwicklern steigt. Entsprechende Diskusionsrunden auf Entwicklerkonferenzen wie der \textit{Domain-Driven-Europe}
-\footnote{Die Konferenz \textit{Domain-Driven-Europe} ist eine Entwicklerkonferenz mit dem Schwerpunkt Softwarearchitektur, insbesondere den \textit{Domain-Drive-Design} Prinzipien. Sie findet jährlich in Amsterdam statt und versammelt Architekten der ganzen Welt. \\ \url{https://ddeurope.com}  }
+\footnote{Die Konferenz \textit{Domain-Driven-Europe} ist eine Entwicklerkonferenz mit dem Schwerpunkt Softwarearchitektur, insbesondere den \textit{Domain-Drive-Design} Prinzipien. Sie findet jährlich in Amsterdam statt und versammelt Architekten der ganzen Welt. \\ \url{https://ddeurope.com} }
 oder der \textit{Techorama}
 \footnote{Die Techorama ist eine Entwicklerkonferenz mit dem Fokus auf aktuelle Trends in der Softwarebranche. Unter den Vortragenden sind jährlich international bekannt Redner, welche sich mit aktuellen Problemen der Branche auseinandersetzen. \\ \url{https://techorama.be} }
 , lässt vermuten, dass auch kommerzielle Systeme mit diesen Technologien umgesetzt wurden oder gerade entstehen. \\
 Die Implementierung einer Softwarearchitektur mit dem \textit{Actor-Model} ist zu Beginn aufwendig, da das Programmiermodell im Gegensatz zum weit verbreiteten objektorientierten Modell abweicht. 
-Auch wenn die Grundlagen der Actorbasierten Entwicklung von heutigen Standards in Software-Unternehmen abweichen und entsprechendes Wissen im Team zuerst aufgebaut werden muss, kann das \textit{Actor-Model} als große Unterstützung dienen.   
+Auch wenn die Grundlagen der Actorbasierten Entwicklung von heutigen Standards in Software-Unternehmen abweichen und entsprechendes Wissen im Team zuerst aufgebaut werden muss, kann das \textit{Actor-Model} als große Unterstützung dienen.  

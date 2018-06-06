@@ -1,138 +1,138 @@
 {
-    "editor.fontSize": 20,
+  "editor.fontSize": 20,
 
-    "latex-workshop.latex.recipes": [{
-      "name": "texify",
-      "tools": [
-        "bibtex",
-        "texify"
-      ]
-    }],
-    "latex-workshop.latex.tools": [
-      {
-      "name": "texify",
-      "command": "texify",
-      "args": [
-        "--synctex",
-        "--pdf",
-        "--tex-option=\"-interaction=nonstopmode\"",
-        "--tex-option=\"-file-line-error\"",
-        "%DOC%.tex"
-      ]
-    },
-    {
-          "name": "bibtex",
-          "command": "bibtex",
-          "args": [
-            "%DOCFILE%"
-          ]
-        }
-    ],
-    
-    //old settings before latex workshop update
-    // "latex-workshop.latex.recipes": [{
-    //   "name": "texify",
-    //   "tools": [
-    //     "tool1",
-    //     "tool2",
-    //     "tool3"
-    //   ]
-    // }],
+  "latex-workshop.latex.recipes": [{
+   "name": "texify",
+   "tools": [
+    "bibtex",
+    "texify"
+   ]
+  }],
+  "latex-workshop.latex.tools": [
+   {
+   "name": "texify",
+   "command": "texify",
+   "args": [
+    "--synctex",
+    "--pdf",
+    "--tex-option=\"-interaction=nonstopmode\"",
+    "--tex-option=\"-file-line-error\"",
+    "%DOC%.tex"
+   ]
+  },
+  {
+     "name": "bibtex",
+     "command": "bibtex",
+     "args": [
+      "%DOCFILE%"
+     ]
+    }
+  ],
+  
+  //old settings before latex workshop update
+  // "latex-workshop.latex.recipes": [{
+  //  "name": "texify",
+  //  "tools": [
+  //   "tool1",
+  //   "tool2",
+  //   "tool3"
+  //  ]
+  // }],
 
-    // "latex-workshop.latex.tools": [
-    //   {
-    //     "name": "tool1",
-    //     "command": "pdflatex",
-    //     "args": [
-    //       "-synctex=1",
-    //       "-interaction=nonstopmode",
-    //       "-file-line-error",
-    //       "%DOC%"
-    //     ]
-    //   }, {
-    //     "name": "tool2",
-    //     "command": "bibtex",
-    //     "args": [
-    //       "%DOCFILE%"
-    //     ]
-    //   }, {
-    //     "name": "tool3",
-    //     "command": "pdflatex",
-    //     "args": [
-    //       "-synctex=1",
-    //       "-interaction=nonstopmode",
-    //       "-file-line-error",
-    //       "%DOC%"
-    //     ]
-    //   }, {
-    //     "name": "tool4",
-    //     "command": "pdflatex",
-    //     "args": [
-    //       "-synctex=1",
-    //       "-interaction=nonstopmode",
-    //       "-file-line-error",
-    //       "%DOC%"
-    //     ]
-    //   }
-    // ],
-      "cSpell.ignoreRegExpList": [
-        "\\\\\\w*(\\[.*?\\])?(\\{.*?\\})?",
-        "\\$.+?\\$"
-      ],
+  // "latex-workshop.latex.tools": [
+  //  {
+  //   "name": "tool1",
+  //   "command": "pdflatex",
+  //   "args": [
+  //    "-synctex=1",
+  //    "-interaction=nonstopmode",
+  //    "-file-line-error",
+  //    "%DOC%"
+  //   ]
+  //  }, {
+  //   "name": "tool2",
+  //   "command": "bibtex",
+  //   "args": [
+  //    "%DOCFILE%"
+  //   ]
+  //  }, {
+  //   "name": "tool3",
+  //   "command": "pdflatex",
+  //   "args": [
+  //    "-synctex=1",
+  //    "-interaction=nonstopmode",
+  //    "-file-line-error",
+  //    "%DOC%"
+  //   ]
+  //  }, {
+  //   "name": "tool4",
+  //   "command": "pdflatex",
+  //   "args": [
+  //    "-synctex=1",
+  //    "-interaction=nonstopmode",
+  //    "-file-line-error",
+  //    "%DOC%"
+  //   ]
+  //  }
+  // ],
+   "cSpell.ignoreRegExpList": [
+    "\\\\\\w*(\\[.*?\\])?(\\{.*?\\})?",
+    "\\$.+?\\$"
+   ],
 
-    "cSpell.language": "de",
-    "cSpell.enabledLanguageIds": [
-        "c",
-        "cpp",
-        "csharp",
-        "go",
-        "handlebars",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "latex",
-        "markdown",
-        "php",
-        "plaintext",
-        "python",
-        "restructuredtext",
-        "text",
-        "typescript",
-        "typescriptreact",
-        "yml"
-    ],
-    "editor.cursorBlinking": "solid",
-    "telemetry.enableCrashReporter": false,
-    "telemetry.enableTelemetry": false,
-    "editor.wordWrap": "on",
-    "editor.wordWrapColumn": 80,
-    "editor.wrappingIndent": "same",
-    "cSpell.words": [
-      "Actor",
-      "Actoren",
-      "Actors",
-      "Bezahlprozess",
-      "Framework",
-      "Frameworks",
-      "Opensource",
-      "Pattern",
-      "Persistierung",
-      "Sourcing",
-      "Weiters",
-      "allokieren",
-      "bearbeitbar",
-      "serialisierbar",
-      "transaktionale",
-      "transaktionalen"
-    ],
-    "files.exclude": {
-      "**/*.aux": true,
-      "**/*.toc": true,
-      "**/*.lot": true,
-      "**/*.lol": true,
-      "**/*.lof": true,
-      "**/*.blg": true,
-      "**/*.bbl": true,
-      "**/*.out": true,
-    },
+  "cSpell.language": "de",
+  "cSpell.enabledLanguageIds": [
+    "c",
+    "cpp",
+    "csharp",
+    "go",
+    "handlebars",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "latex",
+    "markdown",
+    "php",
+    "plaintext",
+    "python",
+    "restructuredtext",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "yml"
+  ],
+  "editor.cursorBlinking": "solid",
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 80,
+  "editor.wrappingIndent": "same",
+  "cSpell.words": [
+   "Actor",
+   "Actoren",
+   "Actors",
+   "Bezahlprozess",
+   "Framework",
+   "Frameworks",
+   "Opensource",
+   "Pattern",
+   "Persistierung",
+   "Sourcing",
+   "Weiters",
+   "allokieren",
+   "bearbeitbar",
+   "serialisierbar",
+   "transaktionale",
+   "transaktionalen"
+  ],
+  "files.exclude": {
+   "**/*.aux": true,
+   "**/*.toc": true,
+   "**/*.lot": true,
+   "**/*.lol": true,
+   "**/*.lof": true,
+   "**/*.blg": true,
+   "**/*.bbl": true,
+   "**/*.out": true,
+  },
 }
