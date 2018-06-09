@@ -15,7 +15,7 @@ Als Basis für die nachfolgende Bewertung dient der aufgebaute Testlauf. Für de
     Bank APU     &  1    \\
     Testanwendung  &  1
   \end{tabular}
-  \caption{Verwendete Komponenten und deren Anzahl während eines Testlauf.}
+  \caption{Verwendete Komponenten und deren Anzahl während eines Testlaufs.}
   \label{tab:evaluation:testStage}
 \end{table}
 Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten, aus Kapitel \ref{sec:eruierung:testdata}, in die Anwendung eingespielt. Die Einspielung erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
@@ -73,7 +73,7 @@ Die im Anforderungskatalog gestellten Bedingungen konnten erfüllt werden. Die M
 \subsection{Implementierungsdiskussion}
 Wie die Tests aus Abschnitt \ref{subsec:evaluation:resultsTestRuns} zeigen, kann die Implementierung der \textit{TyrolSky}-Anwendung mit den vorgegebenen Anforderungen ausreichend umgehen. Die Umsetzung mit unterschiedlichen Komponenten hat den Vorteil, dass die Anwendung in die verschiedenen Anforderungskategorien aufgeteilt ist. Diese Aufteilung ermöglicht es, die gegebenen unterschiedlichen Herausforderungen zu separieren. Der Quellcode der \textit{API}-Komponente zeigt beispielhaft die Trennung der Aufgaben der einzelnen Komponente. Die \textit{API}-Komponente beinhaltet selbst keinerlei Geschäftslogik sondern fokussiert sich auf die Abhandlung von \textit{HTTP} Anfragen. Das Beispiel zeigt, wie die unterschiedlichen Applikationsservices die Arbeit untereinander Aufteilen. Durch diese Entkopplung der verschiedenen Herausforderungen konnte ein wichtige Grundlage für die Verteilbarkeit der gesamten Anwendung erreicht werden. \\
 Ein anderes wesentliches Detail der Implementierung ist die Verwendung von \textit{Event-Sourcing} für die Datenhaltung. Dadurch kann die Auslastung der verwendeten Datenbank, vor allem was den Lesezugriff betrifft, im Vergleich zur gebräuchlichen \textit{CRUD}-Operationen reduziert werden. 
-\graffito{\textit{CRUD} steht für \textit{Create, Read, Update, Delete} und beschreibt den Zugriff auf die Datenbank für jede Operation an ein datenhaltendes System. \citep{martin1981managing}}
+\graffito{\textit{CRUD} steht für \textit{Create, Read, Update, Delete} und beschreibt den Zugriff auf die Datenbank für jede Operation an ein datenhaltendes System \citep{martin1981managing}.}
 Eine Datenbank ist zwar für eine dauerhafte Speicherung der Daten notwendig, durch die fehlende Struktur der in der Datenbank gespeicherten Daten, ist auch die Verteilung einfach möglich. Die vorliegende Umsetzung verwendet zwar eine Relationale Datenbank, jedoch ist der Umstieg auf eine \textit{NoSQL} Datenbank ohne Aufwand möglich. \\
 Die Prinzipien des \textit{Reactive Manifesto}, aus Kapitel \ref{reactiveManifesto}, wurden so weit wie möglich eingehalten. Einerseits ist die Nachrichtenorientierung durch die strikte Verwendung von Actors sowie Events implizit gegeben. Die Elastizität sowie die Antwortbereitschaft ist durch die Komponentenorientierung gegeben. Für eine korrekte Erfüllung des \textit{Manifesto} ist jedoch eine vollautomatische Skalierung der Anwendung erforderlich. \\
 Die in Kapitel \ref{sec:distributedSystems:capTheorem} behandelte Problematik des \text{CAP}-Theorem wurde durch den Verzicht auf vollständige Toleranz der Partition gelöst. Die Anwendung versucht mittels, der in Abschnitt 

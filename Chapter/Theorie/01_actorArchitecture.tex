@@ -2,10 +2,10 @@
 \label{sec:theory:actorArchitecture}
 Die Entwicklung von gängigen Designmustern, wie beispielsweise jene der \textit{Game of Four} (siehe \cite{gangOfFour1995design}), sind auf die objektorientierte Programmierung ausgerichtet. Im \textit{ Actor-Model} können eine Vielzahl dieser Muster nicht mehr verwendet werden bzw. ihre Stärken nicht mehr optimal ausspielen. Um die Stärken des \textit{ Actor-Models} optimal zu nutzen sind etliche Architekturmuster entstanden, welche unter anderem in \cite{Vernon2015ReactiveAkka} und \cite{kuhn2017reactive} beschrieben werden. Einige dieser Muster werden nachfolgend beschrieben um die Verständlichkeit mit der Arbeit des \textit{ Actor-Models} zu erhöhen.
 
-\subsection{RequestRequest-Replay} 
+\subsection{Request-Replay} 
 Das einfachste und gleichzeitig wohl bedeutendste Muster, da andere Muster darauf aufbauen, innerhalb des \textit{Actor-Models},ist das \textit{Request-Replay} Muster. Es wird benötigt um Inhalte von einem Actor abzufragen. Wie in Kapitel \ref{actor:requirements:shareNothing} beschrieben, darf ein Actor keine Informationen nach außen geben. Möchte nun ein Actor Informationen von einem anderen Actor haben, so muss dieser eine Nachricht an den betroffenden Actor senden. Der angeschriebene Actor sendet dann eine neue Nachricht mit den entsprechenden Informationen an den anfragenden Actor zurück. Die Antwort Nachricht kommt dabei nicht als direkte Antwort der Nachricht, sondern als eigenständige Nachricht an den fragenden Actor zurück. Es wird zwar von der Antwort gesprochen, wie jedoch in Abschnitt \ref{actor:requirements:AsynchronCommunication} beschrieben, ist jede Anfrage an einen Actor asynchron. Deshalb wird die Antwort wieder in die Mailbox des Empfängers zugestellt. Zur Vereinfachung wird jedoch von einer Antwort-Nachricht gesprochen. \\
 In der Abbildung \ref{fig:actor:patterns:requestReplay} ist das \textit{Request-Replay} abgebildet. Der Actor \textit{A} sendet eine \textit{Command-Message} an den Actor \textit{B}, dieser verarbeitet diese Nachricht und sendet eine neue \textit{Document-Message} zurück an Actor \textit{A}. Somit kann Actor \textit{A} mit den Informationen von Actor \textit{B} weiterarbeiten. \\
-Dieses Pattern gilt als Grundlage für die alle weiteren Patterns und veranschaulicht das Prinzip eines typischen Workflows in einem Actor System. \citep{Vernon2015ReactiveAkka}
+Dieses Pattern gilt als Grundlage für die alle weiteren Patterns und veranschaulicht das Prinzip eines typischen Workflows in einem Actor-System \citep{Vernon2015ReactiveAkka}.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{gfx/actor/patterns/requestReplay}
@@ -23,12 +23,12 @@ Diese somit bekannt gegebene Adresse könnte auch für zukünftige Verarbeitunge
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{gfx/actor/patterns/returnAddress}
-  \caption{Der Processor empfängt von Actor A ein Kommando. Die Nachricht enthält jedoch die Information, das Ergebnisse nicht an den Absender zu senden sind, sondern an den Actor B.}
+  \caption{Der Prozessor empfängt von Actor A ein Kommando. Die Nachricht enthält jedoch die Information, das Ergebnisse nicht an den Absender zu senden sind, sondern an den Actor B.}
   \label{fig:actor:patterns:returnAdress}
 \end{figure}
 
 
-\subsection{Processor}\label{sub:actor:patterns:processor}
+\subsection{Prozessor}\label{sub:actor:patterns:processor}
 Eine Möglichkeit komplexe Prozesse mit dem Actor-Model abzubilden, ist ein \textit{Processor}-Actor. Dieser koordiniert, abgestimmt auf einen bestimmen Geschäftsprozess, alle Vorgänge und liefert, falls gewünscht, abschließend oder periodisch ein Ergebnis zurück. Es gibt verschiedenste Varianten von \textit{Processor}-Actoren \citep{Vernon2015ReactiveAkka}.
 Oft verwenden \textit{Processors} auch \textit{Router} (siehe Kapitel \ref{sec:actor:patterns:routing}) und \textit{Aggregatoren} (siehe Kapitel \ref{sec:actor:patterns:aggregator}) um ihre Prozesse in einem Actor-System abzubilden. \\
 Ein typisches Beispiel kann in Form eines Bestellprozesses gezeigt werden. Im Ablauf des schemenhaft gezeigten \textit{Order Processors} in Abbildung \ref{fig:actor:patterns:orderProcesseor} sind drei andere Komponenten, welche hier als Actors dargestellt werden, beteiligt. Der Statistik Actor sowie die zwei \textit{Inventories} können sich auch aus mehreren Actors formieren, ist jedoch für den \textit{Order-Processor} nicht relevant. Vielmehr ist der \textit{Processor} in diesem Fall verantwortlich den Bestellprozesses vollständig auszuführen, indem er die Beteiligten Actors über den Vorgang informiert bzw. weitere Kommandos an diesen abgibt. Sind alle erforderlichen Antworten eingetroffen, kann er die Bestellung abschließen und dies wiederum über eine \textit{Event}-Nachricht an den Besteller signalisieren. \\
@@ -37,12 +37,12 @@ In diesem Beispiel fungiert der \textit{Processor} auch als \textit{Aggregator},
 \begin{figure}
   \centering
   \includegraphics[width=0.9\linewidth]{gfx/actor/patterns/simpleOrderProcesor}
-  \caption{Ein schemenhafter Bestellprozess welcher mehrere andere Actors miteinbezieht.}
+  \caption{Ein schematischer Bestellprozess welcher mehrere andere Actors miteinbezieht.}
   \label{fig:actor:patterns:orderProcesseor}
 \end{figure}
 
 \subsection{Routing}\label{sec:actor:patterns:routing}
-In einem Actor System versteht man laut \cite{Vernon2015ReactiveAkka} und \cite{kuhn2017reactive} eine Komponente welche ankommende Nachrichten an einen oder mehrere Actors weitersendet. \\
+In einem Actor-System versteht man laut \cite{Vernon2015ReactiveAkka} und \cite{kuhn2017reactive} eine Komponente welche ankommende Nachrichten an einen oder mehrere Actors weitersendet. \\
 In \cite{Vernon2015ReactiveAkka} ist eine Vielzahl an unterschiedlichsten Routern beschrieben. Wie die meisten anderen Komponenten auch ist ein Router ein Actor. Dieser Actor bekommt dann die Aufgabe einkommende Nachrichten entsprechend weiterzuleiten. Dazu kann ein Router verschiedene Faktoren für das Routing einbeziehen. Als Beispiel ist unter anderem zu nennen, dass der Router Informationen aus der Nachricht entnimmt und anhand dieser das Routing vornimmt. Weiters können auch Einflüsse des Actor-System einbezogen werden. In \cite{Vernon2015ReactiveAkka} und \cite{Akka.netCommunityAkka.NETDocumentation} ist zu lesen, dass ein Router CPU oder Speicherauslastung von verschiedenen Systemen überwacht und neue Nachrichten an das am wenigsten ausgelastete System zukommen lässt. \\
 \cite{Vernon2015ReactiveAkka} kategorisiert Router in folgende drei Kategorien. 
 \begin{description}
@@ -73,7 +73,7 @@ Um in einem solchen System jedoch die Zustellung von Nachrichten zu gewährleist
   \item [Exakt einmal] Die Nachricht wird exakt einmal zugestellt. Erfordert jedoch viele Ressourcen und ist nur schwer bis gar nicht realisierbar.
 \end{description}
 \cite{Vernon2015ReactiveAkka} zeigt eine Variante der garantierten Nachrichtenzustellung mit dem \textit{Actor-Model}, welche die Zustellung mindestens einmal garantiert. Dabei wird beim versenden die gesendete Nachricht in einem permanenten Speicher abgespeichert. Trifft die Bestätigung der gesendeten Nachricht ein, wird die gespeicherte Nachricht entsprechend markiert. Vergeht nach dem Versenden der Nachricht ein definiertes Zeitfenster ohne Eintreffen einer Bestätigung, so wird die Nachricht erneut versendet. Dies geschieht solange bis die Bestätigung einlangt. \\
-Generell ist jedoch immer zu beachten, dass das Versenden einer Nachricht fehlschlagen kann. Je nach Anwendungsfall muss dies vom Entwickler beachtet und entsprechende Maßnahmen dafür getroffen werden. Die Gründe weshalb eine Nachricht nicht ordnungsgemäß zugestellt wird sind zahlreich. So kann beispielsweise die Nachricht über ein Netzwerk gesendet werden und somit kann auch das Paket verloren gehen. Weiters ist es möglich, dass der Empfänger der Nachricht nicht reagiert, weil die Mailbox voll ist oder der Prozess, welchen den Empfänger beherbergt, nicht reagiert. Die Gründe für die Unzustellbarkeit sind zahllos, weshalb die Zustellbarkeit auch nicht garantiert werden kann. \citep{messagedeliveryreliabilityakkadocumentation}
+Generell ist jedoch immer zu beachten, dass das Versenden einer Nachricht fehlschlagen kann. Je nach Anwendungsfall muss dies vom Entwickler beachtet und entsprechende Maßnahmen dafür getroffen werden. Die Gründe weshalb eine Nachricht nicht ordnungsgemäß zugestellt wird sind zahlreich. So kann beispielsweise die Nachricht über ein Netzwerk gesendet werden und somit kann auch das Paket verloren gehen. Weiters ist es möglich, dass der Empfänger der Nachricht nicht reagiert, weil die Mailbox voll ist oder der Prozess, welchen den Empfänger beherbergt, nicht reagiert. Die Gründe für die Unzustellbarkeit sind zahllos, weshalb die Zustellbarkeit auch nicht garantiert werden kann \citep{messagedeliveryreliabilityakkadocumentation}.
 
 
 

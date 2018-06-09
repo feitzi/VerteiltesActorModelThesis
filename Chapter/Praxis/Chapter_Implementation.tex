@@ -69,12 +69,12 @@ Die Komponente fungiert als Orientierungshilfe für neue Instanzen, welche am Ge
 \label{subsec:implementation:apiComponente}
 Anfragen von Endbenutzern werden über eine \textit{REST} Schnittstelle mittels \textit{HTTP} an das System übertragen. Diese Anfragen werden von der Komponente \textit{API} angenommen, überprüft und anschließend an eine verfügbare \textit{Query} oder \textit{Command} Komponente weitergeleitet. \\
 Für jede ankommende Anfrage wird ein eigener Actor gestartet, welcher ausschließlich für diese konkrete Anfrage zuständig ist. Der Actor wartet auf eine Antwort von der angefragten \textit{CQRS}-Komponente und beendet abschließend die bestehende \textit{HTTP} -Verbindung zum Benutzer mit dem entsprechenden Ergebnis. Wird von der angefragten Komponente innerhalb eines Zeitfensters keine Antwort geliefert, bricht die \textit{API}-Komponente die Anfrage des Benutzers mit einem Fehler ab. \\
-In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des entsprechenden  Actor-Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen, dass die API Komponente selbst über keinen komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten, wie in Kapitel \ref{actor:actorSystem}, fungieren. Dadurch wird eine interne Schnittstelle zum eigentlichen Actor System hergestellt. \\
-Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actor System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Benutzeranfragen des gleichen Typs und an die gleiche API Komponente, an unterschiedliche Instanzen der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
+In der Grafik \ref{fig:implementation:apiActorModel} ist der Aufbau des entsprechenden  Actor-Models innerhalb der API Komponente ersichtlich. Darauf ist auch zu sehen, dass die API Komponente selbst über keinen komplexen Aufbau verfügt und die Actoren darin als Actor Rezeptionisten, wie in Kapitel \ref{actor:actorSystem}, fungieren. Dadurch wird eine interne Schnittstelle zum eigentlichen Actor-System hergestellt. \\
+Das Verwenden von einem separaten Rezeptionisten pro Benutzeranfrage ermöglicht es, die weitere Behandlung im dahinterliegenden Actor-System an unterschiedliche Komponenteninstanzen zu verteilen. Dadurch können Benutzeranfragen des gleichen Typs und an die gleiche API Komponente, an unterschiedliche Instanzen der für die Abarbeitung der Anfrage zuständige Komponente, weitergeleitet werden. 
 \begin{figure}
   \centering
   \includegraphics[width=0.5\linewidth]{gfx/implementation/apiActorModel}
-  \caption{Actor Ansicht der API Komponente}
+  \caption{Ansicht der Actors der API-Komponente.}
   \label{fig:implementation:apiActorModel}
 \end{figure} 
 
@@ -108,7 +108,7 @@ Das Beispiel der Implementierung der dritten Abfrage zeigt, dass je nach Anwendu
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{gfx/implementation/QueringServiceActorModel}
-  \caption{Der Aufbau des Actor Systems der Query Komponente von \textit{TyrolSky}.}
+  \caption{Der Aufbau des Actor-Systems der Query-Komponente von \textit{TyrolSky}.}
   \label{fig:implementation:queryActorModel}
 \end{figure} 
 

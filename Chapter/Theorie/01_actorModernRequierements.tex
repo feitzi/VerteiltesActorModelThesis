@@ -7,19 +7,19 @@ In der Abbildung \ref{fig:actor:actorHierarchySample}, ist eine Hierarchie eines
 \begin{figure}
   \centering
   \includegraphics[width=0.6\linewidth]{gfx/actor/actorHierarchy}
-  \caption{Ein Beispiel eines Actor-Hierarchie-Baumes}
+  \caption{Ein Beispiel eines hierarchischen Actor-Baumes Actor-Hierarchie-Baumes}
   \label{fig:actor:actorHierarchySample}
 \end{figure}
 
 \subsection{Supervision}\label{actor:supervision}
-Damit die im \textit{Reactive Manifest (siehe Kapitel \ref{reactiveManifesto})} geforderte Bedingung \textit{Widerstandsfähigkeit} erfüllt wird, bieten Actor Frameworks, wie beispielsweise \textit{Akka} oder \textit{Orleans} (siehe nähere Framework Beschreibung unter Abschnitt \ref{sec:ActorFrameworks}) ein Fehlerhandling welches \textit{Supervision} genannt wird. Das, unter anderem in \cite{sargent2016play} beschriebene, Vorgehen ermöglicht es, mögliche Fehlerquellen zu kapseln und beim Auftreten eines Fehlers während der Laufzeit den Fehler unabhängig vom Rest des Systems zu lösen.\\
+Damit die im \textit{Reactive Manifest (siehe Kapitel \ref{reactiveManifesto})} geforderte Bedingung \textit{Widerstandsfähigkeit} erfüllt wird, bieten Actor-Frameworks, wie beispielsweise \textit{Akka} oder \textit{Orleans} (siehe nähere Framework Beschreibung unter Abschnitt \ref{sec:ActorFrameworks}) ein Fehlerhandling welches \textit{Supervision} genannt wird. Das, unter anderem in \cite{sargent2016play} beschriebene, Vorgehen ermöglicht es, mögliche Fehlerquellen zu kapseln und beim Auftreten eines Fehlers während der Laufzeit den Fehler unabhängig vom Rest des Systems zu lösen.\\
 Das Beispiel in Abbildung \ref{fig:actor:actorHierarchySample}, enthält einen Prozessor Actor \textit{Processor-A}, welcher selber zwei \textit{Childs} hat. Wenn es nun in einem der zwei \textit{Child}-Actors zu einem Fehler kommt, sollte der übergeordnete Actor \textit{Coordinator} im Idealfall nichts davon nichts mitbekommen. Daher kann in diesem Beispiel aus den zwei untersten Actors, wie in Abbildung \ref{fig:actor:actorHierarchySupervison} dargestellt, ein \textit{Error Kernel} gebildet werden. Wenn innerhalb dieses \textit{Kernels} ein Fehler auftritt, wird der \textit{Parent}, was in dem Beispiel der Actor \textit{Processor-A} ist, über den Fehler benachrichtigt, und kann dann darauf entsprechend reagieren. Alle anderen Actors im System bekommen von diesem Vorgehen nichts mit und arbeiten ohne Unterbrechung weiter. \\
 \begin{figure}
   \centering
   \begin{minipage}{.4\textwidth}
     \centering
     \includegraphics[width=\linewidth]{gfx/actor/actorHierchyErrorKernel}
-    \caption{Ein Teil der Hierarchie aus Abbildung \ref{fig:actor:actorHierarchySample} wird ein \textit{Error-Kernel} zugewiesen.}
+    \caption{Einem Teil der Hierarchie aus Abbildung \ref{fig:actor:actorHierarchySample} wird ein \textit{Error-Kernel} zugewiesen.}
     \label{fig:actor:actorHierarchySupervison}    
   \end{minipage}%
   \begin{minipage}{.1\textwidth}
@@ -27,11 +27,11 @@ Das Beispiel in Abbildung \ref{fig:actor:actorHierarchySample}, enthält einen P
   \begin{minipage}{.5\textwidth}
    \centering
    \includegraphics[width=\linewidth]{gfx/actor/actorSupervisionMessageExample}
-   \caption{Nachrichten Austausch an den Supervisor des in Abbildung \ref{fig:actor:actorHierarchySupervison} definiterten \textit{Error-Kernel}.}
+   \caption{Nachrichten-Austausch an den Supervisor des in Abbildung \ref{fig:actor:actorHierarchySupervison} definierten \textit{Error-Kernels}.}
    \label{fig:actor:actorHierarchySupervisonMessaging}
   \end{minipage}
 \end{figure} 
 
 \subsection{Location Transparenz}\label{actor:locationTransparency}
-Eine weitere Eigenschaft, welche etliche Implementierungen dem \textit{Actor-Model} hinzufügen, ist eine nicht gekoppelte Beziehung zwischen den Actors. Wie in Abschnitt \ref{actor:definition} erklärt, benötigt ein Actor für das Senden einer Nachricht an einen anderen Actor dessen Adresse. Mit dem Prinzip der \textit{location Transparenz} wird die Adresse eines Actors so gestaltet, dass sie nicht an einen bestimmten Prozess oder Rechner gebunden ist. Durch Entkoppelung ist es für den sendenden Actor nicht relevant wo sich der Empfänger befindet. \citep{Vernon2015ReactiveAkka} und \citep{sargent2016play}
+Eine weitere Eigenschaft, welche etliche Implementierungen dem \textit{Actor-Model} hinzufügen, ist eine nicht gekoppelte Beziehung zwischen den Actors. Wie in Abschnitt \ref{actor:definition} erklärt, benötigt ein Actor für das Senden einer Nachricht an einen anderen Actor dessen Adresse. Mit dem Prinzip der \textit{location Transparenz} wird die Adresse eines Actors so gestaltet, dass sie nicht an einen bestimmten Prozess oder Rechner gebunden ist. Durch Entkoppelung ist es für den sendenden Actor nicht relevant wo sich der Empfänger befindet \citep{Vernon2015ReactiveAkka} und \citep{sargent2016play}.
 
