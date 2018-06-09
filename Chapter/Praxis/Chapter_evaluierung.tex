@@ -20,8 +20,8 @@ Als Basis für die nachfolgende Bewertung dient der aufgebaute Testlauf. Für de
 \end{table}
 Nachdem alle Komponenten gestartet und miteinander verbunden sind, werden die Testdaten, aus Kapitel \ref{sec:eruierung:testdata}, in die Anwendung eingespielt. Die Einspielung erfolgt über die verfügbare Schnittstelle von der bereits gestarteten Komponente \textit{API}. Vor jedem Testlauf wird die gesamte Anwendung neugestartet und der Datenstand auf den Ursprungswert gesetzt. \\
 
-\subsection{Beschreibung eines Testlaufes}
-Innerhalb eines Testlaufes wird über die Testapplikation das \textit{TyroSky}-System mit einer Vielzahl an gleichzeitigen Buchungsanfragen unter Last gesetzt. Dabei werden die verfügbaren Flüge von der Testanwendung gebucht. Als Testparameter werden {2000} Ticketbuchungen auf allen verfügbaren Flügen innerhalb des Zeitraums 1. Juni bis 1. Juli gestartet. \\
+\subsection{Beschreibung eines Testlaufs}
+Innerhalb eines Testlaufs wird über die Testapplikation das \textit{TyroSky}-System mit einer Vielzahl an gleichzeitigen Buchungsanfragen unter Last gesetzt. Dabei werden die verfügbaren Flüge von der Testanwendung gebucht. Als Testparameter werden {2000} Ticketbuchungen auf allen verfügbaren Flügen innerhalb des Zeitraums 1. Juni bis 1. Juli gestartet. \\
 
 \subsection{1. Testlauf}
 Der erste Testlauf findet ohne Einflüsse von außen statt. Es werden daher während des Testes keine Komponenten entfernt oder hinzugefügt. Ist der Testlauf beendet, wird der Status der einzelnen Testbuchungen über die Datenbanktabelle überprüft. Anschließend werden die Kontobewegungen der simulierten Bankenanwendung mit den durchgeführten Buchungen verglichen. Dabei sollte für jede erfolgreiche Buchung eine verbuchte Kontobewegung gefunden werden. Abschließend wird stichprobenartig die Passagierliste für die gebuchten Flüge überprüft. Auch diese sollten mit den in der Testanwendung gebuchten Tickets übereinstimmen. \\
