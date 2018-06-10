@@ -64,7 +64,8 @@ Der Aggregator kann durch folgende, in \cite{Vernon2015ReactiveAkka} gelisteten 
 \end{itemize}
 Welches der fünf Kriterien ein Aggregator für die Terminierung verwendet, hängt stark von der eigentlichen Aufgabe ab. Ein Aggregator kann, wie in \cite{Vernon2015ReactiveAkka} beschrieben, auch als Router fungieren, dies ist jedoch nicht zwingend erforderlich.
 
-\subsection{Garantierte Nachrichtenzustellung}\label{sec:actor:patterns:guaranteedDelivery}
+\subsection{Garantierte Nachrichtenzustellung}
+\label{sec:actor:patterns:guaranteedDelivery}
 Die Zustellung von Nachrichten zu einem Actor unterliegt allgemein keiner Garantie das sie dort auch ankommt und verarbeitet wird. Schon in \cite{Agha1985ConcurrentParallelism} wird dieses Problem skizziert. Auch \cite{Vernon2015ReactiveAkka} und \cite{CloudComputingPatterns2014} verweisen auf das Problem, dass nicht gewährleistet werden kann, dass eine Nachricht an einen Actor auch ankommt. \cite{CloudComputingPatterns2014} generalisieren das Problem, dass Nachrichten zwischen Komponenten generell keiner garantierten Zustellung unterliegen. \\
 Um in einem solchen System jedoch die Zustellung von Nachrichten zu gewährleisten, gibt es Muster welche die Zustellung einer Nachricht überwachen. In \cite{messagedeliveryreliabilityakkadocumentation} sowie \cite{kuhn2017reactive} werden drei Kategorien für die Zustellung von Nachrichten genannt.
 \begin{description}
